@@ -2,7 +2,7 @@
 // Clock of clocks with p5.js
 // Inspired by this video : https://www.youtube.com/watch?v=ExkVIQ60ClM
 
-const smoothness = 0.1;
+const smoothness = 0.2;
 
 let scl;
 let clock;
@@ -11,6 +11,7 @@ let darkTheme;
 function setup() {
   scl = windowWidth / 40;
   createCanvas(scl * 34, scl * 6).parent('canvas-holder');
+  frameRate(30);
   ellipseMode(CORNER);
   clock = new DigitalClock(0, 0);
   darkTheme = false;
