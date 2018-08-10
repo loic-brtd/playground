@@ -8,7 +8,7 @@ function drawCube(posX, posY, color, scl, ctx) {
   const y = posY * scl;
 
   if (!ctx) {
-    ctx = this;
+    ctx = window;
   }
 
   ctx.noStroke();

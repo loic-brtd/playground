@@ -1,17 +1,17 @@
 // Loïc Bertrand
 // Tetris recreation with p5.js
 
-const cols = 12;
-const rows = 18;
+const cols = 10;
+const rows = 20;
 const scl = 30;
 
-let currentPiece;
-let nextPiece;
-let board;
-let gameOver = false;
+let gameOver;
 let score;
 let level;
 let speed;
+let board;
+let nextPiece;
+let currentPiece;
 let canvas2;
 
 function setup() {
@@ -21,6 +21,19 @@ function setup() {
   frameRate(30);
   textFont('Consolas Black');
   resetGame();
+}
+
+function resetGame() {
+  gameOver = false;
+  score = 0;
+  level = 1;
+  speed = 30;
+  updatePlayerInfo();
+  board = create2DArray(rows, cols);
+  nextPiece = new Piece();
+  currentPiece = new Piece();
+  drawNextPiece();
+  loop();
 }
 
 function draw() {
@@ -57,19 +70,6 @@ function keyPressed() {
   } else if (keyCode === UP_ARROW) {
     currentPiece.turn();
   }
-}
-
-function resetGame() {
-  gameOver = false;
-  score = 0;
-  level = 1;
-  speed = 30;
-  updatePlayerInfo();
-  board = create2DArray(rows, cols);
-  nextPiece = new Piece();
-  currentPiece = new Piece();
-  drawNextPiece();
-  loop();
 }
 
 function moveCurrentDown() {
