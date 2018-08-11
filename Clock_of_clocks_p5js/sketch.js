@@ -14,9 +14,10 @@ function setup() {
   frameRate(30);
   ellipseMode(CORNER);
   clock = new DigitalClock(0, 0);
-  darkTheme = false;
   const checkbox = document.querySelector('#theme');
   checkbox.addEventListener('change', toggleDarkTheme);
+  darkTheme = false;
+  toggleDarkTheme();
 }
 
 function draw() {

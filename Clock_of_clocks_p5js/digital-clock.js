@@ -26,13 +26,11 @@ class DigitalClock {
     const s = d.getSeconds();
     // Update hours
     if (frameCount < 50 || (m === 0 && s <= 2)) {
-      console.log('updating hours')
       this.digits[0].set(floor(h / 10), amount);
       this.digits[1].set(h % 10, amount);
     }
     // Update minutes
     if (frameCount < 50 || s <= 2) {
-      console.log('updating minutes')
       this.digits[2].set(floor(m / 10), amount);
       this.digits[3].set(m % 10, amount);
     }
