@@ -29,4 +29,6 @@ function draw() {
 function toggleDarkTheme() {
   darkTheme = !darkTheme;
   document.body.style.backgroundColor = darkTheme ? '#111' : '#eee';
+  const metaThemeColor = document.querySelector("meta[name=theme-color]");
+  metaThemeColor.setAttribute("content", darkTheme ? '#111' : '#eee');
 }
