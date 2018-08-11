@@ -4,11 +4,7 @@
 
 class Digit {
 
-  constructor(x, y) {
-    if (!x && !y) {
-      x = 0;
-      y = 0;
-    }
+  constructor(x = 0, y = 0) {
     this.corner = createVector(x, y);
     this.clocks = [];
     for (let j = 0; j < 6; j++) {
@@ -18,10 +14,7 @@ class Digit {
     }
   }
 
-  set(dig, amount) {
-    if (!amount) {
-      amount = 1;
-    }
+  set(dig, amount = 1) {
     const model = positions[dig];
     for (let i = 0; i < model.length; i++) {
       this.clocks[i].set(model[i].hour, model[i].min, amount);
@@ -29,7 +22,7 @@ class Digit {
   }
 
   show() {
-    for (let c of this.clocks) {
+    for (const c of this.clocks) {
       c.show();
     }
   }

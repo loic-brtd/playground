@@ -20,7 +20,7 @@ function setup() {
 }
 
 function draw() {
-  background(darkTheme ? '#111' : '#eee');
+  clear();
   clock.show();
   clock.update(smoothness);
 }
