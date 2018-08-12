@@ -4,32 +4,32 @@
 
 // Vertical line
 const VER = {
-  hour: 1,
+  hours: 1,
   min: 3
 };
 // Horizontal line
 const HOR = {
-  hour: 0,
+  hours: 0,
   min: 2
 };
 // Top Right Corner of a square
 const TRC = {
-  hour: 1,
+  hours: 1,
   min: 2
 };
 // Top Left Corner of a square
 const TLC = {
-  hour: 0,
+  hours: 0,
   min: 1
 };
 // Bottom Right Corner of a square
 const BRC = {
-  hour: 2,
+  hours: 2,
   min: 3
 };
 // Bottom Left Corner of a square
 const BLC = {
-  hour: 0,
+  hours: 0,
   min: 3
 };
 

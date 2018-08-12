@@ -25,20 +25,23 @@ class DigitalClock {
     const m = d.getMinutes();
     const s = d.getSeconds();
     // Update hours
-    if (frameCount < 50 || (m === 0 && s <= 2)) {
+    if (frameCount < initCount || (m === 0 && s <= 1)) {
       this.digits[0].set(floor(h / 10), amount);
       this.digits[1].set(h % 10, amount);
     }
     // Update minutes
-    if (frameCount < 50 || s <= 2) {
+    if (frameCount < initCount || s <= 1) {
       this.digits[2].set(floor(m / 10), amount);
       this.digits[3].set(m % 10, amount);
     }
     // Update seconds
-    this.digits[4].set(floor(s / 10), amount);
-    this.digits[5].set(s % 10, amount);
+    const secUnitsDigit = s % 10;
+    if (frameCount < initCount || secUnitsDigit <= 1) {
+      this.digits[4].set(floor(s / 10), amount);
+    }
+    this.digits[5].set(secUnitsDigit, amount);
     // Update columns
-    if (frameCount < 50) {
+    if (frameCount < initCount) {
       for (const c of this.columns) {
         c.update(amount);
       }

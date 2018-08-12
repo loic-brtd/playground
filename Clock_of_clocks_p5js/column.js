@@ -15,14 +15,14 @@ class Column {
   }
 
   update(amount) {
-    this.clocks[2].set(TLC.min, TLC.hour, amount);
-    this.clocks[3].set(TRC.min, TRC.hour, amount);
-    this.clocks[4].set(BLC.min, BLC.hour, amount);
-    this.clocks[5].set(BRC.min, BRC.hour, amount);
-    this.clocks[6].set(TLC.min, TLC.hour, amount);
-    this.clocks[7].set(TRC.min, TRC.hour, amount);
-    this.clocks[8].set(BLC.min, BLC.hour, amount);
-    this.clocks[9].set(BRC.min, BRC.hour, amount);
+    this.clocks[2].set(TLC.min, TLC.hours, amount);
+    this.clocks[3].set(TRC.min, TRC.hours, amount);
+    this.clocks[4].set(BLC.min, BLC.hours, amount);
+    this.clocks[5].set(BRC.min, BRC.hours, amount);
+    this.clocks[6].set(TLC.min, TLC.hours, amount);
+    this.clocks[7].set(TRC.min, TRC.hours, amount);
+    this.clocks[8].set(BLC.min, BLC.hours, amount);
+    this.clocks[9].set(BRC.min, BRC.hours, amount);
   }
 
   show() {

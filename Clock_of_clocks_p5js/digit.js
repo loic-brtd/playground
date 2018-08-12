@@ -17,7 +17,7 @@ class Digit {
   set(dig, amount = 1) {
     const model = positions[dig];
     for (let i = 0; i < model.length; i++) {
-      this.clocks[i].set(model[i].hour, model[i].min, amount);
+      this.clocks[i].set(model[i].hours, model[i].min, amount);
     }
   }
 
