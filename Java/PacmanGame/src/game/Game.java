@@ -46,7 +46,6 @@ public class Game extends PApplet {
 
     @Override
     public void keyPressed() {
-        println(frameCount);
         if (keyCode == ARROW_UP) {
             player.changeDirection(Direction.UP);
         } else if (keyCode == ARROW_RIGHT) {

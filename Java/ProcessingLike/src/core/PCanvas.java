@@ -151,9 +151,11 @@ public class PCanvas extends PGraphics {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                handleEvent(e);
-                pressedKeys.add(e.getKeyCode());
-                PCanvas.this.keyPressed();
+                if (!pressedKeys.contains(e.getKeyCode())) {
+                    handleEvent(e);
+                    pressedKeys.add(e.getKeyCode());
+                    PCanvas.this.keyPressed();
+                }
             }
 
             @Override

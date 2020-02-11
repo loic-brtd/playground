@@ -35,7 +35,7 @@ import constants.RendererType;
 public class PApplet extends PCanvas implements PConstants {
 
     private static final Dimension frameMinSize = new Dimension(300, 220);
-    private static final String CACHE_FILE = ".p_applet_cache";
+    private static final String CACHE_FILE_NAME = ".p_applet_cache";
     private final JFrame frame;
     private JPanel contentPane;
     private boolean showCanvas;
@@ -80,7 +80,7 @@ public class PApplet extends PCanvas implements PConstants {
             boolean useCachedPosition = false;
             int posX = 0, posY = 0;
             if (!isFullScreen) {
-                File cache = new File(CACHE_FILE);
+                File cache = new File(CACHE_FILE_NAME);
                 if (cache.exists() && cache.isFile()) {
                     try {
                         Properties props = new Properties();
@@ -161,7 +161,7 @@ public class PApplet extends PCanvas implements PConstants {
                 Properties props = new Properties();
                 props.setProperty("frame_x", frame.getX() + "");
                 props.setProperty("frame_y", frame.getY() + "");
-                props.store(new FileOutputStream(CACHE_FILE), "Cached properties for PApplet");
+                props.store(new FileOutputStream(CACHE_FILE_NAME), "Cached properties for PApplet");
             } catch (IOException e) {
                 e.printStackTrace();
             }
