@@ -1,7 +1,7 @@
 package game;
 
-import static constants.PConstants.CENTER_MODE;
-import static game.Game.unit;
+import static constants.PConstants.*;
+import static game.Game.*;
 
 import core.PGraphics;
 
@@ -18,6 +18,8 @@ public abstract class Gem {
         this.r = d / 2;
     }
 
+    abstract void doEffect();
+
     abstract void show(PGraphics g);
 
     // Implementations
@@ -25,6 +27,11 @@ public abstract class Gem {
     public static class Dot extends Gem {
         Dot(int x, int y) {
             super(x, y, unit * 0.2f);
+        }
+
+        @Override
+        void doEffect() {
+
         }
 
         void show(PGraphics g) {
@@ -37,6 +44,11 @@ public abstract class Gem {
     public static class Ball extends Gem {
         Ball(int x, int y) {
             super(x, y, unit * 0.6f);
+        }
+
+        @Override
+        void doEffect() {
+            board.forEachGhost(Ghost::makeBlueForAMoment);
         }
 
         void show(PGraphics g) {

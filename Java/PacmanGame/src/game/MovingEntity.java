@@ -1,101 +1,117 @@
 package game;
 
-import static game.Game.board;
-import static game.Game.unit;
-import static game.Game.width;
+import static game.Game.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import core.PGraphics;
+import sun.security.jgss.GSSHeader;
 
 public abstract class MovingEntity {
-    protected int x, y; // Coordinates of the player's top left corner
-    protected final float d; // Diameter
-    protected final float r; // Radius
-    protected Direction currDir;
-    protected Direction nextDir;
-    // protected float speed;
 
-    MovingEntity(int x, int y, float d) {
+    protected int x, y;
+    protected final float diameter;
+    protected final float radius;
+    protected int color;
+
+    protected Direction direction;
+    protected Direction desiredDirection;
+
+    protected int targetX, targetY;
+    protected float animationProgress;
+    protected boolean isAnimating;
+    protected float speed;
+
+    MovingEntity(int x, int y, float diameter, int color) {
         this.x = x;
         this.y = y;
-        this.d = d;
-        this.r = d / 2;
-        this.nextDir = Direction.STATIC;
-        this.currDir = nextDir;
+        this.diameter = diameter;
+        this.radius = diameter / 2;
+        this.color = color;
+        this.desiredDirection = Direction.STATIC;
+        this.direction = Direction.STATIC;
+        this.targetX = x;
+        this.targetY = y;
+        this.animationProgress = 1;
+        this.isAnimating = false;
+        this.speed = 1 / 10f;
     }
 
-    void changeDirection(Direction dir) {
-        this.nextDir = dir;
+    public void changeDirection(Direction dir) {
+        this.desiredDirection = dir;
     }
 
     private void setPos(int x, int y) {
-        this.x = (x + width) % width;
+        this.x = (x + board.cols) % board.cols;
         this.y = y;
+        onPositionUpdated();
     }
 
-    void update() {
-        int factor = 2;
-        // Calculate new position
-        int nextDirTargetX = (x + (nextDir.dx * factor));
-        int nextDirTargetY = (y + (nextDir.dy * factor));
-        int currDirTargetX = (x + (currDir.dx * factor));
-        int currDirTargetY = (y + (currDir.dy * factor));
+    protected void onPositionUpdated() {
+    }
 
-        if (isAccessible(nextDirTargetX, nextDirTargetY)) {
-            // Go there
-            setPos(nextDirTargetX, nextDirTargetY);
-            // Update direction
-            currDir = nextDir;
-            doAction(board.get(x / unit, y / unit));
-        } else if (isAccessible(currDirTargetX, currDirTargetY)) {
-            // Go there
-            setPos(currDirTargetX, currDirTargetY);
-            doAction(board.get(x / unit, y / unit));
+    public void update() {
+        if (isAnimating) {
+            stepMovement();
         } else {
-            // Don't move, you're stuck
+            if (board.get(x + desiredDirection.dx, y + desiredDirection.dy).isAccessible()) {
+                direction = desiredDirection;
+                startMovement();
+            } else if (board.get(x + direction.dx, y + direction.dy).isAccessible()) {
+                startMovement();
+            }
         }
+    }
+
+    private void stepMovement() {
+        animationProgress += speed;
+        if (animationProgress >= 1) {
+            animationProgress = 1;
+            setPos(targetX, targetY);
+            isAnimating = false;
+        }
+    }
+
+    private void startMovement() {
+        if (direction == Direction.STATIC) return;
+        isAnimating = true;
+        animationProgress = 0;
+        targetX = x + direction.dx;
+        targetY = y + direction.dy;
     }
 
     public Direction[] findPossibleMoves() {
         List<Direction> found = new ArrayList<>();
-        for (Direction dir : Direction.nonStatic()) {
-            if (dir != currDir.reversed()) {
-                int posX = x + dir.dx * unit;
-                int posY = y + dir.dy * unit;
-                if (board.isPointAccessible(posX, posY)) {
+        for (Direction dir : Direction.NON_STATIC) {
+            if (dir != direction.opposite()) {
+                int posX = x + dir.dx;
+                int posY = y + dir.dy;
+                if (board.get(posX, posY).isAccessible()) {
                     found.add(dir);
                 }
             }
         }
-        // Cul de sac
+        // If no other option than turning around
         if (found.isEmpty()) {
-            return new Direction[] { currDir.reversed() };
+            return new Direction[]{direction.opposite()};
         }
-        return found.toArray(new Direction[found.size()]);
+        return found.toArray(new Direction[0]);
     }
 
-    private boolean isAccessible(int newX, int newY) {
-        // Coordinates of the top, right, bottom and left
-        // inner borders of the player
-        int topY = newY / unit;
-        int rightX = (newX + unit - 1) / unit;
-        int bottomY = (newY + unit - 1) / unit;
-        int leftX = newX / unit;
+    public void show(PGraphics g) {
+        float drawnX = lerp(x * unit, targetX * unit, animationProgress);
+        float drawnY = lerp(y * unit, targetY * unit, animationProgress);
 
-        // Wrap around
-        rightX = (rightX + board.cols) % board.cols;
-        leftX = (leftX + board.cols) % board.cols;
-
-        // Are those four pixels in a cell which is accessible ?
-        return (board.get(leftX, topY).isAccessible()
-                && board.get(rightX, topY).isAccessible()
-                && board.get(rightX, bottomY).isAccessible()
-                && board.get(leftX, bottomY).isAccessible());
+        g.ellipseMode(CORNER_MODE);
+        g.fill(color);
+        g.circle(drawnX, drawnY, diameter);
+        // Wrap around the board horizontally
+        if (drawnX > width - unit) {
+            g.circle(drawnX - width, drawnY, diameter);
+        } else if (drawnX < unit) {
+            g.circle(drawnX + width, drawnY, diameter);
+        }
     }
 
-    abstract void show(PGraphics g);
-
-    abstract void doAction(Cell c);
 }

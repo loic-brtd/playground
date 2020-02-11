@@ -1,28 +1,27 @@
 package game;
 
-import static core.PCanvas.distSq;
-import static game.Game.halfUnit;
-import static game.Game.unit;
+import static game.Game.*;
 
 import core.PGraphics;
 
 public abstract class Cell {
 
     abstract void show(PGraphics g, int x, int y);
-    abstract void act(Pacman p);
-    abstract void getActionFrom(Ghost g);
+
+    abstract void doAction(PacMan p);
+
     abstract boolean isAccessible();
-    
+
     public static Cell from(char c, int x, int y) {
         switch (c) {
-        case ' ':
-            return new Empty(null);
-        case '·':
-            return new Empty(new Gem.Dot(x, y));
-        case 'o':
-            return new Empty(new Gem.Ball(x, y));
-        default:
-            return new Wall();
+            case ' ':
+                return new Empty(null);
+            case '·':
+                return new Empty(new Gem.Dot(x, y));
+            case 'o':
+                return new Empty(new Gem.Ball(x, y));
+            default:
+                return new Wall();
         }
     }
 
@@ -40,14 +39,10 @@ public abstract class Cell {
         }
 
         @Override
-        void act(Pacman p) {
-            
+        void doAction(PacMan p) {
+
         }
 
-        @Override
-        void getActionFrom(Ghost g) {
-            
-        }
     }
 
     public static class Empty extends Cell {
@@ -70,22 +65,13 @@ public abstract class Cell {
         }
 
         @Override
-        void act(Pacman p) {
+        void doAction(PacMan p) {
             if (gem != null) {
-                int playerCenterX = p.x + halfUnit;
-                int playerCenterY = p.y + halfUnit;
-                float distance = distSq(gem.x, gem.y, playerCenterX, playerCenterY);
-                float radii = (p.r + gem.r);
-                if (distance < radii * radii) {
-                    // Collect gem
-                    gem = null;
-                }
+                gem.doEffect();
+                gem = null;
+                p.score++;
             }
         }
 
-        @Override
-        void getActionFrom(Ghost g) {
-            
-        }
     }
 }

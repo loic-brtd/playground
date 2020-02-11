@@ -1,7 +1,11 @@
 package game;
 
 public enum Direction {
-    UP(0, -1), RIGHT(1, 0), DOWN(0, 1), LEFT(-1, 0), STATIC(0, 0);
+    UP(0, -1),
+    RIGHT(1, 0),
+    DOWN(0, 1),
+    LEFT(-1, 0),
+    STATIC(0, 0);
 
     final int dx, dy;
 
@@ -11,8 +15,8 @@ public enum Direction {
     }
 
     static Direction fromVector(int x, int y) {
-        int normX = x < 0 ? -1 : x == 0 ? 0 : 1;
-        int normY = y < 0 ? -1 : y == 0 ? 0 : 1;
+        int normX = Integer.compare(x, 0);
+        int normY = Integer.compare(y, 0);
 
         if (normX == 0) {
             if (normY == 1)
@@ -26,35 +30,33 @@ public enum Direction {
         }
     }
 
-    static Direction[] nonStatic() {
-        return new Direction[] { UP, RIGHT, DOWN, LEFT };
-    }
+    public static final Direction[] NON_STATIC = new Direction[]{UP, RIGHT, DOWN, LEFT};
 
-    Direction[] rotated() {
+    Direction[] rotatedLeftRight() {
         switch (this) {
-        case UP:
-        case DOWN:
-            return new Direction[] { LEFT, RIGHT };
-        case RIGHT:
-        case LEFT:
-            return new Direction[] { UP, DOWN };
-        default:
-            return new Direction[] { UP, DOWN, LEFT, RIGHT };
+            case UP:
+            case DOWN:
+                return new Direction[]{LEFT, RIGHT};
+            case RIGHT:
+            case LEFT:
+                return new Direction[]{UP, DOWN};
+            default:
+                return new Direction[]{UP, DOWN, LEFT, RIGHT};
         }
     }
 
-    Direction reversed() {
+    Direction opposite() {
         switch (this) {
-        case UP:
-            return DOWN;
-        case DOWN:
-            return UP;
-        case RIGHT:
-            return LEFT;
-        case LEFT:
-            return RIGHT;
-        default:
-            return STATIC;
+            case UP:
+                return DOWN;
+            case DOWN:
+                return UP;
+            case RIGHT:
+                return LEFT;
+            case LEFT:
+                return RIGHT;
+            default:
+                return STATIC;
         }
     }
 }

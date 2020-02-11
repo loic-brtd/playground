@@ -7,16 +7,18 @@ import static game.Game.unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import core.PGraphics;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 public class Board {
 
     Cell[][] cells;
     int cols, rows;
     int halfUnit;
-
-    List<MovingEntity> movingEntities = new ArrayList<>();
+    PacMan player;
+    List<Ghost> ghosts = new ArrayList<>();
 
     Board(String file) {
         String[] lines = loadStrings(file);
@@ -32,29 +34,27 @@ public class Board {
         }
     }
 
+    public void setPlayer(PacMan player) {
+        this.player = player;
+    }
+
     Cell get(int x, int y) {
+        x = (x + board.cols) % board.cols;
         return cells[y][x];
     }
 
-    void add(MovingEntity e) {
-        movingEntities.add(e);
+    void addGhost(Ghost e) {
+        ghosts.add(e);
     }
 
-    public boolean isPointAccessible(int xx, int yy) {
-        // Wrap around
-        // xx = (xx + board.cols) % board.cols;
-
-        int cellX = constrain(xx / unit, 0, cols - 1);
-        int cellY = constrain(yy / unit, 0, rows - 1);
-
-        // println(cellX, cellY);
-
-        return board.get(cellX, cellY).isAccessible();
+    void forEachGhost(Consumer<Ghost> consumer) {
+        ghosts.forEach(consumer);
     }
 
     void update() {
-        for (MovingEntity e : movingEntities)
-            e.update();
+        for (Ghost ghost : ghosts)
+            ghost.update();
+        player.update();
     }
 
     void show(PGraphics g) {
@@ -64,8 +64,9 @@ public class Board {
             for (int x = 0; x < cols; x++)
                 cells[y][x].show(g, x, y);
         g.fill(255, 255, 0);
-        for (MovingEntity e : movingEntities)
-            e.show(g);
+        for (Ghost ghost : ghosts)
+            ghost.show(g);
+        player.show(g);
     }
 
 }
