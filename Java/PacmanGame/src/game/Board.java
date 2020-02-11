@@ -10,17 +10,15 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import core.PGraphics;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 public class Board {
 
-    Cell[][] cells;
-    int cols, rows;
-    int halfUnit;
-    PacMan player;
-    List<Ghost> ghosts = new ArrayList<>();
+    public Cell[][] cells;
+    public int cols, rows;
+    private PacMan player;
+    private List<Ghost> ghosts = new ArrayList<>();
 
-    Board(String file) {
+    public Board(String file) {
         String[] lines = loadStrings(file);
         this.cols = lines[0].length();
         this.rows = lines.length;
@@ -38,26 +36,26 @@ public class Board {
         this.player = player;
     }
 
-    Cell get(int x, int y) {
+    public Cell get(int x, int y) {
         x = (x + board.cols) % board.cols;
         return cells[y][x];
     }
 
-    void addGhost(Ghost e) {
+    public void addGhost(Ghost e) {
         ghosts.add(e);
     }
 
-    void forEachGhost(Consumer<Ghost> consumer) {
+    public void forEachGhost(Consumer<Ghost> consumer) {
         ghosts.forEach(consumer);
     }
 
-    void update() {
+    public void update() {
         for (Ghost ghost : ghosts)
             ghost.update();
         player.update();
     }
 
-    void show(PGraphics g) {
+    public void show(PGraphics g) {
         g.background(0);
         g.noStroke();
         for (int y = 0; y < rows; y++)

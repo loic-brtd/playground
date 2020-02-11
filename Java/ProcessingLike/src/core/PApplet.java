@@ -85,8 +85,8 @@ public class PApplet extends PCanvas implements PConstants {
                     try {
                         Properties props = new Properties();
                         props.load(new FileInputStream(cache));
-                        posX = Integer.valueOf(props.getProperty("frame_x", "0"));
-                        posY = Integer.valueOf(props.getProperty("frame_y", "0"));
+                        posX = Integer.parseInt(props.getProperty("frame_x", "0"));
+                        posY = Integer.parseInt(props.getProperty("frame_y", "0"));
                         useCachedPosition = true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -303,7 +303,7 @@ public class PApplet extends PCanvas implements PConstants {
             try {
                 app = (PApplet) mainClass.newInstance();
             } catch (InstantiationException e) {
-                error("Cannot instanciate the main class");
+                error("Cannot instantiate the main class");
             } catch (IllegalAccessException e) {
                 error("No access to the constructor");
             }

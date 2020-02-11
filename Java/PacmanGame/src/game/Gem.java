@@ -7,20 +7,20 @@ import core.PGraphics;
 
 public abstract class Gem {
     // Coordinates of the gem's center
-    final int x, y;
-    final float d;
-    final float r;
+    public final int x, y;
+    public final float d;
+    public final float r;
 
-    Gem(int x, int y, float d) {
+    public Gem(int x, int y, float d) {
         this.x = x;
         this.y = y;
         this.d = d;
         this.r = d / 2;
     }
 
-    abstract void doEffect();
+    public abstract void doEffect();
 
-    abstract void show(PGraphics g);
+    public abstract void show(PGraphics g);
 
     // Implementations
 
@@ -30,11 +30,11 @@ public abstract class Gem {
         }
 
         @Override
-        void doEffect() {
+        public void doEffect() {
 
         }
 
-        void show(PGraphics g) {
+        public void show(PGraphics g) {
             g.ellipseMode(CENTER_MODE);
             g.fill(0xFFFCBA94);
             g.circle(x, y, d);
@@ -42,16 +42,16 @@ public abstract class Gem {
     }
 
     public static class Ball extends Gem {
-        Ball(int x, int y) {
+        public Ball(int x, int y) {
             super(x, y, unit * 0.6f);
         }
 
         @Override
-        void doEffect() {
+        public void doEffect() {
             board.forEachGhost(Ghost::makeBlueForAMoment);
         }
 
-        void show(PGraphics g) {
+        public void show(PGraphics g) {
             g.ellipseMode(CENTER_MODE);
             g.fill(0xFFFCBA94);
             g.circle(x, y, d);

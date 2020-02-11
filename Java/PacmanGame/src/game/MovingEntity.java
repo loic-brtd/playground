@@ -14,16 +14,16 @@ public abstract class MovingEntity {
     protected final float diameter;
     protected final float radius;
     protected int color;
-
-    protected Direction direction;
-    protected Direction desiredDirection;
-
-    protected int targetX, targetY;
-    protected float animationProgress;
-    protected boolean isAnimating;
     protected float speed;
 
-    MovingEntity(int x, int y, float diameter, int color) {
+    protected Direction direction;
+    private Direction desiredDirection;
+
+    private int targetX, targetY;
+    private float animationProgress;
+    private boolean isAnimating;
+
+    public MovingEntity(int x, int y, float diameter, int color) {
         this.x = x;
         this.y = y;
         this.diameter = diameter;

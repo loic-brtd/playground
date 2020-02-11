@@ -6,9 +6,10 @@ public class PacMan extends MovingEntity {
 
     public int score;
 
-    PacMan(int x, int y, float d) {
+    public PacMan(int x, int y, float d) {
         super(x, y, d, 0xFFFFFF00);
         score = 0;
+        speed = 1/10f;
     }
 
     @Override

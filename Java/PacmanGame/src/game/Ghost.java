@@ -6,18 +6,22 @@ import static core.PCanvas.*;
 
 public class Ghost extends MovingEntity {
 
-    final int BASE_COLOR;
+    private final int BASE_COLOR;
+    private final float BASE_SPEED;
 
-    Ghost(int x, int y, float d, int color) {
+    public Ghost(int x, int y, float d, int color) {
         super(x, y, d, color);
         BASE_COLOR = color;
+        BASE_SPEED = 1/15f;
         chooseRandomDirection();
     }
 
     public void makeBlueForAMoment() {
         color = 0xFF0000FF;
+        speed = 1/30f;
         Timer timer = new Timer(3000, e -> {
             color = BASE_COLOR;
+            speed = BASE_SPEED;
         });
         timer.setRepeats(false);
         timer.start();

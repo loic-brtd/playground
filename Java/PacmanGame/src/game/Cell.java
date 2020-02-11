@@ -6,11 +6,11 @@ import core.PGraphics;
 
 public abstract class Cell {
 
-    abstract void show(PGraphics g, int x, int y);
+    public abstract void show(PGraphics g, int x, int y);
 
-    abstract void doAction(PacMan p);
+    public abstract void doAction(PacMan p);
 
-    abstract boolean isAccessible();
+    public abstract boolean isAccessible();
 
     public static Cell from(char c, int x, int y) {
         switch (c) {
@@ -29,30 +29,30 @@ public abstract class Cell {
 
     public static class Wall extends Cell {
 
-        void show(PGraphics g, int x, int y) {
+        public void show(PGraphics g, int x, int y) {
             g.fill(0xFF1919A6);
             g.rect(x * unit, y * unit, unit, unit);
         }
 
-        boolean isAccessible() {
+        public boolean isAccessible() {
             return false;
         }
 
         @Override
-        void doAction(PacMan p) {
+        public void doAction(PacMan p) {
 
         }
 
     }
 
     public static class Empty extends Cell {
-        Gem gem;
+        public Gem gem;
 
-        Empty(Gem gem) {
+        public Empty(Gem gem) {
             this.gem = gem;
         }
 
-        void show(PGraphics g, int x, int y) {
+        public void show(PGraphics g, int x, int y) {
             g.fill(0);
             g.rect(x * unit, y * unit, unit, unit);
             if (gem != null) {
@@ -60,12 +60,12 @@ public abstract class Cell {
             }
         }
 
-        boolean isAccessible() {
+        public boolean isAccessible() {
             return true;
         }
 
         @Override
-        void doAction(PacMan p) {
+        public void doAction(PacMan p) {
             if (gem != null) {
                 gem.doEffect();
                 gem = null;

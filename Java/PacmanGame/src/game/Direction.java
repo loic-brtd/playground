@@ -7,14 +7,16 @@ public enum Direction {
     LEFT(-1, 0),
     STATIC(0, 0);
 
-    final int dx, dy;
+    public static final Direction[] NON_STATIC = new Direction[]{UP, RIGHT, DOWN, LEFT};
+
+    public final int dx, dy;
 
     Direction(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
     }
 
-    static Direction fromVector(int x, int y) {
+    public static Direction fromVector(int x, int y) {
         int normX = Integer.compare(x, 0);
         int normY = Integer.compare(y, 0);
 
@@ -30,22 +32,7 @@ public enum Direction {
         }
     }
 
-    public static final Direction[] NON_STATIC = new Direction[]{UP, RIGHT, DOWN, LEFT};
-
-    Direction[] rotatedLeftRight() {
-        switch (this) {
-            case UP:
-            case DOWN:
-                return new Direction[]{LEFT, RIGHT};
-            case RIGHT:
-            case LEFT:
-                return new Direction[]{UP, DOWN};
-            default:
-                return new Direction[]{UP, DOWN, LEFT, RIGHT};
-        }
-    }
-
-    Direction opposite() {
+    public Direction opposite() {
         switch (this) {
             case UP:
                 return DOWN;

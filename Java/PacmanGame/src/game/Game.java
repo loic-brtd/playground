@@ -4,13 +4,14 @@ import core.PApplet;
 
 public class Game extends PApplet {
 
-    static int unit = 20;
-    static int halfUnit = unit / 2;
-    static int width, height;
-    static Board board;
-    static PacMan player;
-    boolean frozen = false;
+    public static int unit = 20;
+    public static int halfUnit = unit / 2;
+    public static int width, height;
+    public static Board board;
+    public static PacMan player;
+    public boolean frozen = false;
 
+    @Override
     public void setup() {
         board = new Board("res/board.txt");
         size(board.cols * unit, board.rows * unit + unit * 2);
@@ -35,6 +36,7 @@ public class Game extends PApplet {
         textFont("Monospaced");
     }
 
+    @Override
     public void draw() {
         if (!frozen) board.update();
         board.show(this);
@@ -42,7 +44,9 @@ public class Game extends PApplet {
         text("SCORE: " + player.score, halfUnit, height + unit);
     }
 
+    @Override
     public void keyPressed() {
+        println(frameCount);
         if (keyCode == ARROW_UP) {
             player.changeDirection(Direction.UP);
         } else if (keyCode == ARROW_RIGHT) {
