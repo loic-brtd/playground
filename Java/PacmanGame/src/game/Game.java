@@ -4,26 +4,26 @@ import core.PApplet;
 
 public class Game extends PApplet {
 
-    public static int unit = 20;
-    public static int halfUnit = unit / 2;
-    public static int width, height;
+    public static final int UNIT = 20;
+    public static final int HALF_UNIT = UNIT / 2;
+    public static int WIDTH, HEIGHT;
     public static Board board;
     public static PacMan player;
-    public boolean frozen = false;
+    public static boolean frozen = false;
+    public static boolean over = false;
 
     @Override
     public void setup() {
         board = new Board("res/board.txt");
-        size(board.cols * unit, board.rows * unit + unit * 2);
-        noSmooth();
-        width = board.cols * unit;
-        height = board.rows * unit;
+        size(board.cols * UNIT, board.rows * UNIT + UNIT * 2);
+        WIDTH = board.cols * UNIT;
+        HEIGHT = board.rows * UNIT + UNIT * 2;
 
-        player = new PacMan(board.cols / 2, board.rows - 7, unit);
-        Ghost red = new Ghost(board.cols / 2, 10, unit, 0xFFFC0204);
-        Ghost cyan = new Ghost(board.cols / 2, 10, unit, 0xFF04FEDC);
-        Ghost orange = new Ghost(board.cols / 2, 10, unit, 0xFFFCBA44);
-        Ghost pink = new Ghost(board.cols / 2, 10, unit, 0xFFFCBADC);
+        player = new PacMan(10, 19, 1 / 10f);
+        Ghost red = new Ghost(10, 10, 1 / 12f, 0xFFFC0204);
+        Ghost cyan = new Ghost(9, 11, 1 / 15f, 0xFF04FEDC);
+        Ghost orange = new Ghost(10, 11, 1 / 18f, 0xFFFCBA44);
+        Ghost pink = new Ghost(11, 11, 1 / 16f, 0xFFFCBADC);
 
         board.setPlayer(player);
         board.addGhost(red);
@@ -31,17 +31,30 @@ public class Game extends PApplet {
         board.addGhost(orange);
         board.addGhost(pink);
 
-        textSize(unit);
-        textAlign(LEFT, CENTER);
+        // noSmooth();
+        angleMode(DEGREES);
         textFont("Monospaced");
     }
 
     @Override
     public void draw() {
-        if (!frozen) board.update();
+        if (!frozen) {
+            board.update();
+        }
+
+        background(0);
         board.show(this);
+
         fill(255);
-        text("SCORE: " + player.score, halfUnit, height + unit);
+        textSize(UNIT);
+        textAlign(LEFT, CENTER);
+        text("SCORE: " + player.score, HALF_UNIT, HEIGHT - UNIT);
+
+        if (over) {
+            textSize(UNIT * 2);
+            textAlign(CENTER, CENTER);
+            text("GAME OVER", WIDTH / 2f, HEIGHT / 2f);
+        }
     }
 
     @Override

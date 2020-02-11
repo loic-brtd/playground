@@ -193,7 +193,7 @@ public class PCanvas extends PGraphics {
 
     private void checkSizedOnlyOnce() {
         if (sizedOnceOrMore) {
-            error("Canvas can only be sized once (fullscreen() and size() both set the size of the canvas).");
+            error("Canvas can only be sized once (fullScreen() and size() both set the size of the canvas).");
         } else {
             sizedOnceOrMore = true;
         }
@@ -400,9 +400,9 @@ public class PCanvas extends PGraphics {
 
     private static void saveImage(BufferedImage bufferedImage, String fileName, String extension) {
         if (extension.equals("png")) {
-            final File outputfile = new File(fileName + '.' + extension);
+            final File outputFile = new File(fileName + '.' + extension);
             try {
-                ImageIO.write(bufferedImage, extension, outputfile);
+                ImageIO.write(bufferedImage, extension, outputFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -419,11 +419,11 @@ public class PCanvas extends PGraphics {
 
     // Graphics
 
-    public PGraphics createGraphics(int width, int height) {
+    public static PGraphics createGraphics(int width, int height) {
         return new PGraphics(width, height, RendererType.P2D);
     }
 
-    public PGraphics createGraphics(int width, int height, RendererType rendererType) {
+    public static PGraphics createGraphics(int width, int height, RendererType rendererType) {
         return new PGraphics(width, height, rendererType);
     }
 
@@ -448,7 +448,7 @@ public class PCanvas extends PGraphics {
         if (random == null) {
             random = new Random();
         }
-        return (float) (random.nextFloat() * max);
+        return random.nextFloat() * max;
     }
 
     public static <T> T random(T[] array) {
@@ -492,63 +492,63 @@ public class PCanvas extends PGraphics {
     }
 
     public static int constrain(int value, int a, int b) {
-        return value < a ? a : (value > b ? b : value);
+        return value < a ? a : (Math.min(value, b));
     }
 
     public static float constrain(float value, float a, float b) {
-        return value < a ? a : (value > b ? b : value);
+        return value < a ? a : (Math.min(value, b));
     }
 
     public static int min(int... array) {
         int min = array[0];
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] < min)
-                min = array[i];
+        for (int value : array) {
+            if (value < min)
+                min = value;
         }
         return min;
     }
 
     public static float min(float... array) {
         float min = array[0];
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] < min)
-                min = array[i];
+        for (float v : array) {
+            if (v < min)
+                min = v;
         }
         return min;
     }
 
     public static int min(int a, int b) {
-        return a < b ? a : b;
+        return Math.min(a, b);
     }
 
     public static float min(float a, float b) {
-        return a < b ? a : b;
+        return Math.min(a, b);
     }
 
     public static int max(int... array) {
         int max = array[0];
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] > max)
-                max = array[i];
+        for (int value : array) {
+            if (value > max)
+                max = value;
         }
         return max;
     }
 
     public static float max(float... array) {
         float max = array[0];
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] > max)
-                max = array[i];
+        for (float v : array) {
+            if (v > max)
+                max = v;
         }
         return max;
     }
 
     public static int max(int a, int b) {
-        return a > b ? a : b;
+        return Math.max(a, b);
     }
 
     public static float max(float a, float b) {
-        return a > b ? a : b;
+        return Math.max(a, b);
     }
 
     public static int abs(int value) {
@@ -669,7 +669,7 @@ public class PCanvas extends PGraphics {
 
     public static String join(Object[] array, String delimiter) {
         return Stream.of(array)
-                .map(e -> String.valueOf(e))
+                .map(String::valueOf)
                 .collect(Collectors.joining(delimiter));
     }
 
@@ -685,7 +685,7 @@ public class PCanvas extends PGraphics {
             for (int i = 0; i < objects.length; i++) {
                 Object o = objects[i];
                 String obj;
-                if (o != null && o instanceof String) {
+                if (o instanceof String) {
                     obj = '"' + String.valueOf(o) + '"';
                 } else {
                     obj = String.valueOf(o);
@@ -695,7 +695,7 @@ public class PCanvas extends PGraphics {
             System.out.print(sb);
         } else {
             System.out.println(Stream.of(objects)
-                    .map(e -> String.valueOf(e))
+                    .map(String::valueOf)
                     .collect(Collectors.joining(", ", "[", "]")));
         }
     }

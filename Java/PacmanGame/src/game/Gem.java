@@ -1,6 +1,5 @@
 package game;
 
-import static constants.PConstants.*;
 import static game.Game.*;
 
 import core.PGraphics;
@@ -26,7 +25,7 @@ public abstract class Gem {
 
     public static class Dot extends Gem {
         Dot(int x, int y) {
-            super(x, y, unit * 0.2f);
+            super(x, y, UNIT * 0.2f);
         }
 
         @Override
@@ -43,12 +42,12 @@ public abstract class Gem {
 
     public static class Ball extends Gem {
         public Ball(int x, int y) {
-            super(x, y, unit * 0.6f);
+            super(x, y, UNIT * 0.6f);
         }
 
         @Override
         public void doEffect() {
-            board.forEachGhost(Ghost::makeBlueForAMoment);
+            board.forEachGhost(ghost -> ghost.changeBehaviour(Ghost.Behaviour.FRIGHTENED));
         }
 
         public void show(PGraphics g) {

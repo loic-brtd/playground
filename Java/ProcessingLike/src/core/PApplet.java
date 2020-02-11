@@ -179,15 +179,15 @@ public class PApplet extends PCanvas implements PConstants {
 
     // Vectors
 
-    public PVector createVector() {
+    public static PVector createVector() {
         return new PVector();
     }
 
-    public PVector createVector(float x, float y) {
+    public static PVector createVector(float x, float y) {
         return new PVector(x, y);
     }
 
-    public PVector createVector(float x, float y, float z) {
+    public static PVector createVector(float x, float y, float z) {
         return new PVector(x, y, z);
     }
 

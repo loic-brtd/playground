@@ -25,7 +25,7 @@ public class PGraphics {
 
     PGraphics() {}
 
-    PGraphics(int width, int height, RendererType rendererType) {
+    public PGraphics(int width, int height, RendererType rendererType) {
         initRenderer(width, height, rendererType);
     }
 

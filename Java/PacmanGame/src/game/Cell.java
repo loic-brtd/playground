@@ -4,6 +4,8 @@ import static game.Game.*;
 
 import core.PGraphics;
 
+import javax.swing.*;
+
 public abstract class Cell {
 
     public abstract void show(PGraphics g, int x, int y);
@@ -16,8 +18,10 @@ public abstract class Cell {
         switch (c) {
             case ' ':
                 return new Empty(null);
-            case '·':
+            case '.':
                 return new Empty(new Gem.Dot(x, y));
+            case 'x':
+                return new Fortress();
             case 'o':
                 return new Empty(new Gem.Ball(x, y));
             default:
@@ -27,11 +31,41 @@ public abstract class Cell {
 
     // Implementations
 
+    public static class Fortress extends Cell {
+
+        boolean accessible;
+
+        public Fortress() {
+            accessible = true;
+            Timer timer = new Timer(2000, e -> {
+                accessible = false;
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+
+        @Override
+        public void show(PGraphics g, int x, int y) {
+            g.fill(accessible ? 0 : 0xFF222222);
+            g.rect(x * UNIT, y * UNIT, UNIT, UNIT);
+        }
+
+        @Override
+        public void doAction(PacMan p) {
+
+        }
+
+        @Override
+        public boolean isAccessible() {
+            return accessible;
+        }
+    }
+
     public static class Wall extends Cell {
 
         public void show(PGraphics g, int x, int y) {
-            g.fill(0xFF1919A6);
-            g.rect(x * unit, y * unit, unit, unit);
+//            g.fill(0xFF1919A6);
+//            g.rect(x * UNIT, y * UNIT, UNIT, UNIT);
         }
 
         public boolean isAccessible() {
@@ -54,7 +88,7 @@ public abstract class Cell {
 
         public void show(PGraphics g, int x, int y) {
             g.fill(0);
-            g.rect(x * unit, y * unit, unit, unit);
+            g.rect(x * UNIT, y * UNIT, UNIT, UNIT);
             if (gem != null) {
                 gem.show(g);
             }

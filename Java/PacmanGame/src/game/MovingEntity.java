@@ -6,13 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.PGraphics;
-import sun.security.jgss.GSSHeader;
+import core.PVector;
 
 public abstract class MovingEntity {
 
     protected int x, y;
-    protected final float diameter;
-    protected final float radius;
+    public static final float DIAMETER = UNIT * 1.3f;
     protected int color;
     protected float speed;
 
@@ -23,11 +22,10 @@ public abstract class MovingEntity {
     private float animationProgress;
     private boolean isAnimating;
 
-    public MovingEntity(int x, int y, float diameter, int color) {
+    public MovingEntity(int x, int y, float speed, int color) {
         this.x = x;
         this.y = y;
-        this.diameter = diameter;
-        this.radius = diameter / 2;
+        this.speed = speed;
         this.color = color;
         this.desiredDirection = Direction.STATIC;
         this.direction = Direction.STATIC;
@@ -35,7 +33,6 @@ public abstract class MovingEntity {
         this.targetY = y;
         this.animationProgress = 1;
         this.isAnimating = false;
-        this.speed = 1 / 10f;
     }
 
     public void changeDirection(Direction dir) {
@@ -99,18 +96,27 @@ public abstract class MovingEntity {
         return found.toArray(new Direction[0]);
     }
 
-    public void show(PGraphics g) {
-        float drawnX = lerp(x * unit, targetX * unit, animationProgress);
-        float drawnY = lerp(y * unit, targetY * unit, animationProgress);
+    public PVector computeDrawingCornerPosition(int x, int y) {
+        float offset = UNIT * 0.15f;
+        float drawnX = lerp(x * UNIT, targetX * UNIT, animationProgress) - offset;
+        float drawnY = lerp(y * UNIT, targetY * UNIT, animationProgress) - offset;
+        return createVector(drawnX, drawnY);
+    }
 
-        g.ellipseMode(CORNER_MODE);
+    public void show(PGraphics g) {
+        float offset = UNIT * 0.15f;
+        float drawnX = lerp(x * UNIT, targetX * UNIT, animationProgress) - offset;
+        float drawnY = lerp(y * UNIT, targetY * UNIT, animationProgress) - offset;
+
         g.fill(color);
-        g.circle(drawnX, drawnY, diameter);
+        g.noStroke();
+        g.ellipseMode(CORNER_MODE);
+        g.arc(drawnX, drawnY, DIAMETER, DIAMETER, 30, 330);
         // Wrap around the board horizontally
-        if (drawnX > width - unit) {
-            g.circle(drawnX - width, drawnY, diameter);
-        } else if (drawnX < unit) {
-            g.circle(drawnX + width, drawnY, diameter);
+        if (drawnX > WIDTH - UNIT) {
+            g.circle(drawnX - WIDTH, drawnY, DIAMETER);
+        } else if (drawnX < UNIT) {
+            g.circle(drawnX + WIDTH, drawnY, DIAMETER);
         }
     }
 

@@ -16,22 +16,6 @@ public enum Direction {
         this.dy = dy;
     }
 
-    public static Direction fromVector(int x, int y) {
-        int normX = Integer.compare(x, 0);
-        int normY = Integer.compare(y, 0);
-
-        if (normX == 0) {
-            if (normY == 1)
-                return DOWN;
-            else
-                return UP;
-        } else if (normX == 1) {
-            return RIGHT;
-        } else {
-            return LEFT;
-        }
-    }
-
     public Direction opposite() {
         switch (this) {
             case UP:
