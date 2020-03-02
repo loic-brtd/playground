@@ -473,4 +473,10 @@ public class PGraphics {
     public void image(PGraphics g, float x, float y, float width, float height, float alpha) {
         renderer.image(g, x, y, width, height, alpha);
     }
+
+    // Debug
+
+    public void printStyles() {
+        System.out.println(renderer.getStyle());
+    }
 }

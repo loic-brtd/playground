@@ -8,9 +8,9 @@ import javax.swing.*;
 
 public abstract class Cell {
 
-    public abstract void show(PGraphics g, int x, int y);
+    public void show(PGraphics g, int x, int y) { }
 
-    public abstract void doAction(PacMan p);
+    public void doAction(PacMan p) { }
 
     public abstract boolean isAccessible();
 
@@ -24,12 +24,42 @@ public abstract class Cell {
                 return new Fortress();
             case 'o':
                 return new Empty(new Gem.Ball(x, y));
+            case '@':
+                return new Door();
             default:
                 return new Wall();
         }
     }
 
     // Implementations
+
+    public static class Door extends Cell {
+
+        boolean closed;
+
+        public Door () {
+            closed = false;
+            Timer timer = new Timer(2000, e -> {
+                closed = true;
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+
+        @Override
+        public void show(PGraphics g, int x, int y) {
+            if (closed) {
+                g.stroke(255);
+                g.strokeWeight(6);
+                g.line(x * UNIT, y * UNIT + HALF_UNIT, x * UNIT + UNIT, y * UNIT + HALF_UNIT);
+            }
+        }
+
+        @Override
+        public boolean isAccessible() {
+            return !closed;
+        }
+    }
 
     public static class Fortress extends Cell {
 
@@ -45,17 +75,6 @@ public abstract class Cell {
         }
 
         @Override
-        public void show(PGraphics g, int x, int y) {
-            g.fill(accessible ? 0 : 0xFF222222);
-            g.rect(x * UNIT, y * UNIT, UNIT, UNIT);
-        }
-
-        @Override
-        public void doAction(PacMan p) {
-
-        }
-
-        @Override
         public boolean isAccessible() {
             return accessible;
         }
@@ -63,18 +82,8 @@ public abstract class Cell {
 
     public static class Wall extends Cell {
 
-        public void show(PGraphics g, int x, int y) {
-//            g.fill(0xFF1919A6);
-//            g.rect(x * UNIT, y * UNIT, UNIT, UNIT);
-        }
-
         public boolean isAccessible() {
             return false;
-        }
-
-        @Override
-        public void doAction(PacMan p) {
-
         }
 
     }
@@ -87,8 +96,6 @@ public abstract class Cell {
         }
 
         public void show(PGraphics g, int x, int y) {
-            g.fill(0);
-            g.rect(x * UNIT, y * UNIT, UNIT, UNIT);
             if (gem != null) {
                 gem.show(g);
             }

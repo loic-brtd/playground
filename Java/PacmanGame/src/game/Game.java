@@ -1,6 +1,7 @@
 package game;
 
 import core.PApplet;
+import core.PGraphics;
 
 public class Game extends PApplet {
 
@@ -15,15 +16,15 @@ public class Game extends PApplet {
     @Override
     public void setup() {
         board = new Board("res/board.txt");
-        size(board.cols * UNIT, board.rows * UNIT + UNIT * 2);
         WIDTH = board.cols * UNIT;
         HEIGHT = board.rows * UNIT + UNIT * 2;
+        size(WIDTH, HEIGHT);
 
-        player = new PacMan(10, 19, 1 / 10f);
-        Ghost red = new Ghost(10, 10, 1 / 12f, 0xFFFC0204);
-        Ghost cyan = new Ghost(9, 11, 1 / 15f, 0xFF04FEDC);
-        Ghost orange = new Ghost(10, 11, 1 / 18f, 0xFFFCBA44);
-        Ghost pink = new Ghost(11, 11, 1 / 16f, 0xFFFCBADC);
+        player = new PacMan(10, 20, 1/10f);
+        Ghost red = new Ghost(10, 12, 1 / 12f, 0xFFFC0204);
+        Ghost cyan = new Ghost(9, 13, 1 / 15f, 0xFF04FEDC);
+        Ghost orange = new Ghost(10, 13, 1 / 18f, 0xFFFCBA44);
+        Ghost pink = new Ghost(11, 13, 1 / 16f, 0xFFFCBADC);
 
         board.setPlayer(player);
         board.addGhost(red);
@@ -31,9 +32,13 @@ public class Game extends PApplet {
         board.addGhost(orange);
         board.addGhost(pink);
 
-        // noSmooth();
+        setSmooth(this);
         angleMode(DEGREES);
         textFont("Monospaced");
+    }
+
+    public static void setSmooth(PGraphics g) {
+       g.noSmooth();
     }
 
     @Override
@@ -49,6 +54,7 @@ public class Game extends PApplet {
         textSize(UNIT);
         textAlign(LEFT, CENTER);
         text("SCORE: " + player.score, HALF_UNIT, HEIGHT - UNIT);
+        textSize(HALF_UNIT);
 
         if (over) {
             textSize(UNIT * 2);

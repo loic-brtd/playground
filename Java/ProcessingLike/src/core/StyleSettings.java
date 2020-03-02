@@ -3,6 +3,7 @@ package core;
 import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.geom.AffineTransform;
+import java.util.StringJoiner;
 
 import constants.AngleMode;
 import constants.ColorMaxes;
@@ -10,7 +11,7 @@ import constants.ColorMode;
 import constants.ShapeMode;
 import constants.TextAlign;
 
-class StyleSettings {
+public class StyleSettings {
 
     private int fillColor;
     private int strokeColor;
@@ -164,4 +165,22 @@ class StyleSettings {
         return stroked;
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(",\n   ", StyleSettings.class.getSimpleName() + "[\n   ", "\n]")
+                .add("fillColor=" + fillColor)
+                .add("strokeColor=" + strokeColor)
+                .add("colorMode=" + colorMode)
+                .add("colorMaxes=" + colorMaxes)
+                .add("stroke=" + stroke)
+                .add("rectMode=" + rectMode)
+                .add("ellipseMode=" + ellipseMode)
+                .add("font=" + font)
+                .add("textAlign=" + textAlign)
+                .add("angleMode=" + angleMode)
+                .add("transform=" + transform)
+                .add("filled=" + filled)
+                .add("stroked=" + stroked)
+                .toString();
+    }
 }

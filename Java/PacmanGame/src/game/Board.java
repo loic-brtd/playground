@@ -12,10 +12,9 @@ public class Board {
 
     public final Cell[][] cells;
     public final int cols, rows;
-    public Ghost.Behaviour ghostsBehaviour;
     private PacMan player;
-    private final List<Ghost> ghosts = new ArrayList<>();
-    private final PGraphics boardBackground;
+    public final List<Ghost> ghosts = new ArrayList<>();
+    private final PGraphics background;
 
     public Board(String file) {
         String[] lines = loadStrings(file);
@@ -30,21 +29,22 @@ public class Board {
             }
         }
 
-        this.boardBackground = createGraphics(cols * UNIT, rows * UNIT);
-        PGraphics g = boardBackground;
-        g.background(0);
-        g.stroke(0xFF1919A6);
-        g.strokeWeight(UNIT * 0.02f);
-        g.translate(HALF_UNIT, HALF_UNIT);
-        g.scale(UNIT);
+        this.background = createGraphics(cols * UNIT, rows * UNIT);
+        setSmooth(background);
+        background.background(0);
+        background.stroke(0xFF1919A6);
+        background.strokeWeight(UNIT * 0.015f);
+        background.translate(HALF_UNIT, HALF_UNIT);
+        background.scale(UNIT);
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
+                char c = x < lines[y].length() ? lines[y].charAt(x) : ' ';
                 if (cells[y][x] instanceof Cell.Wall) {
                     if (x < cols - 1 && cells[y][x + 1] instanceof Cell.Wall) {
-                        g.line(x, y, x + 1, y);
+                        background.line(x, y, x + 1, y);
                     }
-                    if (y < rows - 1 && cells[y + 1][x] instanceof Cell.Wall) {
-                        g.line(x, y, x, y + 1);
+                    if (y < rows - 1 && cells[y + 1][x] instanceof Cell.Wall && c != '=') {
+                        background.line(x, y, x, y + 1);
                     }
                 }
             }
@@ -75,7 +75,8 @@ public class Board {
     }
 
     public void show(PGraphics g) {
-        g.image(boardBackground, 0, 0);
+        g.noStroke();
+        g.image(background, 0, 0);
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 cells[y][x].show(g, x, y);
@@ -84,9 +85,5 @@ public class Board {
         for (Ghost ghost : ghosts)
             ghost.show(g);
         player.show(g);
-    }
-
-    public boolean positionIntersectsPlayer(int x, int y) {
-        return player != null && player.x == x && player.y == y;
     }
 }

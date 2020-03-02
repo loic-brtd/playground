@@ -1,7 +1,6 @@
 package game;
 
 import core.PGraphics;
-import core.PVector;
 
 import javax.swing.*;
 
@@ -9,102 +8,81 @@ import static game.Game.*;
 
 public class Ghost extends MovingEntity {
 
-    private final int BASE_COLOR;
-    private final float BASE_SPEED;
-    private int chasedTargetX, chasedTargetY;
+    public final int BASE_COLOR;
+    public final float BASE_SPEED;
+    public game.Behaviour behaviour;
 
     public Ghost(int x, int y, float speed, int color) {
         super(x, y, speed, color);
         BASE_COLOR = color;
         BASE_SPEED = speed;
-        changeBehaviour(Behaviour.EXITING_FORTRESS);
+        changeBehaviour(new Behaviour.ExitingFortress(this));
         onPositionUpdated();
+        new Timer(10_000, e -> {
+            if (behaviour instanceof Behaviour.RandomTarget) {
+                changeBehaviour(new Behaviour.ChasingPlayer(this));
+            } else if (behaviour instanceof Behaviour.ChasingPlayer){
+                changeBehaviour(new Behaviour.RandomTarget(this));
+            }
+        }).start();
     }
 
-    public void changeBehaviour(Behaviour behaviour) {
-        board.ghostsBehaviour = behaviour;
-        if (behaviour == Behaviour.FRIGHTENED) {
-            enterFrightenedBehaviour();
-        } else if (behaviour == Behaviour.EXITING_FORTRESS) {
-            enterExitingFortressBehaviour();
+    public void changeBehaviour(game.Behaviour behaviour) {
+        if (this.behaviour != null) {
+            this.behaviour.terminate();
         }
+        this.behaviour = behaviour;
+        this.behaviour.initialize();
     }
 
-    private void enterFrightenedBehaviour() {
-        color = 0xFF0000FF;
-        speed = 1/30f;
-        Timer timer = new Timer(8000, e -> {
-            color = BASE_COLOR;
-            speed = BASE_SPEED;
-            board.ghostsBehaviour = Behaviour.CHASING;
-        });
-        timer.setRepeats(false);
-        timer.start();
-    }
-
-    private void enterExitingFortressBehaviour() {
-        Timer timer = new Timer(3000, e -> changeBehaviour(Behaviour.CHASING));
-        timer.setRepeats(false);
-        timer.start();
-    }
+    int randomTargetX, randomTargetY;
 
     @Override
     protected void onPositionUpdated() {
-        if (board.ghostsBehaviour != Behaviour.FRIGHTENED && board.positionIntersectsPlayer(x, y)) {
+        behaviour.update();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (!(behaviour instanceof Behaviour.Frightened) && this.touches(player)) {
             frozen = true;
             over = true;
-            return;
-        }
-        if (board.ghostsBehaviour == Behaviour.EXITING_FORTRESS) {
-            chasedTargetX = 10;
-            chasedTargetY = 1;
-            chooseDirectionTowardsTarget();
-        } else if (board.ghostsBehaviour == Behaviour.FRIGHTENED) {
-            chooseRandomDirection();
-        } else if (board.ghostsBehaviour == Behaviour.CHASING) {
-            chasedTargetX = player.x;
-            chasedTargetY = player.y;
-            chooseDirectionTowardsTarget();
+            behaviour.terminate();
         }
     }
 
-    private void chooseDirectionTowardsTarget() {
+    Direction chooseDirectionTowardsTarget(int tx, int ty) {
         Direction[] possibleMoves = findPossibleMoves();
         Direction bestMove = possibleMoves[0];
         float shortestDistanceToTarget = board.cols + board.rows;
         for (Direction move : possibleMoves) {
-            float d = dist(x + move.dx, y + move.dy, chasedTargetX, chasedTargetY);
+            float d = dist(x + move.dx, y + move.dy, tx, ty);
             if (d < shortestDistanceToTarget) {
                 bestMove = move;
                 shortestDistanceToTarget = d;
             }
         }
-        changeDirection(bestMove);
+        return bestMove;
     }
 
-    private void chooseRandomDirection() {
+    Direction chooseRandomDirection() {
         Direction[] possibleMoves = findPossibleMoves();
-        Direction move = random(possibleMoves);
-        changeDirection(move);
+        return random(possibleMoves);
     }
 
     @Override
     public void show(PGraphics g) {
-        PVector drawn = computeDrawingCornerPosition(x, y);
         g.fill(color);
         g.noStroke();
         g.ellipseMode(CORNER_MODE);
-        g.circle(drawn.x, drawn.y, DIAMETER);
+        g.circle(drawnX, drawnY, DIAMETER);
         // Wrap around the board horizontally
-        if (drawn.x > WIDTH - UNIT) {
-            g.circle(drawn.x - WIDTH, drawn.y, DIAMETER);
-        } else if (drawn.x < UNIT) {
-            g.circle(drawn.x + WIDTH, drawn.y, DIAMETER);
+        if (drawnX > WIDTH - UNIT) {
+            g.circle(drawnX - WIDTH, drawnY, DIAMETER);
+        } else if (drawnX < UNIT) {
+            g.circle(drawnX + WIDTH, drawnY, DIAMETER);
         }
-    }
-
-    public enum Behaviour {
-        FRIGHTENED, CHASING, EXITING_FORTRESS
     }
 
 }

@@ -17,9 +17,11 @@ public abstract class Gem {
         this.r = d / 2;
     }
 
-    public abstract void doEffect();
+    public void doEffect() {
+    }
 
-    public abstract void show(PGraphics g);
+    public void show(PGraphics g){
+    }
 
     // Implementations
 
@@ -28,13 +30,10 @@ public abstract class Gem {
             super(x, y, UNIT * 0.2f);
         }
 
-        @Override
-        public void doEffect() {
-
-        }
-
         public void show(PGraphics g) {
             g.ellipseMode(CENTER_MODE);
+            g.noStroke();
+            g.strokeWeight(0);
             g.fill(0xFFFCBA94);
             g.circle(x, y, d);
         }
@@ -47,11 +46,14 @@ public abstract class Gem {
 
         @Override
         public void doEffect() {
-            board.forEachGhost(ghost -> ghost.changeBehaviour(Ghost.Behaviour.FRIGHTENED));
+            board.forEachGhost(ghost -> ghost.changeBehaviour(new Behaviour.Frightened(ghost)));
         }
+
 
         public void show(PGraphics g) {
             g.ellipseMode(CENTER_MODE);
+            g.strokeWeight(0);
+            g.noStroke();
             g.fill(0xFFFCBA94);
             g.circle(x, y, d);
         }

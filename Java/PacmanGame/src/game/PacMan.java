@@ -1,8 +1,6 @@
 package game;
 
-import com.sun.org.apache.regexp.internal.RE;
 import core.PGraphics;
-import core.PVector;
 
 import static game.Game.*;
 
@@ -22,17 +20,16 @@ public class PacMan extends MovingEntity {
 
     @Override
     public void show(PGraphics g) {
-        PVector drawn = computeDrawingCornerPosition(x, y);
         PGraphics img = getImage();
         g.fill(color);
         g.noStroke();
         g.ellipseMode(CORNER_MODE);
-        g.image(img, drawn.x, drawn.y);
+        g.image(img, drawnX, drawnY);
         // Wrap around the board horizontally
-        if (drawn.x > WIDTH - UNIT) {
-            g.image(img, drawn.x - WIDTH, drawn.y);
-        } else if (drawn.x < UNIT) {
-            g.image(img, drawn.x + WIDTH, drawn.y);
+        if (drawnX > WIDTH - UNIT) {
+            g.image(img, drawnX - WIDTH, drawnY);
+        } else if (drawnX < UNIT) {
+            g.image(img, drawnX + WIDTH, drawnY);
         }
     }
 
@@ -50,42 +47,36 @@ public class PacMan extends MovingEntity {
     }
 
     private static PGraphics createRightImage() {
-        PGraphics g = createGraphics(ceil(DIAMETER), ceil(DIAMETER));
-        g.noStroke();
-        g.ellipseMode(CORNER_MODE);
-        g.angleMode(DEGREES);
-        g.fill(0xFFFFFF00);
+        PGraphics g = createBaseGraphics();
         g.arc(0, 0, DIAMETER, DIAMETER, 30, 330);
         return g;
     }
 
     private static PGraphics createLeftImage() {
-        PGraphics g = createGraphics(ceil(DIAMETER), ceil(DIAMETER));
-        g.noStroke();
-        g.ellipseMode(CORNER_MODE);
-        g.angleMode(DEGREES);
-        g.fill(0xFFFFFF00);
+        PGraphics g = createBaseGraphics();
         g.arc(0, 0, DIAMETER, DIAMETER, 210, 150);
         return g;
     }
 
     private static PGraphics createUpImage() {
-        PGraphics g = createGraphics(ceil(DIAMETER), ceil(DIAMETER));
-        g.noStroke();
-        g.ellipseMode(CORNER_MODE);
-        g.angleMode(DEGREES);
-        g.fill(0xFFFFFF00);
+        PGraphics g = createBaseGraphics();
         g.arc(0, 0, DIAMETER, DIAMETER, 300, 240);
         return g;
     }
 
     private static PGraphics createDownImage() {
+        PGraphics g = createBaseGraphics();
+        g.arc(0, 0, DIAMETER, DIAMETER, 120, 60);
+        return g;
+    }
+
+    private static PGraphics createBaseGraphics() {
         PGraphics g = createGraphics(ceil(DIAMETER), ceil(DIAMETER));
+        setSmooth(g);
         g.noStroke();
         g.ellipseMode(CORNER_MODE);
         g.angleMode(DEGREES);
         g.fill(0xFFFFFF00);
-        g.arc(0, 0, DIAMETER, DIAMETER, 120, 60);
         return g;
     }
 
