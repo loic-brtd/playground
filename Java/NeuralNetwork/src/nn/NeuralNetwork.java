@@ -26,7 +26,7 @@ public class NeuralNetwork {
         this.biasO = Matrix.ofSize(outputSize, 1).fill(Utils::randomFloat);
     }
 
-    public float[] feedForward(float[] inputArray) {
+    public float[] predict(float[] inputArray) {
         Matrix inputs = Matrix.fromArray(inputArray);
 
         Matrix hidden = weightsIH
@@ -75,10 +75,6 @@ public class NeuralNetwork {
 
     private static float dsigmoid(float y) {
         return y * (1 - y);
-    }
-
-    public float getLearningRate() {
-        return learningRate;
     }
 
     public void setLearningRate(float learningRate) {
