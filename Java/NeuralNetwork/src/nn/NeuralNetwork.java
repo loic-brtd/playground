@@ -1,6 +1,15 @@
 package nn;
 
+import com.google.gson.GsonBuilder;
 import matrix.Matrix;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.util.stream.Collectors.*;
 
 public class NeuralNetwork {
 
@@ -80,4 +89,34 @@ public class NeuralNetwork {
     public void setLearningRate(float learningRate) {
         this.learningRate = learningRate;
     }
+
+    public String toJson() {
+        return new GsonBuilder().create().toJson(this);
+    }
+
+    public static NeuralNetwork fromJson(String jsonString) {
+        return new GsonBuilder().create().fromJson(jsonString, NeuralNetwork.class);
+    }
+
+    public void save(String jsonFile) {
+        Path path = Paths.get(jsonFile);
+        byte[] strToBytes = toJson().getBytes();
+        try {
+            Files.write(path, strToBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static NeuralNetwork load(String jsonFile) {
+        String jsonString;
+        try {
+            jsonString = Files.lines(Paths.get(jsonFile)).collect(joining());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return fromJson(jsonString);
+    }
+
 }

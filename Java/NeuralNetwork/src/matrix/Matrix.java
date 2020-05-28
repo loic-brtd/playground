@@ -20,12 +20,32 @@ public class Matrix {
         this.internal = new float[rows][cols];
     }
 
+    public static Matrix ofSize(int rows, int cols) {
+        return new Matrix(rows, cols);
+    }
+
     public static Matrix fromArray(float[][] a) {
         Matrix m = new Matrix(a.length, a[0].length);
         for (int i = 0; i < m.rows; i++) {
             System.arraycopy(a[i], 0, m.internal[i], 0, m.cols);
         }
         return m;
+    }
+
+    public static Matrix fromArray(float[] a) {
+        Matrix m = new Matrix(a.length, 1);
+        for (int i = 0; i < m.rows; i++) {
+            m.internal[i][0] = a[i];
+        }
+        return m;
+    }
+
+    public float[][] toArray() {
+        float[][] copy = new float[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(internal[i], 0, copy[i], 0, cols);
+        }
+        return copy;
     }
 
     public float[] toFlatArray() {
@@ -37,26 +57,6 @@ public class Matrix {
             }
         }
         return res;
-    }
-
-    public float[][] toArray() {
-        float[][] copy = new float[rows][cols];
-        for (int i = 0; i < rows; i++) {
-            System.arraycopy(internal[i], 0, copy[i], 0, cols);
-        }
-        return copy;
-    }
-
-    public static Matrix fromArray(float[] a) {
-        Matrix m = new Matrix(a.length, 1);
-        for (int i = 0; i < m.rows; i++) {
-            m.internal[i][0] = a[i];
-        }
-        return m;
-    }
-
-    public static Matrix ofSize(int rows, int cols) {
-        return new Matrix(rows, cols);
     }
 
     public Matrix fill(FloatSupplier supplier) {
@@ -103,6 +103,10 @@ public class Matrix {
         return m;
     }
 
+    public Matrix hadamard(Matrix b) {
+        return elementWiseOperation(b, (u, v) -> u * v);
+    }
+
     public Matrix add(Matrix b) {
         return elementWiseOperation(b, Float::sum);
     }
@@ -127,10 +131,6 @@ public class Matrix {
             }
         }
         return c;
-    }
-
-    public Matrix hadamard(Matrix b) {
-        return elementWiseOperation(b, (u, v) -> u * v);
     }
 
     public Matrix map(FloatUnaryOperator operator) {
@@ -159,25 +159,18 @@ public class Matrix {
         return map(e -> e / x);
     }
 
-    public void print() {
+    public Matrix print() {
         System.out.println(toString());
+        return this;
     }
 
     @Override
     public String toString() {
         return Arrays.deepToString(internal)
                 .replaceAll("], ", "],\n ");
-        // StringBuilder result = new StringBuilder();
-        // for (int i = 0; i < rows; i++) {
-        //     for (int j = 0; j < cols; j++) {
-        //         result.append(internal[i][j]);
-        //         // result.append(String.format(Locale.ENGLISH, "%5.1f", internal[i][j]));
-        //         if (j != cols - 1) {
-        //             result.append(", ");
-        //         }
-        //     }
-        //     result.append("\n");
-        // }
-        // return result.toString();
+    }
+
+    public String toJson() {
+        return Arrays.deepToString(internal);
     }
 }
