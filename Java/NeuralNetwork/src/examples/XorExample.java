@@ -1,6 +1,5 @@
 package examples;
 
-import com.google.gson.GsonBuilder;
 import core.PApplet;
 import nn.NeuralNetwork;
 
@@ -25,6 +24,7 @@ public class XorExample extends PApplet {
     };
     NeuralNetwork nn;
     Training[] trainingData = XOR_TRAINING;
+    public static final String JSON_FILE = "src/examples/xor.json";
 
     @Override
     protected void setup() {
@@ -69,11 +69,10 @@ public class XorExample extends PApplet {
 
     @Override
     protected void keyPressed() {
-        String jsonFile = "src/examples/xor.json";
         if (key == 's' || key == 'S') {
-            nn.save(jsonFile);
+            nn.save(JSON_FILE);
         } else if (key == 'l' || key == 'L') {
-            nn = NeuralNetwork.load(jsonFile);
+            nn = NeuralNetwork.load(JSON_FILE);
         }
     }
 
