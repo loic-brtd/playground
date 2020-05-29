@@ -10,8 +10,8 @@ public class Matrix {
 
     protected Matrix(float[][] array) {
         this.array = array;
-        cols = this.array[0].length;
         rows = this.array.length;
+        cols = this.array[0].length;
     }
 
     public static Matrix of(float[][] array) {
@@ -47,9 +47,9 @@ public class Matrix {
 
     public Matrix copy() {
         float[][] copy = new float[rows][cols];
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                copy[j][i] = array[j][i];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                copy[i][j] = array[i][j];
             }
         }
         return new Matrix(copy);
@@ -57,9 +57,9 @@ public class Matrix {
 
     public Matrix map(Function<Float, Float> function) {
         Matrix copy = this.copy();
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                copy.array[j][i] = function.apply(array[j][i]);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                copy.array[i][j] = function.apply(array[i][j]);
             }
         }
         return copy;
@@ -70,54 +70,54 @@ public class Matrix {
     }
 
     public Matrix forEach(Consumer<Float> consumer) {
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                consumer.accept(array[j][i]);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                consumer.accept(array[i][j]);
             }
         }
         return this;
     }
 
-    public Matrix mult(float value) {
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                array[j][i] *= value;
+    public Matrix mul(float value) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] *= value;
             }
         }
         return this;
     }
 
     public Matrix add(float value) {
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                array[j][i] += value;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] += value;
             }
         }
         return this;
     }
 
     public Matrix add(Matrix other) {
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                array[j][i] += other.array[j][i];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] += other.array[i][j];
             }
         }
         return this;
     }
 
     public Matrix sub(float value) {
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                array[j][i] -= value;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] -= value;
             }
         }
         return this;
     }
 
     public Matrix div(float value) {
-        for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                array[j][i] /= value;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] /= value;
             }
         }
         return this;
@@ -128,8 +128,8 @@ public class Matrix {
             throw new IllegalArgumentException("There must be only one column to convert to a Vector");
         }
         final float[] values = new float[array.length];
-        for (int j = 0; j < values.length; j++) {
-            values[j] = array[j][0];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = array[i][0];
         }
         return Vector.of(values);
     }
@@ -141,17 +141,16 @@ public class Matrix {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("rows x cols: " + rows + " x " + cols + System.lineSeparator());
-        for (int j = 0; j < rows; j++) {
-            builder.append(j == 0 ? "[[" : " [");
-            for (int i = 0; i < cols; i++) {
-                builder.append(" " + array[j][i]);
-                if (i != cols - 1) {
+        for (int i = 0; i < rows; i++) {
+            builder.append(i == 0 ? "[[" : " [");
+            for (int j = 0; j < cols; j++) {
+                builder.append(" ").append(array[i][j]);
+                if (j != cols - 1) {
                     builder.append(",");
                 }
             }
-            builder.append(j == rows - 1
-                    ? " ]]" + System.lineSeparator()
-                    : " ]" + System.lineSeparator());
+            builder.append(i == rows - 1 ? " ]]" : " ]");
+            builder.append(System.lineSeparator());
         }
         return builder.toString();
     }

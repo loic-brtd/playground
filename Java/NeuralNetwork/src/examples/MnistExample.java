@@ -6,14 +6,13 @@ import nn.NeuralNetwork;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static java.util.stream.Collectors.*;
 import static mnist.MnistReader.*;
 
 public class MnistExample extends PApplet {
 
-    // String IMAGES_PATH = "src/mnist/t10k-images.idx3-ubyte";
-    // String LABELS_PATH = "src/mnist/t10k-labels.idx1-ubyte";
     String IMAGES_PATH = "src/mnist/train-images.idx3-ubyte";
     String LABELS_PATH = "src/mnist/train-labels.idx1-ubyte";
 
@@ -41,7 +40,7 @@ public class MnistExample extends PApplet {
         unit = floor((width * 1f) / SIZE + 1);
 
         // nn = new NeuralNetwork(SIZE * SIZE, 100, 10);
-        // doTheTraining(200_000);
+        // doTheTraining();
         // nn.save(JSON_FILE);
         // println("Model trained and saved");
 
@@ -51,20 +50,14 @@ public class MnistExample extends PApplet {
         background(0);
     }
 
-    int pmouseX = -1, pmouseY;
-
     @Override
     protected void draw() {
-        // drawImage(inputs.get(frameCount % inputs.size()));
+        // drawImage(inputs.get(7 % inputs.size()));
+
         if (mouseIsPressed) {
             stroke(255);
             strokeWeight(20);
-            if (pmouseX != -1)
-                line(pmouseX, pmouseY, mouseX, mouseY);
-            pmouseX = mouseX;
-            pmouseY = mouseY;
-        } else {
-            pmouseX = -1;
+            line(pmouseX, pmouseY, mouseX, mouseY);
         }
     }
 
@@ -78,18 +71,10 @@ public class MnistExample extends PApplet {
         background(0);
     }
 
-    @Override
-    protected void keyPressed() {
-        if (key == 'g' || keyCode == 'G') {
-            makeAGuess();
-        } else if (key == 'c' || key == 'C') {
-            background(0);
-        }
-    }
-
     private void makeAGuess() {
         float[] in = canvasToInputs();
         float[] guess = nn.predict(in);
+        printFormatted(guess);
         float max = guess[0];
         int indexMax = 0;
         for (int i = 0; i < guess.length; i++) {
@@ -106,19 +91,18 @@ public class MnistExample extends PApplet {
         background(0);
         noStroke();
         int index = 0;
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int y = 0; y < SIZE; y++) {
+            for (int x = 0; x < SIZE; x++) {
                 fill(img[index++] * 255);
-                rect(j * unit, i * unit, unit, unit);
+                rect(x * unit, y * unit, unit, unit);
             }
         }
     }
 
-    public void doTheTraining(int iterations) {
-        for (int i = 0; i < iterations; i++) {
-            int index = floor(random(inputs.size()));
-            float[] in = this.inputs.get(index);
-            float[] out = this.targets.get(index);
+    public void doTheTraining() {
+        for (int i = 0; i < inputs.size(); i++) {
+            float[] in = this.inputs.get(i);
+            float[] out = this.targets.get(i);
             nn.train(in, out);
         }
     }
@@ -149,6 +133,19 @@ public class MnistExample extends PApplet {
             res[i] = red(image.pixels[i]) / 255f;
         }
         return res;
+    }
+
+    public void printFormatted(float[] array) {
+        String res = "[";
+        for (int i = 0; i < array.length; i++) {
+            res += i + ": ";
+            res += String.format(Locale.ENGLISH, "%.2f", array[i]);
+            if (i != array.length - 1) {
+                res += ", ";
+            }
+        }
+        res += "]";
+        System.out.println(res);
     }
 
     public static void main(String[] args) {

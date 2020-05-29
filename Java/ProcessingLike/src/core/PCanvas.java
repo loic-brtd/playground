@@ -50,7 +50,7 @@ public class PCanvas extends PGraphics {
     public int frameCount;
     public float frameRate;
     public float ellapsedMillis;
-    public int mouseX, mouseY;
+    public int mouseX, mouseY, pmouseX, pmouseY;
     public int screenMouseX, screenMouseY;
     public int screenWidth, screenHeight;
     public boolean mouseIsPressed = false;
@@ -91,8 +91,7 @@ public class PCanvas extends PGraphics {
     }
 
     private JPanel makePanel() {
-        @SuppressWarnings("serial")
-        final JPanel p = new JPanel() {
+        @SuppressWarnings("serial") final JPanel p = new JPanel() {
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -257,6 +256,7 @@ public class PCanvas extends PGraphics {
         draw();
         endDraw();
         canvas.repaint();
+        savePreviousMousePosition();
     }
 
     // Mouse position
@@ -282,6 +282,11 @@ public class PCanvas extends PGraphics {
         mouseY = e.getY();
     }
 
+    private void savePreviousMousePosition() {
+        pmouseX = mouseX;
+        pmouseY = mouseY;
+    }
+
     public void frameRate(float framesPerSecond) {
         final int delay = (int) (1000 / framesPerSecond);
         timer.setInitialDelay(delay);
@@ -300,13 +305,17 @@ public class PCanvas extends PGraphics {
 
     // Mouse
 
-    protected void mousePressed() {}
+    protected void mousePressed() {
+    }
 
-    protected void mouseReleased() {}
+    protected void mouseReleased() {
+    }
 
-    protected void mouseDragged() {}
+    protected void mouseDragged() {
+    }
 
-    protected void mouseMoved() {}
+    protected void mouseMoved() {
+    }
 
     // Keyboard
 
@@ -324,11 +333,14 @@ public class PCanvas extends PGraphics {
     public static final int SHIFT = KeyEvent.VK_SHIFT;
     public static final int SPACE = KeyEvent.VK_SPACE;
 
-    protected void keyPressed() {}
+    protected void keyPressed() {
+    }
 
-    protected void keyReleased() {}
+    protected void keyReleased() {
+    }
 
-    protected void keyTyped() {}
+    protected void keyTyped() {
+    }
 
     public boolean keyIsDown(int keyCode) {
         return pressedKeys.contains(keyCode);
@@ -340,17 +352,19 @@ public class PCanvas extends PGraphics {
 
     public void loadPixels() {
         pixels = new int[width * height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                pixels[x + y * width] = renderer.getImage().getRGB(x, y);
+        int index = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                pixels[index++] = renderer.getImage().getRGB(x, y);
             }
         }
     }
 
     public void updatePixels() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                renderer.getImage().setRGB(x, y, pixels[x + y * width]);
+        int index = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                renderer.getImage().setRGB(x, y, pixels[index++]);
             }
         }
     }
@@ -411,7 +425,7 @@ public class PCanvas extends PGraphics {
         }
     }
 
-    public int colorAt(int x, int y) {
+    public int get(int x, int y) {
         x = PCanvas.constrain(x, 0, width - 1);
         y = PCanvas.constrain(y, 0, height - 1);
         return renderer.getImage().getRGB(x, y);
@@ -476,7 +490,7 @@ public class PCanvas extends PGraphics {
             array[i] = temp;
         }
     }
-    
+
     public static <T> void shuffle(int[] array) {
         Random rand = new Random();
         for (int i = 0; i < array.length; i++) {

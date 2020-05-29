@@ -12,7 +12,7 @@ public enum ArcMode {
     private int fillMode;
     private int strokeMode;
 
-    private ArcMode(int fillMode, int strokeMode) {
+    ArcMode(int fillMode, int strokeMode) {
         this.fillMode = fillMode;
         this.strokeMode = strokeMode;
     }

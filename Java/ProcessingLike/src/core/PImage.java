@@ -46,10 +46,8 @@ public class PImage {
 
         BufferedImage resized = new BufferedImage(width, height, img.getType());
         Graphics2D g = resized.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(img, 0, 0, width, height, 0, 0, img.getWidth(),
-                img.getHeight(), null);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(img, 0, 0, width, height, 0, 0, img.getWidth(), img.getHeight(), null);
         g.dispose();
         this.img = resized;
         this.width = img.getWidth();
@@ -63,17 +61,19 @@ public class PImage {
 
     public void loadPixels() {
         pixels = new int[width * height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                pixels[x + y * width] = img.getRGB(x, y);
+        int index = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                pixels[index++] = img.getRGB(x, y);
             }
         }
     }
 
     public void updatePixels() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                img.setRGB(x, y, pixels[x + y * width]);
+        int index = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                img.setRGB(x, y, pixels[index++]);
             }
         }
     }
@@ -98,11 +98,11 @@ public class PImage {
     }
 
     public PImage copy() {
-        BufferedImage bfimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D bGr = bfimg.createGraphics();
-        bGr.drawImage(img, 0, 0, null);
-        bGr.dispose();
-        return new PImage(bfimg);
+        BufferedImage copyImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = copyImg.createGraphics();
+        g.drawImage(img, 0, 0, null);
+        g.dispose();
+        return new PImage(copyImg);
     }
 
     @Override
