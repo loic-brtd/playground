@@ -8,5 +8,6 @@ public class Utils {
 
     public static float randomFloat() {
         return rand.nextFloat() * 2 - 1;
+        // return rand.nextFloat();
     }
 }

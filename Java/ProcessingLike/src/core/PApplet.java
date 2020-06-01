@@ -38,7 +38,6 @@ public class PApplet extends PCanvas implements PConstants {
     private static final String CACHE_FILE_NAME = ".p_applet_cache";
     private final JFrame frame;
     private JPanel contentPane;
-    private boolean showCanvas;
     private boolean isFullScreen;
 
     public PApplet() {

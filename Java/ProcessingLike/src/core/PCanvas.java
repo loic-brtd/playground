@@ -6,11 +6,7 @@ import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -35,17 +31,20 @@ import javax.swing.Timer;
 import constants.MouseButton;
 import constants.RendererType;
 
+import static core.PTimer.*;
+
 public class PCanvas extends PGraphics {
 
     private static final int DEFAULT_FRAME_RATE = 60;
 
-    private final Timer timer = makeTimer();
-    private final FPSMeter fpsMeter = new FPSMeter();
+    private final PTimer timer;
+    private final FPSMeter fpsMeter;
     private JComponent canvas;
+    protected boolean showCanvas;
 
     private boolean setupDone = false;
     private boolean shouldLoop = true;
-    private boolean sizedOnceOrMore = false;
+    private boolean alreadySized = false;
 
     public int frameCount;
     public float frameRate;
@@ -58,11 +57,21 @@ public class PCanvas extends PGraphics {
 
     public PCanvas() {
         super();
+        timer = create(DEFAULT_FRAME_RATE, this::performTimerAction);
         canvas = makePanel();
+        fpsMeter = new FPSMeter();
         addMouseListeners();
         addKeyListeners();
         updateScreenSize();
         super.initRenderer(100, 100, RendererType.P2D);
+    }
+
+    private void performTimerAction() {
+        try {
+            redraw();
+        } catch (Throwable t) {
+            manageError(t);
+        }
     }
 
     public void start() {
@@ -70,24 +79,14 @@ public class PCanvas extends PGraphics {
             setup();
             setupDone = true;
 
-            if (!shouldLoop) {
-                redraw();
+            if (shouldLoop) {
+                timer.start(showCanvas ? Policy.ANIMATION : Policy.NO_ANIMATION);
             } else {
-                timer.start();
+                redraw();
             }
         } catch (Throwable t) {
             manageError(t);
         }
-    }
-
-    private Timer makeTimer() {
-        return new Timer(1000 / DEFAULT_FRAME_RATE, e -> {
-            try {
-                redraw();
-            } catch (Throwable t) {
-                manageError(t);
-            }
-        });
     }
 
     private JPanel makePanel() {
@@ -191,10 +190,10 @@ public class PCanvas extends PGraphics {
     }
 
     private void checkSizedOnlyOnce() {
-        if (sizedOnceOrMore) {
+        if (alreadySized) {
             error("Canvas can only be sized once (fullScreen() and size() both set the size of the canvas).");
         } else {
-            sizedOnceOrMore = true;
+            alreadySized = true;
         }
     }
 
@@ -242,7 +241,7 @@ public class PCanvas extends PGraphics {
     public void loop() {
         shouldLoop = true;
         if (!timer.isRunning()) {
-            timer.restart();
+            timer.start(showCanvas ? Policy.ANIMATION : Policy.NO_ANIMATION);
         }
     }
 
@@ -288,19 +287,15 @@ public class PCanvas extends PGraphics {
     }
 
     public void frameRate(float framesPerSecond) {
-        final int delay = (int) (1000 / framesPerSecond);
-        timer.setInitialDelay(delay);
-        timer.setDelay(delay);
+        timer.setFrameRate((int) framesPerSecond);
     }
 
     // Main methods to override
 
     protected void setup() {
-        // Override
     }
 
     protected void draw() {
-        // Override
     }
 
     // Mouse

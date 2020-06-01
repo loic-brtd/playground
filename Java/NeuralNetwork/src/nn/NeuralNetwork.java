@@ -64,7 +64,7 @@ public class NeuralNetwork {
         Matrix targets = Matrix.fromArray(targetArray);
         Matrix outputErrors = targets.sub(outputs);
         Matrix gradients = outputs
-                .map(NeuralNetwork::dsigmoid)
+                .map(Activation::dsigmoid)
                 .hadamard(outputErrors)
                 .scale(learningRate);
         Matrix deltaHO = gradients.mul(hidden.t());
@@ -73,16 +73,12 @@ public class NeuralNetwork {
 
         Matrix hiddenErrors = weightsHO.t().mul(outputErrors);
         Matrix hiddenGradient = hidden
-                .map(NeuralNetwork::dsigmoid)
+                .map(Activation::dsigmoid)
                 .hadamard(hiddenErrors)
                 .scale(learningRate);
         Matrix deltaIH = hiddenGradient.mul(inputs.t());
         weightsIH = weightsIH.add(deltaIH);
         biasH = biasH.add(hiddenGradient);
-    }
-
-    private static float dsigmoid(float y) {
-        return y * (1 - y);
     }
 
     public void setLearningRate(float learningRate) {

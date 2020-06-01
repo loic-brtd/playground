@@ -8,7 +8,7 @@ import static java.lang.String.format;
 
 public class Matrix {
 
-    private final int rows, cols;
+    public final int rows, cols;
     private final float[][] internal;
 
     private Matrix(int rows, int cols) {
@@ -57,6 +57,10 @@ public class Matrix {
             }
         }
         return res;
+    }
+
+    public float get(int rows, int cols) {
+        return internal[rows][cols];
     }
 
     public Matrix fill(FloatSupplier supplier) {
@@ -170,7 +174,4 @@ public class Matrix {
                 .replaceAll("], ", "],\n ");
     }
 
-    public String toJson() {
-        return Arrays.deepToString(internal);
-    }
 }

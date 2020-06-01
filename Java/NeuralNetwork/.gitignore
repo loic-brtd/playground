@@ -4,3 +4,9 @@ t10k-labels.idx1-ubyte
 train-images.idx3-ubyte
 train-labels.idx1-ubyte
 resized/
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

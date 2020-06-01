@@ -13,8 +13,7 @@ import java.util.Locale;
 public class CatsDogsExample extends PApplet {
 
     String JSON_FILE = "src/examples/catsdogs.json";
-    String IMAGES_DIR_PATH = "src/catsdogs/resized";
-    int SIZE = 28;
+    String IMAGES_DIR_PATH = "/home/loic/Documents/data/catsdogs/resized";
 
     List<Training> trainingData;
     NeuralNetwork nn;
@@ -24,9 +23,8 @@ public class CatsDogsExample extends PApplet {
         size(300, 300);
 
         trainingData = loadTrainingDataset(IMAGES_DIR_PATH);
-        println("Data loaded");
 
-        // nn = new NeuralNetwork(SIZE * SIZE, 100, 2);
+        // nn = new NeuralNetwork(28 * 28, 100, 2);
         // nn.setLearningRate(0.1f);
         // doTheTraining();
 
@@ -82,19 +80,22 @@ public class CatsDogsExample extends PApplet {
     }
 
     private List<Training> loadTrainingDataset(String path) {
-        List<Training> list = null;
+        List<Training> list;
         File dir = new File(path);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             list = new ArrayList<>(directoryListing.length);
+            println("Found " + directoryListing.length + " files");
             for (File file : directoryListing) {
                 PImage img = new PImage(file.getPath());
                 Type type = file.getName().startsWith("dog") ? Type.DOG : Type.CAT;
                 list.add(new Training(img, type));
             }
             Collections.shuffle(list);
+            println("Data loaded");
         } else {
             println("Not a directory");
+            throw new IllegalStateException();
         }
         return list;
     }
