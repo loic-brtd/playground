@@ -1,3 +1,5 @@
+package com.picasso;
+
 import com.picasso.gui.Frame;
 
 import javax.swing.*;
