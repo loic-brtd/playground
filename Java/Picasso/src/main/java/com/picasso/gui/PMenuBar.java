@@ -1,22 +1,24 @@
 package com.picasso.gui;
 
+import com.picasso.app.menu.FileMenu;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class MenuBar {
+public class PMenuBar extends JMenuBar {
 
-    private MenuBar() {
+    private PMenuBar() {
     }
 
-    public static JMenuBar createMain() {
-        JMenuBar menuBar = new JMenuBar();
+    public static PMenuBar createMain() {
+        PMenuBar menuBar = new PMenuBar();
         menuBar.setBackground(Theme.getCurrent().getMenu());
         menuBar.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
 
         JMenu file = createMenu("File");
-        file.add(createItem("Open..."));
+        file.add(createItem("Open...", FileMenu::open));
         file.add(createItem("Save"));
         menuBar.add(file);
 
@@ -43,6 +45,12 @@ public class MenuBar {
         JMenuItem item = new JMenuItem(name);
         applyCommonMenuStyle(item);
         item.setBorder(new EmptyBorder(new Insets(2, 2, 2, 2)));
+        return item;
+    }
+
+    private static JMenuItem createItem(String name, Runnable runnable) {
+        JMenuItem item = createItem(name);
+        item.addActionListener(e -> runnable.run());
         return item;
     }
 

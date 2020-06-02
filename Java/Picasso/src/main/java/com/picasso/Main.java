@@ -1,14 +1,13 @@
 package com.picasso;
 
-import com.picasso.gui.Frame;
+import com.picasso.gui.PFrame;
 
-import javax.swing.*;
+import java.awt.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        JFrame frame = Frame.createMain();
-        frame.setVisible(true);
+        EventQueue.invokeLater(() -> PFrame.getMain().setVisible(true));
     }
 
 }
