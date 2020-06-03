@@ -9,24 +9,24 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PImagePoolPanel extends JPanel {
+public class PDesktop extends JPanel {
 
     private List<PImageEditorPanel> imagePanels;
     private PImageEditorPanel selectedPanel;
     private Point previousLocation;
 
-    public PImagePoolPanel() {
+    public PDesktop() {
         imagePanels = new ArrayList<>();
         setBackground(Theme.getCurrent().getBackground());
-        setLayout(null); // Absolute layout
+        setLayout(new ManualLayout());
     }
 
     public void addImageEditor(PImageEditorPanel imageEditorPanel) {
         imagePanels.add(0, imageEditorPanel);
-        imageEditorPanel.setLocation(findInitialLocation(new Point()));
+        add(imageEditorPanel, 0);
+        Point editorLocation = findInitialLocation(new Point(10, 10), imageEditorPanel);
+        imageEditorPanel.setLocation(editorLocation);
         addMouseInteractions(imageEditorPanel);
-        add(imageEditorPanel);
-        setComponentZOrder(imageEditorPanel, 0);
         updateUI();
     }
 
@@ -47,7 +47,7 @@ public class PImagePoolPanel extends JPanel {
             public void mouseDragged(MouseEvent e) {
                 Point offset = Points.sub(e.getPoint(), previousLocation);
                 Point newLocation = Points.add(panel.getLocation(), offset);
-                panel.setLocation(newLocation);
+                panel.setLocation(Points.max(newLocation, new Point(-8, 0)));
             }
         });
     }
@@ -60,18 +60,24 @@ public class PImagePoolPanel extends JPanel {
         repaint();
     }
 
-    private Point findInitialLocation(Point tryPos) {
+    private Point findInitialLocation(Point tryPos, PImageEditorPanel imagePanel) {
         boolean anyOverlap = false;
-        for (PImageEditorPanel imagePanel : imagePanels) {
-            if (imagePanel.getLocation().equals(tryPos)) {
+        for (PImageEditorPanel p : imagePanels) {
+            if (p != imagePanel && p.getLocation().equals(tryPos)) {
                 anyOverlap = true;
                 break;
             }
         }
         if (anyOverlap) {
-            return findInitialLocation(Points.add(tryPos, new Point(20, 30)));
+            return findInitialLocation(Points.add(tryPos, new Point(20, 30)), imagePanel);
         }
         return tryPos;
+    }
+
+    @Override
+    public boolean isOptimizedDrawingEnabled() {
+        // Required to overlap children components
+        return false;
     }
 
 }

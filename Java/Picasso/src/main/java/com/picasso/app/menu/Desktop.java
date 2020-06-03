@@ -1,4 +1,4 @@
 package com.picasso.app.menu;
 
-public class ImagePool {
+public class Desktop {
 }

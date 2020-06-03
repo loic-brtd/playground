@@ -31,7 +31,7 @@ public class Theme {
         setOnMenu(onBackground);
         setFocusedMenu(Color.decode("#0055cc"));
         setOnFocusedMenu(Color.decode("#ffffff"));
-        setMenuBorder(Color.decode("#3c3c3c"));
+        setMenuBorder(Color.decode("#444444"));
     }
 
     private Optional<Font> loadFont(String name) {

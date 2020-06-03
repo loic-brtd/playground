@@ -7,17 +7,23 @@ import java.io.IOException;
 
 public class ImageEditor {
 
-    private File originalFile;
+    private final File originalFile;
     private BufferedImage bufferedImage;
+    private boolean loadedProperly;
 
     public ImageEditor(File file) {
         this.originalFile = file;
 
         try {
             bufferedImage = ImageIO.read(originalFile);
+            loadedProperly = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Can't create Image for " + file);
         }
+    }
+
+    public boolean isLoadedProperly() {
+        return loadedProperly;
     }
 
     public String getName() {

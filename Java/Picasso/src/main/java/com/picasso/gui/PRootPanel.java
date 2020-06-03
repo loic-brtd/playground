@@ -7,12 +7,12 @@ public class PRootPanel extends JPanel {
 
     private static PRootPanel rootPanel;
 
-    private final PImagePoolPanel imagePoolPanel;
+    private final PDesktop imagePoolPanel;
 
     private PRootPanel() {
         setLayout(new BorderLayout());
         setBackground(Theme.getCurrent().getBackground());
-        imagePoolPanel = new PImagePoolPanel();
+        imagePoolPanel = new PDesktop();
         add(imagePoolPanel, BorderLayout.CENTER);
     }
 
@@ -21,7 +21,7 @@ public class PRootPanel extends JPanel {
         return rootPanel;
     }
 
-    public PImagePoolPanel getImagePoolPanel() {
+    public PDesktop getImagePoolPanel() {
         return imagePoolPanel;
     }
 
