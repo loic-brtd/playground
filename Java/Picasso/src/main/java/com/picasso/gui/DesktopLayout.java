@@ -2,7 +2,7 @@ package com.picasso.gui;
 
 import java.awt.*;
 
-public class ManualLayout implements LayoutManager {
+public class DesktopLayout implements LayoutManager {
 
     @Override
     public void addLayoutComponent(String name, Component comp) {
@@ -14,11 +14,8 @@ public class ManualLayout implements LayoutManager {
 
     @Override
     public Dimension preferredLayoutSize(Container parent) {
-        Dimension dim = new Dimension(0, 0);
-        Insets insets = parent.getInsets();
-        dim.width = insets.left + insets.right;
-        dim.height = insets.top + insets.bottom;
-        return dim;
+        Insets in = parent.getInsets();
+        return new Dimension(in.left + in.right, in.top + in.bottom);
     }
 
     @Override
@@ -28,12 +25,15 @@ public class ManualLayout implements LayoutManager {
 
     @Override
     public void layoutContainer(Container parent) {
+        Dimension parentSize = parent.getSize();
         for (Component c : parent.getComponents()) {
             if (c.isVisible()) {
-                Dimension d = c.getPreferredSize();
-                // int x = Math.max(c.getX(), 0);
-                // int y = Math.max(c.getY(), 0);
-                c.setBounds(c.getX(), c.getY(), d.width, d.height);
+                Dimension compSize = c.getPreferredSize();
+                int x = c.getX();
+                int y = c.getY();
+                int w = Math.min(compSize.width, parentSize.width - x);
+                int h = Math.min(compSize.height, parentSize.height - y);
+                c.setBounds(x, y, w, h);
             }
         }
     }

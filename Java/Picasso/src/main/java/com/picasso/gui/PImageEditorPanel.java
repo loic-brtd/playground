@@ -1,22 +1,27 @@
 package com.picasso.gui;
 
-import com.picasso.app.menu.ImageEditor;
+import com.picasso.app.ImageEditor;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.border.DropShadowBorder;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.awt.GridBagConstraints.*;
 
 public class PImageEditorPanel extends JXPanel {
 
     private JComponent titleBar;
     private PCanvas canvas;
+
+    private List<Runnable> onClose = new ArrayList<>();
 
     public PImageEditorPanel(ImageEditor imageEditor) {
         // Overall layout
@@ -26,30 +31,59 @@ public class PImageEditorPanel extends JXPanel {
 
         // Title bar
         titleBar = new JPanel(new GridBagLayout());
-        titleBar.setBackground(Theme.getCurrent().getMenu());
+        titleBar.setBackground(Theme.current().getMenu());
         JLabel titleLabel = new JLabel(imageEditor.getName());
-        titleLabel.setForeground(Theme.getCurrent().getOnMenu());
-        titleLabel.setFont(Theme.getCurrent().getMainFont());
-        titleLabel.setBorder(new EmptyBorder(new Insets(4, 2, 4, 2)));
-        titleBar.add(titleLabel);
-        PAsset cross = new PAsset("/image/cross.png");
-        titleBar.add(cross);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setForeground(Theme.current().getOnMenu());
+        titleLabel.setFont(Theme.current().getMainFont());
+        titleBar.add(titleLabel, gridBag(0, 0, 1, 1, CENTER, 1, HORIZONTAL));
+        PIcon cross = new PIcon("/image/cross.png");
         cross.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                System.out.println("close " + imageEditor.getName());
+            public void mouseReleased(MouseEvent e) {
+                if (cross.isHovered())
+                    onClose.forEach(Runnable::run);
             }
         });
-
+        titleBar.add(cross, gridBag(1, 0, 1, 1, LINE_END, 0, NONE));
         add(titleBar, BorderLayout.NORTH);
 
         // Image
         canvas = new PCanvas(imageEditor.getBufferedImage());
-        add(canvas, BorderLayout.CENTER);
+        JScrollPane scrollPane = createScrollPane(canvas);
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private JScrollPane createScrollPane(PCanvas canvas) {
+        JScrollPane scrollPane = new JScrollPane(canvas);
+        scrollPane.setBackground(Theme.current().getMenu());
+        scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+        JScrollBar vsb = scrollPane.getVerticalScrollBar();
+        JScrollBar hsb = scrollPane.getHorizontalScrollBar();
+        vsb.setUnitIncrement(12);
+        hsb.setUnitIncrement(12);
+        vsb.setPreferredSize(new Dimension(12, vsb.getPreferredSize().height));
+        hsb.setPreferredSize(new Dimension(hsb.getPreferredSize().width, 12));
+        vsb.setUI(new CustomScrollBarUI());
+        hsb.setUI(new CustomScrollBarUI());
+        return scrollPane;
+    }
+
+    private GridBagConstraints gridBag(int x, int y, int w, int h, int anchor, int wx, int fill) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = x;
+        c.gridy = y;
+        c.gridwidth = w;
+        c.gridheight = h;
+        c.anchor = anchor;
+        c.weightx = wx;
+        c.fill = fill;
+        c.insets = new Insets(4, 4, 4, 4);
+        return c;
     }
 
     private Border createBorder() {
-        Border lineBorder = new LineBorder(Theme.getCurrent().getMenuBorder());
+        Border lineBorder = new LineBorder(Theme.current().getMenuBorder());
         DropShadowBorder shadow = new DropShadowBorder();
         shadow.setShadowColor(Color.BLACK);
         shadow.setShowLeftShadow(true);
@@ -59,7 +93,22 @@ public class PImageEditorPanel extends JXPanel {
         shadow.setShadowOpacity(0.3f);
         shadow.setShadowSize(8);
         shadow.setCornerSize(8);
-        return new CompoundBorder(shadow, lineBorder);
+        return lineBorder; // new CompoundBorder(shadow, lineBorder);
+    }
+
+    public void setScale(float scale) {
+        if (scale > 0.1 && scale < 128) {
+            canvas.setScale(scale);
+            updateUI();
+        }
+    }
+
+    public float getScale() {
+        return canvas.getScale();
+    }
+
+    public void onClose(Runnable runnable) {
+        onClose.add(runnable);
     }
 
     public JComponent getTitleBar() {

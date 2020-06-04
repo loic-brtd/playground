@@ -1,4 +1,4 @@
-package com.picasso.app.menu;
+package com.picasso.app;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

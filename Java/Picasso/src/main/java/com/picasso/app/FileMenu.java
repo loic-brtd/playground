@@ -1,4 +1,4 @@
-package com.picasso.app.menu;
+package com.picasso.app;
 
 import com.picasso.gui.PFrame;
 import com.picasso.gui.PImageEditorPanel;
@@ -14,13 +14,14 @@ public class FileMenu {
 
     public static void open() {
         PRootPanel rootPanel = PRootPanel.getRootPanel();
-        PDesktop desktop = rootPanel.getImagePoolPanel();
+        PDesktop desktop = rootPanel.getDesktop();
 
         chooseImageFiles()
                 .map(ImageEditor::new)
                 .filter(ImageEditor::isLoadedProperly)
                 .forEach(imageEditor -> desktop
                         .addImageEditor(new PImageEditorPanel(imageEditor)));
+        PFrame.getMain().requestFocus();
     }
 
     private static Stream<File> chooseImageFiles() {

@@ -1,6 +1,6 @@
 package com.picasso.gui;
 
-import com.picasso.app.menu.FileMenu;
+import com.picasso.app.FileMenu;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,21 +14,27 @@ public class PMenuBar extends JMenuBar {
 
     public static PMenuBar createMain() {
         PMenuBar menuBar = new PMenuBar();
-        menuBar.setBackground(Theme.getCurrent().getMenu());
+        menuBar.setBackground(Theme.current().getMenu());
         menuBar.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
 
-        JMenu file = createMenu("File");
-        file.add(createItem("Open...", FileMenu::open));
+        JMenu file = createMenu("File", 'F');
+        file.add(createItem("Open...", FileMenu::open/*, KeyEvent.VK_O, KeyEvent.CTRL_MASK*/));
         file.add(createItem("Save"));
         menuBar.add(file);
 
-        JMenu edit = createMenu("Edit");
+        JMenu edit = createMenu("Edit", 'E');
         menuBar.add(edit);
 
-        JMenu view = createMenu("View");
+        JMenu view = createMenu("View", 'V');
         menuBar.add(view);
 
         return menuBar;
+    }
+
+    private static JMenu createMenu(String name, char mnemonic) {
+        JMenu menu = createMenu(name);
+        menu.setMnemonic(mnemonic);
+        return menu;
     }
 
     private static JMenu createMenu(String name) {
@@ -37,7 +43,7 @@ public class PMenuBar extends JMenuBar {
         menu.setBorder(new EmptyBorder(new Insets(2, 2, 2, 2)));
         JPopupMenu popupMenu = menu.getPopupMenu();
         applyCommonMenuStyle(popupMenu);
-        popupMenu.setBorder(new LineBorder(Theme.getCurrent().getMenuBorder()));
+        popupMenu.setBorder(new LineBorder(Theme.current().getMenuBorder()));
         return menu;
     }
 
@@ -54,10 +60,17 @@ public class PMenuBar extends JMenuBar {
         return item;
     }
 
+    private static JMenuItem createItem(String name, Runnable runnable, int key, int mask) {
+        JMenuItem item = createItem(name);
+        item.addActionListener(e -> runnable.run());
+        item.setAccelerator(KeyStroke.getKeyStroke(key, mask));
+        return item;
+    }
+
     private static void applyCommonMenuStyle(JComponent menu) {
-        menu.setFont(Theme.getCurrent().getMainFont());
-        menu.setForeground(Theme.getCurrent().getOnMenu());
-        menu.setBackground(Theme.getCurrent().getMenu());
+        menu.setFont(Theme.current().getMainFont());
+        menu.setForeground(Theme.current().getOnMenu());
+        menu.setBackground(Theme.current().getMenu());
     }
 
 }

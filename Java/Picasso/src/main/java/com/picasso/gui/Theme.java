@@ -19,6 +19,8 @@ public class Theme {
     private Color focusedMenu;
     private Color onFocusedMenu;
     private Color menuBorder;
+    private Color thumb;
+    private Color focusedThumb;
 
     private Theme() {
         // Default theme parameters
@@ -32,6 +34,8 @@ public class Theme {
         setFocusedMenu(Color.decode("#0055cc"));
         setOnFocusedMenu(Color.decode("#ffffff"));
         setMenuBorder(Color.decode("#444444"));
+        setThumb(Color.decode("#555555"));
+        setFocusedThumb(Color.decode("#666666"));
     }
 
     private Optional<Font> loadFont(String name) {
@@ -50,7 +54,7 @@ public class Theme {
         return new Theme();
     }
 
-    public static Theme getCurrent() {
+    public static Theme current() {
         return current;
     }
 
@@ -120,5 +124,21 @@ public class Theme {
 
     public void setMenuBorder(Color menuBorder) {
         this.menuBorder = menuBorder;
+    }
+
+    public Color getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(Color thumb) {
+        this.thumb = thumb;
+    }
+
+    public Color getFocusedThumb() {
+        return focusedThumb;
+    }
+
+    public void setFocusedThumb(Color focusedThumb) {
+        this.focusedThumb = focusedThumb;
     }
 }

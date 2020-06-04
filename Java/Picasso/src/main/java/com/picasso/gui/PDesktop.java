@@ -1,5 +1,6 @@
 package com.picasso.gui;
 
+import com.picasso.util.Maths;
 import com.picasso.util.Points;
 
 import javax.swing.*;
@@ -8,17 +9,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PDesktop extends JPanel {
 
     private List<PImageEditorPanel> imagePanels;
-    private PImageEditorPanel selectedPanel;
     private Point previousLocation;
 
     public PDesktop() {
         imagePanels = new ArrayList<>();
-        setBackground(Theme.getCurrent().getBackground());
-        setLayout(new ManualLayout());
+        setBackground(Theme.current().getBackground());
+        setLayout(new DesktopLayout());
     }
 
     public void addImageEditor(PImageEditorPanel imageEditorPanel) {
@@ -27,12 +28,28 @@ public class PDesktop extends JPanel {
         Point editorLocation = findInitialLocation(new Point(10, 10), imageEditorPanel);
         imageEditorPanel.setLocation(editorLocation);
         addMouseInteractions(imageEditorPanel);
+        imageEditorPanel.onClose(() -> closeFrame(imageEditorPanel));
         updateUI();
+    }
+
+    private void closeFrame(PImageEditorPanel imageEditorPanel) {
+        remove(imageEditorPanel);
+        imagePanels.remove(imageEditorPanel);
+        repaint();
+    }
+
+    public boolean hasFramesOpen() {
+        return !imagePanels.isEmpty();
+    }
+
+    public void closeSelectedFrame() {
+        getSelectedPanel().ifPresent(this::closeFrame);
     }
 
     private void addMouseInteractions(PImageEditorPanel panel) {
         JComponent handle = panel.getTitleBar();
         handle.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 previousLocation = e.getPoint();
                 selectPanel(panel);
@@ -44,18 +61,28 @@ public class PDesktop extends JPanel {
             }
         });
         handle.addMouseMotionListener(new MouseAdapter() {
+            @Override
             public void mouseDragged(MouseEvent e) {
                 Point offset = Points.sub(e.getPoint(), previousLocation);
                 Point newLocation = Points.add(panel.getLocation(), offset);
-                panel.setLocation(Points.max(newLocation, new Point(-8, 0)));
+                Dimension desktopSize = PDesktop.this.getSize();
+                Dimension panelSize = panel.getSize();
+                int x = Maths.constrain(newLocation.x, 0, desktopSize.width - panelSize.width);
+                int y = Maths.constrain(newLocation.y, 0, desktopSize.height - panelSize.height);
+                panel.setLocation(x, y);
+                updateUI();
             }
         });
     }
 
+    private Optional<PImageEditorPanel> getSelectedPanel() {
+        return imagePanels.isEmpty() ? Optional.empty()
+                : Optional.of(imagePanels.get(0));
+    }
+
     private void selectPanel(PImageEditorPanel imageEditorPanel) {
-        selectedPanel = imageEditorPanel;
-        imagePanels.remove(selectedPanel);
-        imagePanels.add(0, selectedPanel);
+        imagePanels.remove(imageEditorPanel);
+        imagePanels.add(0, imageEditorPanel);
         setComponentZOrder(imageEditorPanel, 0);
         repaint();
     }
@@ -74,10 +101,19 @@ public class PDesktop extends JPanel {
         return tryPos;
     }
 
+    public void zoom() {
+        getSelectedPanel().ifPresent(panel -> panel.setScale(panel.getScale() * 2));
+        updateUI();
+    }
+
+    public void unzoom() {
+        getSelectedPanel().ifPresent(panel -> panel.setScale(panel.getScale() / 2));
+        updateUI();
+    }
+
     @Override
     public boolean isOptimizedDrawingEnabled() {
         // Required to overlap children components
         return false;
     }
-
 }
