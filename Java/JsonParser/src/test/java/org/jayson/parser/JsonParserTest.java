@@ -6,6 +6,9 @@ import org.jayson.dto.JsonObject;
 import org.jayson.dto.JsonString;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
+import static org.jayson.parser.JsonParser.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JsonParserTest {
@@ -41,6 +44,11 @@ class JsonParserTest {
                         .put("third", "another")
                         .put("bool", false));
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testObjectNoClosed() {
+        assertThrows(UnexpectedTokenException.class, () -> Json.parse("{\"key\":\"value\""));
     }
 
 
