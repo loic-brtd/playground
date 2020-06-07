@@ -1,5 +1,7 @@
 package com.picasso.gui;
 
+import com.picasso.gui.theme.Theme;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
@@ -28,7 +30,7 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
 
     @Override
     protected void paintTrack(Graphics g, JComponent c, Rectangle r) {
-        g.setColor(Theme.current().getBackground());
+        g.setColor(Theme.getCurrent().getBackground());
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }
 
@@ -45,8 +47,8 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
     protected void paintThumb(Graphics g, JComponent c, Rectangle r) {
         if (!c.isEnabled() || checkSizes(c, r)) return;
         g.setColor(isThumbRollover()
-                ? Theme.current().getFocusedThumb()
-                : Theme.current().getThumb());
+                ? Theme.getCurrent().getFocusedThumb()
+                : Theme.getCurrent().getThumb());
         g.fillRect(r.x, r.y, r.width, r.height);
         g.dispose();
     }

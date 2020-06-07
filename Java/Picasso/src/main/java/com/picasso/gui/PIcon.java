@@ -1,5 +1,6 @@
 package com.picasso.gui;
 
+import com.picasso.gui.theme.Theme;
 import org.jdesktop.swingx.JXPanel;
 
 import javax.imageio.ImageIO;
@@ -52,10 +53,10 @@ public class PIcon extends JXPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Dimension d = getPreferredSize();
         if (hovered) {
-            g2.setColor(Theme.current().getFocusedMenu());
+            g2.setColor(Theme.getCurrent().getFocusedMenu());
             g2.fillOval(0, 0, d.width, d.height);
         } else {
-            g2.setColor(Theme.current().getMenuBorder());
+            g2.setColor(Theme.getCurrent().getMenuBorder());
             g2.drawOval(0, 0, d.width - 1, d.height - 1);
         }
         g2.drawImage(img, padding, padding, null);

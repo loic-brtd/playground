@@ -14,12 +14,13 @@ public class MainKeyListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         PDesktop desktop = PRootPanel.getRootPanel().getDesktop();
         if (e.isControlDown()) {
+            if (e.getKeyCode() == VK_W) {
+                if (desktop.hasFramesOpen())
+                    desktop.closeSelectedFrame();
+                else System.exit(0);
+            }
+        } else {
             switch (e.getKeyCode()) {
-                case VK_W:
-                    if (desktop.hasFramesOpen())
-                        desktop.closeSelectedFrame();
-                    else System.exit(0);
-                    break;
                 case VK_ADD:
                 case VK_PLUS:
                     desktop.zoom();

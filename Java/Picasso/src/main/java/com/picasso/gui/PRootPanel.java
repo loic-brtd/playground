@@ -1,5 +1,7 @@
 package com.picasso.gui;
 
+import com.picasso.gui.theme.Theme;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,7 +13,7 @@ public class PRootPanel extends JPanel {
 
     private PRootPanel() {
         setLayout(new BorderLayout());
-        setBackground(Theme.current().getBackground());
+        setBackground(Theme.getCurrent().getBackground());
         desktop = new PDesktop();
         add(desktop, BorderLayout.CENTER);
     }

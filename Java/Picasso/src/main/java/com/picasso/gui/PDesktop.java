@@ -1,5 +1,6 @@
 package com.picasso.gui;
 
+import com.picasso.gui.theme.Theme;
 import com.picasso.util.Maths;
 import com.picasso.util.Points;
 
@@ -18,7 +19,7 @@ public class PDesktop extends JPanel {
 
     public PDesktop() {
         imagePanels = new ArrayList<>();
-        setBackground(Theme.current().getBackground());
+        setBackground(Theme.getCurrent().getBackground());
         setLayout(new DesktopLayout());
     }
 

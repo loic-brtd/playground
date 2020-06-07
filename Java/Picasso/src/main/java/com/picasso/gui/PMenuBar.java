@@ -1,6 +1,7 @@
 package com.picasso.gui;
 
 import com.picasso.app.FileMenu;
+import com.picasso.gui.theme.Theme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,7 +15,7 @@ public class PMenuBar extends JMenuBar {
 
     public static PMenuBar createMain() {
         PMenuBar menuBar = new PMenuBar();
-        menuBar.setBackground(Theme.current().getMenu());
+        menuBar.setBackground(Theme.getCurrent().getMenu());
         menuBar.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
 
         JMenu file = createMenu("File", 'F');
@@ -43,7 +44,7 @@ public class PMenuBar extends JMenuBar {
         menu.setBorder(new EmptyBorder(new Insets(2, 2, 2, 2)));
         JPopupMenu popupMenu = menu.getPopupMenu();
         applyCommonMenuStyle(popupMenu);
-        popupMenu.setBorder(new LineBorder(Theme.current().getMenuBorder()));
+        popupMenu.setBorder(new LineBorder(Theme.getCurrent().getMenuBorder()));
         return menu;
     }
 
@@ -68,9 +69,9 @@ public class PMenuBar extends JMenuBar {
     }
 
     private static void applyCommonMenuStyle(JComponent menu) {
-        menu.setFont(Theme.current().getMainFont());
-        menu.setForeground(Theme.current().getOnMenu());
-        menu.setBackground(Theme.current().getMenu());
+        menu.setFont(Theme.getCurrent().getMainFont());
+        menu.setForeground(Theme.getCurrent().getOnMenu());
+        menu.setBackground(Theme.getCurrent().getMenu());
     }
 
 }

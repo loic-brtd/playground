@@ -1,6 +1,7 @@
 package com.picasso.gui;
 
 import com.picasso.app.ImageEditor;
+import com.picasso.gui.theme.Theme;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.border.DropShadowBorder;
 
@@ -31,11 +32,11 @@ public class PImageEditorPanel extends JXPanel {
 
         // Title bar
         titleBar = new JPanel(new GridBagLayout());
-        titleBar.setBackground(Theme.current().getMenu());
+        titleBar.setBackground(Theme.getCurrent().getMenu());
         JLabel titleLabel = new JLabel(imageEditor.getName());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setForeground(Theme.current().getOnMenu());
-        titleLabel.setFont(Theme.current().getMainFont());
+        titleLabel.setForeground(Theme.getCurrent().getOnMenu());
+        titleLabel.setFont(Theme.getCurrent().getMainFont());
         titleBar.add(titleLabel, gridBag(0, 0, 1, 1, CENTER, 1, HORIZONTAL));
         PIcon cross = new PIcon("/image/cross.png");
         cross.addMouseListener(new MouseAdapter() {
@@ -56,7 +57,7 @@ public class PImageEditorPanel extends JXPanel {
 
     private JScrollPane createScrollPane(PCanvas canvas) {
         JScrollPane scrollPane = new JScrollPane(canvas);
-        scrollPane.setBackground(Theme.current().getMenu());
+        scrollPane.setBackground(Theme.getCurrent().getMenu());
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
         JScrollBar vsb = scrollPane.getVerticalScrollBar();
         JScrollBar hsb = scrollPane.getHorizontalScrollBar();
@@ -83,7 +84,7 @@ public class PImageEditorPanel extends JXPanel {
     }
 
     private Border createBorder() {
-        Border lineBorder = new LineBorder(Theme.current().getMenuBorder());
+        Border lineBorder = new LineBorder(Theme.getCurrent().getMenuBorder());
         DropShadowBorder shadow = new DropShadowBorder();
         shadow.setShadowColor(Color.BLACK);
         shadow.setShowLeftShadow(true);
