@@ -7,7 +7,7 @@ import static org.jayson.parser.Token.Type.*;
 
 public class JsonParser {
 
-    private JsonLexer lexer;
+    private final JsonLexer lexer;
     private Token token;
 
     public JsonParser(JsonLexer lexer) {
@@ -15,6 +15,7 @@ public class JsonParser {
     }
 
     public JsonObject parse() {
+        token = lexer.nextToken();
         JsonObject object = parseObject();
         assertNull(token);
         return object;
@@ -22,7 +23,6 @@ public class JsonParser {
 
     private JsonObject parseObject() {
         JsonObject object = Json.object();
-        token = lexer.nextToken();
         assertType(OPENING_CURLY, token);
         token = lexer.nextToken();
         while (!hasType(CLOSING_CURLY, token)) {
@@ -45,6 +45,8 @@ public class JsonParser {
             return parseString();
         } else if (hasType(BOOLEAN, token)) {
             return parseBoolean();
+        } else if (hasType(OPENING_CURLY, token)) {
+            return parseObject();
         } else {
             throw new UnsupportedOperationException();
         }
@@ -87,9 +89,4 @@ public class JsonParser {
         }
     }
 
-    public static class UnexpectedEndException extends RuntimeException {
-        public UnexpectedEndException(String message) {
-            super(message);
-        }
-    }
 }

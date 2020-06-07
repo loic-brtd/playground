@@ -12,6 +12,7 @@ public class Test {
         System.out.println(Json.parse("        {     \"hello\"   :    \"world\"   }     "));
         System.out.println(Json.parse("{}"));
         System.out.println(Json.parse("{\"first\":\"loic\",\"last\":\"bertrand\",\"boolean\":true}"));
+        System.out.println(Json.parse("{'first':'string','second':{'third':'another','bool':false}}".replaceAll("'", "\"")));
     }
 
 }
