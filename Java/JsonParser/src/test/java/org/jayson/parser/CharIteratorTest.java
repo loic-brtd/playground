@@ -1,6 +1,5 @@
 package org.jayson.parser;
 
-import org.jayson.parser.CharIterator;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;

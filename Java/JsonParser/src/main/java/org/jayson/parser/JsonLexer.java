@@ -3,6 +3,8 @@ package org.jayson.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.*;
+
 public class JsonLexer {
 
     private final CharIterator iterator;
@@ -17,36 +19,33 @@ public class JsonLexer {
         consumed = c == null;
     }
 
-    public String nextTokenAsString() {
+    public String nextString() {
         Token token = nextToken();
         return token == null ? null : token.value;
     }
 
     public Token nextToken() {
-        if (c == null)
+        if (consumed || c == null)
             return null;
 
         switch (c) {
             case '{':
-                c = nextNonWhiteCharOrNull();
-                return Token.OPENING_CURLY;
+                return parseChar(Token.OPENING_CURLY);
             case '}':
-                c = nextNonWhiteCharOrNull();
-                return Token.CLOSING_CURLY;
+                return parseChar(Token.CLOSING_CURLY);
             case '[':
-                c = nextNonWhiteCharOrNull();
-                return Token.OPENING_BRACKET;
+                return parseChar(Token.OPENING_BRACKET);
             case ']':
-                c = nextNonWhiteCharOrNull();
-                return Token.CLOSING_BRACKET;
+                return parseChar(Token.CLOSING_BRACKET);
             case ':':
-                c = nextNonWhiteCharOrNull();
-                return Token.COLON;
+                return parseChar(Token.COLON);
             case ',':
-                c = nextNonWhiteCharOrNull();
-                return Token.COMMA;
+                return parseChar(Token.COMMA);
             case '"':
                 return parseString();
+            case 't':
+            case 'f':
+                return parseBoolean();
             case '0':
             case '1':
             case '2':
@@ -58,23 +57,22 @@ public class JsonLexer {
             case '8':
             case '9':
                 return parseNumber();
-            case 't':
-            case 'f':
-                return parseBoolean();
             default:
                 unexpectedChar(c);
                 break;
         }
 
-        return null;
+        throw new IllegalStateException();
     }
 
     private Token parseBoolean() {
+        Token token;
         if (c == 't') {
-            return parseToken("true", Token.Type.BOOLEAN);
+            token = parseWord("true", Token.Type.BOOLEAN);
         } else {
-            return parseToken("false", Token.Type.BOOLEAN);
+            token = parseWord("false", Token.Type.BOOLEAN);
         }
+        return token;
     }
 
     private Token parseString() {
@@ -124,23 +122,38 @@ public class JsonLexer {
             tokens.append(c);
             c = nextCharOrNull();
         }
-        if (c != null && isWhitespace(c)) {
-            c = nextNonWhiteCharOrNull();
-        }
+        skipWhitespaceIfPresent();
         return tokens.toString();
     }
 
-    private Token parseToken(String expected, Token.Type type) {
-        for (char letter : expected.toCharArray()) {
-            if (c != letter)
-                unexpectedChar(c);
+    private void skipWhitespaceIfPresent() {
+        if (c != null && isWhitespace(c)) {
+            c = nextNonWhiteCharOrNull();
+        }
+    }
+
+    private Token parseChar(Token constant) {
+        c = nextNonWhiteCharOrNull();
+        if (c == null)
+            consumed = true;
+        return constant;
+    }
+
+    private Token parseWord(String expected, Token.Type type) {
+        char[] word = expected.toCharArray();
+        int i;
+        for (i = 0; i < word.length - 1; i++) {
+            if (c != word[i]) unexpectedChar(c);
             c = nextCharOrThrow();
         }
+        if (c != word[i]) unexpectedChar(c);
+        c = nextNonWhiteCharOrNull();
         return new Token(expected, type);
     }
 
     private char nextCharOrThrow() {
         if (!iterator.hasNext()) {
+            consumed = true;
             endOfSource();
         }
         return iterator.next();
@@ -148,6 +161,7 @@ public class JsonLexer {
 
     private Character nextCharOrNull() {
         if (!iterator.hasNext()) {
+            consumed = true;
             return null;
         }
         return iterator.next();
@@ -177,33 +191,33 @@ public class JsonLexer {
         return consumed;
     }
 
+    public boolean hasNext() {
+        return !consumed;
+    }
+
     public String getSource() {
         return source;
     }
 
-    public String[] consumeTokensAsStrings() {
+    public String[] consumeStrings() {
         List<String> list = new ArrayList<>();
-        String current;
-        while ((current = nextTokenAsString()) != null) {
-            list.add(current);
+        while (!consumed) {
+            list.add(nextString());
         }
-        consumed = true;
         return list.toArray(new String[0]);
     }
 
     public Token[] consumeTokens() {
         List<Token> list = new ArrayList<>();
-        Token current;
-        while ((current = nextToken()) != null) {
-            list.add(current);
+        while (!consumed) {
+            list.add(nextToken());
         }
-        consumed = true;
         return list.toArray(new Token[0]);
     }
 
     private void unexpectedChar(char c) {
         consumed = true;
-        throw new UnexpectedCharacterException(c);
+        throw new UnexpectedCharacterException(c, iterator.getLine(), iterator.getColumn());
     }
 
     private void endOfSource() {
@@ -219,7 +233,11 @@ public class JsonLexer {
 
     static class UnexpectedCharacterException extends RuntimeException {
         private UnexpectedCharacterException(char c) {
-            super("Encountered unexpected character '" + c + "'");
+            super(format("Encountered unexpected character '%s'", c));
+        }
+
+        private UnexpectedCharacterException(char c, int line, int column) {
+            super(format("Encountered unexpected character '%s' (%d:%d)", c, line, column));
         }
     }
 }

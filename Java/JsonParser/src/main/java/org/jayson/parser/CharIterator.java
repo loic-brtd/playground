@@ -7,11 +7,15 @@ public class CharIterator {
 
     private final String source;
     private int index;
+    private int line;
+    private int column;
 
     public CharIterator(String source) {
         Objects.requireNonNull(source);
         this.source = source;
         this.index = -1;
+        this.line = 1;
+        this.column = 0;
     }
 
     public boolean hasNext() {
@@ -20,11 +24,33 @@ public class CharIterator {
 
     public char next() {
         if (hasNext()) {
+            updateLineAndColumn();
             index++;
         } else {
             throw new NoSuchElementException();
         }
         return source.charAt(index);
+    }
+
+    private void updateLineAndColumn() {
+        if (index > 0 && source.charAt(index) == '\n') {
+            line++;
+            column = 1;
+        } else {
+            column++;
+        }
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getColumn() {
+        return column;
     }
 
     public boolean canPeek(int offset) {

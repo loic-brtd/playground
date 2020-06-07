@@ -1,5 +1,7 @@
 package org.jayson.parser;
 
+import java.util.Objects;
+
 public class Token {
 
     public static final Token OPENING_BRACKET = new Token("[", Type.OPENING_BRACKET);
@@ -23,5 +25,19 @@ public class Token {
         STRING, BOOLEAN, NUMBER,
         COMMA, COLON, TRUE, FALSE,
         OPENING_BRACKET, CLOSING_BRACKET, OPENING_CURLY, CLOSING_CURLY
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return Objects.equals(value, token.value) &&
+                type == token.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, type);
     }
 }

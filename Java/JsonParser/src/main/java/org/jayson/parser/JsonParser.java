@@ -1,62 +1,83 @@
 package org.jayson.parser;
 
-import org.jayson.dto.Json;
-import org.jayson.dto.JsonObject;
+import org.jayson.dto.*;
+import org.jayson.parser.Token.Type;
+
+import static org.jayson.parser.Token.Type.*;
 
 public class JsonParser {
 
     private JsonLexer lexer;
+    private Token token;
 
     public JsonParser(JsonLexer lexer) {
         this.lexer = lexer;
     }
 
     public JsonObject parse() {
-        JsonObject result = Json.object();
-        String token = lexer.nextTokenAsString();
-        assertToken("{", token);
-        token = lexer.nextTokenAsString();
-        while (!"}".equals(token)) {
-            assertIsString(token);
-            String key = stripQuotes(token);
-            token = lexer.nextTokenAsString();
-            assertToken(":", token);
-            token = lexer.nextTokenAsString();
-            assertIsString(token);
-            String value = stripQuotes(token);
-            result.put(key, value);
-            token = lexer.nextTokenAsString();
-            if (",".equals(token)) {
-                token = lexer.nextTokenAsString();
-                assertIsString(token);
+        JsonObject object = parseObject();
+        assertNull(token);
+        return object;
+    }
+
+    private JsonObject parseObject() {
+        JsonObject object = Json.object();
+        token = lexer.nextToken();
+        assertType(OPENING_CURLY, token);
+        token = lexer.nextToken();
+        while (!hasType(CLOSING_CURLY, token)) {
+            String key = parseString().getValue();
+            assertType(COLON, token);
+            token = lexer.nextToken();
+            JsonElement value = parseElement();
+            object.put(key, value);
+            if (hasType(COMMA, token)) {
+                token = lexer.nextToken();
+                assertType(STRING, token);
             }
         }
-        token = lexer.nextTokenAsString();
-        assertToken(null, token);
-        return result;
+        token = lexer.nextToken();
+        return object;
     }
 
-    private String stripQuotes(String string) {
-        return string.substring(1, string.length() - 1);
-    }
-
-    private void assertIsString(String token) {
-        if (token == null) {
-            throw new UnexpectedEndException("Expected a string but reached the end");
-        } else if (!token.startsWith("\"")) {
-            throw new UnexpectedEndException("Expected a string but got <" + token + ">");
+    private JsonElement parseElement() {
+        if (hasType(STRING, token)) {
+            return parseString();
+        } else if (hasType(BOOLEAN, token)) {
+            return parseBoolean();
+        } else {
+            throw new UnsupportedOperationException();
         }
     }
 
-    private void assertToken(String expected, String actual) {
-        if (expected == null) {
-            if (actual != null) {
-                throw new UnexpectedTokenException("Unexpected token <" + actual + '>');
-            }
-        } else if (actual == null) {
-            throw new UnexpectedEndException("Expected token <" + expected + "> but reached the end");
-        } else if (!expected.equals(actual)) {
-            throw new UnexpectedTokenException("Expected token <" + expected + "> but was <" + actual + '>');
+    private JsonBoolean parseBoolean() {
+        assertType(BOOLEAN, token);
+        boolean value = Boolean.parseBoolean(token.value);
+        token = lexer.nextToken();
+        return new JsonBoolean(value);
+    }
+
+    private JsonString parseString() {
+        assertType(STRING, token);
+        String value = token.value.substring(1, token.value.length() - 1);
+        token = lexer.nextToken();
+        return new JsonString(value);
+    }
+
+    private boolean hasType(Type expected, Token actual) {
+        return actual != null && actual.type == expected;
+    }
+
+    private void assertType(Type expected, Token actual) {
+        if (!hasType(expected, actual)) {
+            throw new UnexpectedTokenException("Expected a " + expected.name().toLowerCase() +
+                    " but got <" + actual.value + '>');
+        }
+    }
+
+    private void assertNull(Token actual) {
+        if (actual != null) {
+            throw new UnexpectedTokenException("Unexpected token <" + actual.value + '>');
         }
     }
 
