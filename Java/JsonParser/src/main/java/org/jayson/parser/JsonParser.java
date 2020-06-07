@@ -62,7 +62,25 @@ public class JsonParser {
     }
 
     private JsonArray parseArray() {
-        return new JsonArray();
+        JsonArray array = new JsonArray();
+        assertType(OPENING_BRACKET, token);
+        token = lexer.nextToken();
+        while (token != null && token.type != CLOSING_BRACKET) {
+            JsonElement element = parseElement();
+            array.push(element);
+            if (token == null) {
+                throw new UnexpectedTokenException(
+                        "Expected a comma or a closing bracket but reached the end");
+            } else if (token.type != COMMA && token.type != CLOSING_BRACKET) {
+                throw new UnexpectedTokenException(
+                        "Expected a comma or a closing bracket but got <" + token.value + ">");
+            }
+            if (token.type == COMMA)
+                token = lexer.nextToken();
+        }
+        assertType(CLOSING_BRACKET, token);
+        token = lexer.nextToken();
+        return array;
     }
 
     private JsonBoolean parseBoolean() {
@@ -93,9 +111,12 @@ public class JsonParser {
     }
 
     private void assertType(Type expected, Token actual) {
-        if (actual == null || actual.type != expected)
-            throw new UnexpectedTokenException("Expected a " + expected.name().toLowerCase() +
-                    " but " + (actual == null ? "reached the end" : " got <" + actual.value + ">"));
+        if (actual == null)
+            throw new UnexpectedTokenException(
+                    "Expected a " + expected.name() + " but reached the end");
+        if (actual.type != expected)
+            throw new UnexpectedTokenException(
+                    "Expected a " + expected.name() + " but got <" + actual.value + ">");
     }
 
     private void assertNull(Token actual) {

@@ -33,6 +33,8 @@ public final class Json {
                 jsonArray.push((Long) element);
             } else if (element instanceof Integer) {
                 jsonArray.push((Integer) element);
+            } else if (element instanceof Boolean) {
+                jsonArray.push((Boolean) element);
             } else if (element instanceof JsonElement) {
                 jsonArray.push((JsonElement) element);
             } else {

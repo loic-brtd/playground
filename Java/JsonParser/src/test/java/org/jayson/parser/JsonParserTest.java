@@ -1,15 +1,11 @@
 package org.jayson.parser;
 
-import org.jayson.dto.Json;
-import org.jayson.dto.JsonBoolean;
-import org.jayson.dto.JsonObject;
-import org.jayson.dto.JsonString;
+import org.jayson.dto.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
-import static org.jayson.parser.JsonParser.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.jayson.parser.JsonParser.UnexpectedTokenException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JsonParserTest {
 
@@ -49,6 +45,22 @@ class JsonParserTest {
     @Test
     public void testObjectNoClosed() {
         assertThrows(UnexpectedTokenException.class, () -> Json.parse("{\"key\":\"value\""));
+    }
+
+    @Test
+    void testEmptyArray() {
+        JsonObject actual = Json.parse("{\"array\":[]}");
+        JsonObject expected = Json.object()
+                .put("array", Json.array());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testArrayWithValues() {
+        JsonObject actual = Json.parse("{\"array\":[\"str\", 12, 5.3, true]}");
+        JsonObject expected = Json.object()
+                .put("array", Json.array("str", 12, 5.3, true));
+        assertEquals(expected, actual);
     }
 
 
