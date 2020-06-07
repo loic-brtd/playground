@@ -1,5 +1,7 @@
 package org.jayson.dto;
 
+import java.util.Objects;
+
 public class JsonNumber implements JsonElement {
 
     private double doubleValue;
@@ -41,5 +43,20 @@ public class JsonNumber implements JsonElement {
     public String toString() {
         if (isDouble) return String.valueOf(doubleValue);
         return String.valueOf(longValue);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JsonNumber that = (JsonNumber) o;
+        return Double.compare(that.doubleValue, doubleValue) == 0 &&
+                longValue == that.longValue &&
+                isDouble == that.isDouble;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(doubleValue, longValue, isDouble);
     }
 }

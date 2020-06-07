@@ -3,6 +3,7 @@ package org.jayson.dto;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class JsonArray implements JsonElement {
@@ -61,5 +62,18 @@ public class JsonArray implements JsonElement {
         return elements.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",", "[", "]"));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JsonArray jsonArray = (JsonArray) o;
+        return Objects.equals(elements, jsonArray.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(elements);
     }
 }

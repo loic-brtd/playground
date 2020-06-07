@@ -2,6 +2,8 @@ package org.jayson.dto;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JsonObject implements JsonElement {
@@ -17,13 +19,17 @@ public class JsonObject implements JsonElement {
         return true;
     }
 
+    public JsonElement get(String key) {
+        return values.get(key);
+    }
+
+    public Set<String> keys() {
+        return values.keySet();
+    }
+
     public JsonObject put(String key, JsonElement value) {
         values.put(key, value);
         return this;
-    }
-
-    public JsonElement get(String key) {
-        return values.get(key);
     }
 
     public JsonObject put(String key, String value) {
@@ -83,5 +89,18 @@ public class JsonObject implements JsonElement {
         return values.entrySet().stream()
                 .map(e -> '"' + e.getKey() + '"' + ':' + e.getValue())
                 .collect(Collectors.joining(",", "{", "}"));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JsonObject object = (JsonObject) o;
+        return Objects.equals(values, object.values);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values);
     }
 }

@@ -1,5 +1,7 @@
 package org.jayson.dto;
 
+import java.util.Objects;
+
 public class JsonBoolean implements JsonElement {
 
     private boolean value;
@@ -20,5 +22,18 @@ public class JsonBoolean implements JsonElement {
     @Override
     public String toString() {
         return value ? "true" : "false";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JsonBoolean that = (JsonBoolean) o;
+        return value == that.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

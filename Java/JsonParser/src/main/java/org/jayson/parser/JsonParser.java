@@ -88,5 +88,4 @@ public class JsonParser {
             super(message);
         }
     }
-
 }
