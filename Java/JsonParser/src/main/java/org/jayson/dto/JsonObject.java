@@ -1,12 +1,16 @@
 package org.jayson.dto;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+
+import static java.util.stream.Collectors.joining;
 
 public class JsonObject implements JsonElement {
 
     private Map<String, JsonElement> map;
-    private int level;
 
     public JsonObject() {
         map = new LinkedHashMap<>();
@@ -26,14 +30,13 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, JsonElement value) {
-        // if (value instanceof JsonObject) {
-        //     ((JsonObject) value).level = level + 1;
-        // }
+        Objects.requireNonNull(key);
         map.put(key, value);
         return this;
     }
 
     public JsonObject put(String key, String value) {
+        Objects.requireNonNull(key);
         map.put(key, (value == null) ? null : new JsonString(value));
         return this;
     }
@@ -47,6 +50,7 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, double value) {
+        Objects.requireNonNull(key);
         map.put(key, new JsonNumber(value));
         return this;
     }
@@ -60,6 +64,7 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, long value) {
+        Objects.requireNonNull(key);
         map.put(key, new JsonNumber(value));
         return this;
     }
@@ -73,6 +78,7 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, boolean value) {
+        Objects.requireNonNull(key);
         map.put(key, new JsonBoolean(value));
         return this;
     }
@@ -86,6 +92,7 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject putNull(String key) {
+        Objects.requireNonNull(key);
         map.put(key, null);
         return this;
     }
@@ -94,16 +101,21 @@ public class JsonObject implements JsonElement {
     public String toJson() {
         return map.entrySet().stream()
                 .map(e -> '"' + e.getKey() + '"' + ':' + e.getValue())
-                .collect(Collectors.joining(",", "{", "}"));
+                .collect(joining(",", "{", "}"));
     }
 
     @Override
     public String toJson(String indent, int level) {
-        String indent1 = repeat(level + 1, indent);
-        String indent2 = repeat(level, indent);
+        String margin = repeat(level, indent);
         return map.entrySet().stream()
-                .map(e -> indent1 + '"' + e.getKey() + '"' + ": " + e.getValue().toJson(indent, level + 1))
-                .collect(Collectors.joining(",\n", "{\n", "\n" + indent2 + "}"));
+                .map(e -> formatEntry(e, indent, level))
+                .collect(joining(",\n", "{\n", "\n" + margin + "}"));
+    }
+
+    private String formatEntry(Entry<String, JsonElement> entry, String indent, int level) {
+        String margin = repeat(level + 1, indent);
+        String value = entry.getValue() == null ? "null" : entry.getValue().toJson(indent, level + 1);
+        return String.format("%s\"%s\": %s", margin, entry.getKey(), value);
     }
 
     private static String repeat(int n, String s) {

@@ -90,6 +90,7 @@ class JsonParserTest {
         String source = loadResource("valid2.json");
         String parsed = Json.parse(source).toJson();
         String parsedAgain = Json.parse(parsed).toJson();
+        System.out.println(Json.parse(source).toJson("    "));
         assertEquals(parsed, parsedAgain);
     }
 
