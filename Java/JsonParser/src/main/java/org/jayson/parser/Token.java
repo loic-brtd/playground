@@ -12,6 +12,7 @@ public class Token {
     static final Token COLON = new Token(":", Type.COLON);
     static final Token TRUE = new Token("true", Type.BOOLEAN);
     static final Token FALSE = new Token("false", Type.BOOLEAN);
+    static final Token NULL = new Token("null", Type.NULL);
 
     public final String value;
     public final Type type;
@@ -22,7 +23,7 @@ public class Token {
     }
 
     enum Type {
-        STRING, BOOLEAN, NUMBER, COMMA, COLON,
+        STRING, BOOLEAN, NUMBER, COMMA, COLON, NULL,
         OPENING_BRACKET, CLOSING_BRACKET,
         OPENING_CURLY, CLOSING_CURLY
     }

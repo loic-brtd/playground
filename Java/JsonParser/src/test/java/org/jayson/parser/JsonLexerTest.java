@@ -2,6 +2,8 @@ package org.jayson.parser;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.jayson.parser.Token.Type.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -212,11 +214,12 @@ class JsonLexerTest {
                 "  \"array\": [12, 12.3, 8],\n" +
                 "  \"object\": {},\n" +
                 "  \"b_true\": true,\n" +
-                "  \"b_false\": false\n" +
+                "  \"b_false\": false,\n" +
+                "  \"null\": null\n" +
                 "}\n");
         String[] actual = lexer.consumeStrings();
         String[] expected = ("{ 'integer' : 123 , 'float' : 12.3 , 'array' : [ 12 , 12.3 , 8 ] , " +
-                "'object' : { } , 'b_true' : true , 'b_false' : false }")
+                "'object' : { } , 'b_true' : true , 'b_false' : false , 'null' : null }")
                 .replaceAll("'", "\"").split(" ");
         assertArrayEquals(expected, actual);
         assertConsumed(lexer);

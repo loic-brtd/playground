@@ -31,22 +31,25 @@ public class JsonLexer {
 
         switch (curr) {
             case '{':
-                return parse(Token.OPENING_CURLY);
+                return parseSingle(Token.OPENING_CURLY);
             case '}':
-                return parse(Token.CLOSING_CURLY);
+                return parseSingle(Token.CLOSING_CURLY);
             case '[':
-                return parse(Token.OPENING_BRACKET);
+                return parseSingle(Token.OPENING_BRACKET);
             case ']':
-                return parse(Token.CLOSING_BRACKET);
+                return parseSingle(Token.CLOSING_BRACKET);
             case ':':
-                return parse(Token.COLON);
+                return parseSingle(Token.COLON);
             case ',':
-                return parse(Token.COMMA);
+                return parseSingle(Token.COMMA);
+            case 't':
+                return parseWord("true", Token.TRUE);
+            case 'f':
+                return parseWord("false", Token.FALSE);
+            case 'n':
+                return parseWord("null", Token.NULL);
             case '"':
                 return parseString();
-            case 't':
-            case 'f':
-                return parseBoolean();
             case '-':
             case '0':
             case '1':
@@ -60,17 +63,9 @@ public class JsonLexer {
             case '9':
                 return parseNumber();
             default:
-                char temp = curr;
-                curr = null;
-                throwUnexpectedChar("Unexpected character '%s'", temp);
+                throwUnexpectedChar("Unexpected character '%s'", curr);
                 return null;
         }
-    }
-
-    private Token parseBoolean() {
-        return curr == 't'
-                ? parseWord("true", Token.TRUE)
-                : parseWord("false", Token.FALSE);
     }
 
     private Token parseWord(String expected, Token token) {
@@ -108,7 +103,7 @@ public class JsonLexer {
         return new Token(token, NUMBER);
     }
 
-    private Token parse(Token constant) {
+    private Token parseSingle(Token constant) {
         curr = nextChar();
         return constant;
     }
@@ -172,12 +167,14 @@ public class JsonLexer {
     }
 
     private void throwUnexpectedChar(String message, Object... objects) {
+        curr = null;
         message = String.format(message, objects);
         message = String.format("(%d:%d) %s", iterator.getLine(), iterator.getColumn(), message);
         throw new UnexpectedCharacterException(message);
     }
 
     private void throwEndOfSource(String message) {
+        curr = null;
         throw new EndOfSourceException(message);
     }
 
