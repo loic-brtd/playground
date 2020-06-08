@@ -17,7 +17,7 @@ public class JsonLexer {
 
     public JsonLexer(String source) {
         iterator = new CharIterator(source);
-        curr = nextChar();
+        curr = iterator.next();
     }
 
     public boolean hasNext() {
@@ -50,17 +50,9 @@ public class JsonLexer {
                 return parseWord("null", Token.NULL);
             case '"':
                 return parseString();
-            case '-':
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
+            case '-': case '0': case '1': case '2':
+            case '3': case '4': case '5': case '6':
+            case '7': case '8': case '9':
                 return parseNumber();
             default:
                 throwUnexpectedChar("Unexpected character '%s'", curr);
@@ -68,24 +60,16 @@ public class JsonLexer {
         }
     }
 
-    private Token parseWord(String expected, Token token) {
-        for (char letter : expected.toCharArray()) {
-            assertChar(letter, curr);
-            curr = nextChar();
-        }
-        return token;
-    }
-
     private Token parseString() {
         StringBuilder token = new StringBuilder();
         assertChar('"', curr);
         do {
             token.append(curr);
-            curr = nextChar();
+            curr = iterator.next();
         } while (curr != null && curr != '"');
         assertChar('"', curr);
         token.append(curr);
-        curr = nextChar();
+        curr = iterator.next();
         return new Token(token.toString(), STRING);
     }
 
@@ -93,7 +77,7 @@ public class JsonLexer {
         StringBuilder sb = new StringBuilder();
         while (isAnyChar("0123456789-+.eE", curr)) {
             sb.append(curr);
-            curr = nextChar();
+            curr = iterator.next();
         }
         String token = sb.toString();
         if (!isValidNumber(token)) {
@@ -103,8 +87,16 @@ public class JsonLexer {
         return new Token(token, NUMBER);
     }
 
+    private Token parseWord(String expected, Token token) {
+        for (char letter : expected.toCharArray()) {
+            assertChar(letter, curr);
+            curr = iterator.next();
+        }
+        return token;
+    }
+
     private Token parseSingle(Token constant) {
-        curr = nextChar();
+        curr = iterator.next();
         return constant;
     }
 
@@ -124,13 +116,6 @@ public class JsonLexer {
                 return ch;
         }
         return null;
-    }
-
-    private Character nextChar() {
-        if (!iterator.hasNext()) {
-            return null;
-        }
-        return iterator.next();
     }
 
     private boolean isNonWhite(char ch) {

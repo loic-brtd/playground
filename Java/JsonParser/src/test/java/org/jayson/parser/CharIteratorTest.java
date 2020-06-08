@@ -18,8 +18,7 @@ public class CharIteratorTest {
         assertTrue(iterator.hasNext());
         assertEquals('c', iterator.next());
         assertFalse(iterator.hasNext());
-        assertThrows(NoSuchElementException.class, iterator::next);
-        assertThrows(NoSuchElementException.class, iterator::next);
+        assertNull(iterator.next());
     }
 
     @Test

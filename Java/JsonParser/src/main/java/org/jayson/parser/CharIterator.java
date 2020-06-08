@@ -22,14 +22,14 @@ public class CharIterator {
         return index + 1 < source.length();
     }
 
-    public char next() {
+    public Character next() {
         if (hasNext()) {
             updateLineAndColumn();
             index++;
+            return source.charAt(index);
         } else {
-            throw new NoSuchElementException();
+            return null;
         }
-        return source.charAt(index);
     }
 
     private void updateLineAndColumn() {
