@@ -29,10 +29,6 @@ public class Token {
 
     @Override
     public String toString() {
-        // return "Token{" +
-        //         "value=<" + value + '>' +
-        //         ", type=" + type +
-        //         '}';
         return type + "(" + value + ")";
     }
 

@@ -1,9 +1,7 @@
 package org.jayson.parser;
 
-import org.jayson.dto.Json;
 import org.junit.jupiter.api.Test;
 
-import static org.jayson.parser.JsonLexer.*;
 import static org.jayson.parser.Token.Type.*;
 import static org.junit.jupiter.api.Assertions.*;
 

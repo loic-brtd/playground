@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static org.jayson.parser.Token.Type.*;
+import static org.jayson.parser.Token.Type.NUMBER;
+import static org.jayson.parser.Token.Type.STRING;
 
 public class JsonLexer {
 
@@ -180,13 +181,13 @@ public class JsonLexer {
         throw new EndOfSourceException(message);
     }
 
-    static class EndOfSourceException extends RuntimeException {
+    public static class EndOfSourceException extends RuntimeException {
         private EndOfSourceException(String message) {
             super(message);
         }
     }
 
-    static class UnexpectedCharacterException extends RuntimeException {
+    public static class UnexpectedCharacterException extends RuntimeException {
         private UnexpectedCharacterException(String message) {
             super(message);
         }
