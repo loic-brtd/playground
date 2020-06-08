@@ -1,6 +1,5 @@
 package org.jayson.parser;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class CharIterator {
@@ -52,18 +51,4 @@ public class CharIterator {
     public int getColumn() {
         return column;
     }
-
-    public boolean canPeek(int offset) {
-        int peekIndex = index + offset;
-        return peekIndex >= 0 && peekIndex < source.length();
-    }
-
-    public char peek(int offset) {
-        int peekIndex = index + offset;
-        if (!canPeek(offset)) {
-            throw new NoSuchElementException();
-        }
-        return source.charAt(peekIndex);
-    }
-
 }

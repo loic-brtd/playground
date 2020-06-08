@@ -33,7 +33,7 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, String value) {
-        map.put(key, new JsonString(value));
+        map.put(key, (value == null) ? null : new JsonString(value));
         return this;
     }
 
@@ -82,6 +82,11 @@ public class JsonObject implements JsonElement {
             return ((JsonBoolean) element).getValue();
         }
         return null;
+    }
+
+    public JsonObject putNull(String key) {
+        map.put(key, null);
+        return this;
     }
 
     @Override

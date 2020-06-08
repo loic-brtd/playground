@@ -22,26 +22,6 @@ public class CharIteratorTest {
     }
 
     @Test
-    public void testPeek() {
-        CharIterator iterator = new CharIterator("abc");
-        assertFalse(iterator.canPeek(0));
-        assertTrue(iterator.canPeek(1));
-        assertTrue(iterator.canPeek(2));
-        assertTrue(iterator.canPeek(3));
-        assertFalse(iterator.canPeek(4));
-        assertEquals('a', iterator.peek(1));
-        assertEquals('b', iterator.peek(2));
-        assertEquals('c', iterator.peek(3));
-        iterator.next();
-        iterator.next();
-        assertEquals('a', iterator.peek(-1));
-        assertEquals('b', iterator.peek(0));
-        assertEquals('c', iterator.peek(1));
-        assertThrows(NoSuchElementException.class, () -> iterator.peek(2));
-        assertThrows(NoSuchElementException.class, () -> iterator.peek(-2));
-    }
-
-    @Test
     public void testEmptySource() {
         CharIterator iterator = new CharIterator("");
         assertFalse(iterator.hasNext());
@@ -51,5 +31,4 @@ public class CharIteratorTest {
     public void testNullSource() {
         assertThrows(NullPointerException.class, () -> new CharIterator(null));
     }
-
 }

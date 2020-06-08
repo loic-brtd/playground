@@ -225,9 +225,23 @@ class JsonLexerTest {
         assertConsumed(lexer);
     }
 
+    @Test
+    public void testNullValue() {
+        JsonLexer lexer = new JsonLexer("{\"here\":null,\"not_here\":12}");
+        assertEquals(new Token("{", OPENING_CURLY), lexer.nextToken());
+        assertEquals(new Token("\"here\"", STRING), lexer.nextToken());
+        assertEquals(new Token(":", COLON), lexer.nextToken());
+        assertEquals(new Token("null", NULL), lexer.nextToken());
+        assertEquals(new Token(",", COMMA), lexer.nextToken());
+        assertEquals(new Token("\"not_here\"", STRING), lexer.nextToken());
+        assertEquals(new Token(":", COLON), lexer.nextToken());
+        assertEquals(new Token("12", NUMBER), lexer.nextToken());
+        assertEquals(new Token("}", CLOSING_CURLY), lexer.nextToken());
+        assertConsumed(lexer);
+    }
+
     private void assertConsumed(JsonLexer lexer) {
         assertFalse(lexer.hasNext());
         assertNull(lexer.nextToken());
     }
-
 }

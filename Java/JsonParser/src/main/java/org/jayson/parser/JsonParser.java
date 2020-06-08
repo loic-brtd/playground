@@ -3,6 +3,8 @@ package org.jayson.parser;
 import org.jayson.dto.*;
 import org.jayson.parser.Token.Type;
 
+import java.util.Objects;
+
 import static org.jayson.parser.Token.Type.*;
 
 public class JsonParser {
@@ -11,6 +13,7 @@ public class JsonParser {
     private Token token;
 
     public JsonParser(JsonLexer lexer) {
+        Objects.requireNonNull(lexer);
         this.lexer = lexer;
     }
 
@@ -50,6 +53,8 @@ public class JsonParser {
                 return parseString();
             case BOOLEAN:
                 return parseBoolean();
+            case NULL:
+                return parseNull();
             case NUMBER:
                 return parseNumber();
             case OPENING_BRACKET:
@@ -59,6 +64,12 @@ public class JsonParser {
             default:
                 throw new UnexpectedTokenException("Expected a json element but got <" + token.value + ">");
         }
+    }
+
+    private JsonElement parseNull() {
+        assertType(NULL, token);
+        token = lexer.nextToken();
+        return null;
     }
 
     private JsonArray parseArray() {

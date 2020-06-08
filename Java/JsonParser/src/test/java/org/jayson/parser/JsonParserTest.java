@@ -48,7 +48,7 @@ class JsonParserTest {
     }
 
     @Test
-    void testEmptyArray() {
+    public void testEmptyArray() {
         JsonObject actual = Json.parse("{\"array\":[]}");
         JsonObject expected = Json.object()
                 .put("array", Json.array());
@@ -56,12 +56,19 @@ class JsonParserTest {
     }
 
     @Test
-    void testArrayWithValues() {
+    public void testArrayWithValues() {
         JsonObject actual = Json.parse("{\"array\":[\"str\", 12, 5.3, true]}");
         JsonObject expected = Json.object()
                 .put("array", Json.array("str", 12, 5.3, true));
         assertEquals(expected, actual);
     }
 
-
+    @Test
+    public void testNullValue() {
+        JsonObject expected = Json.object()
+                .put("here", (String) null)
+                .put("not_here", 12);
+        JsonObject actual = Json.parse("{\"here\":null,\"not_here\":12}");
+        assertEquals(expected, actual);
+    }
 }
