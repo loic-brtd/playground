@@ -2,21 +2,43 @@ package org.jayson.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static java.lang.String.*;
+import static org.jayson.parser.Token.Type.*;
 
 public class JsonLexer {
 
+    private static final Pattern NUMBER_PATTERN =
+            Pattern.compile("-?(0|[1-9]\\d*)(\\.\\d+)?([eE][+-]?\\d+)?");
+
     private final CharIterator iterator;
-    private final String source;
-    private boolean consumed;
-    private Character c;
+    private Character curr;
 
     public JsonLexer(String source) {
-        this.source = source;
         iterator = new CharIterator(source);
-        c = nextNonWhiteCharOrNull();
-        consumed = c == null;
+        curr = nextChar();
+        curr = skipAnyWhitespace();
+    }
+
+    public boolean hasNext() {
+        return curr != null;
+    }
+
+    public String[] consumeStrings() {
+        List<String> list = new ArrayList<>();
+        while (hasNext()) {
+            list.add(nextString());
+        }
+        return list.toArray(new String[0]);
+    }
+
+    public Token[] consumeTokens() {
+        List<Token> list = new ArrayList<>();
+        while (hasNext()) {
+            list.add(nextToken());
+        }
+        return list.toArray(new Token[0]);
     }
 
     public String nextString() {
@@ -25,27 +47,37 @@ public class JsonLexer {
     }
 
     public Token nextToken() {
-        if (consumed || c == null)
+        if (curr == null)
             return null;
 
-        switch (c) {
+        Token token;
+        switch (curr) {
             case '{':
-                return parseChar(Token.OPENING_CURLY);
+                token = parse(Token.OPENING_CURLY);
+                break;
             case '}':
-                return parseChar(Token.CLOSING_CURLY);
+                token = parse(Token.CLOSING_CURLY);
+                break;
             case '[':
-                return parseChar(Token.OPENING_BRACKET);
+                token = parse(Token.OPENING_BRACKET);
+                break;
             case ']':
-                return parseChar(Token.CLOSING_BRACKET);
+                token = parse(Token.CLOSING_BRACKET);
+                break;
             case ':':
-                return parseChar(Token.COLON);
+                token = parse(Token.COLON);
+                break;
             case ',':
-                return parseChar(Token.COMMA);
+                token = parse(Token.COMMA);
+                break;
             case '"':
-                return parseString();
+                token = parseString();
+                break;
             case 't':
             case 'f':
-                return parseBoolean();
+                token = parseBoolean();
+                break;
+            case '-':
             case '0':
             case '1':
             case '2':
@@ -56,188 +88,111 @@ public class JsonLexer {
             case '7':
             case '8':
             case '9':
-                return parseNumber();
-            default:
-                unexpectedChar(c);
+                token = parseNumber();
                 break;
+            default:
+                char temp = curr;
+                curr = null;
+                throw new UnexpectedCharacterException("Unexpected character '" + temp + "'");
         }
-
-        throw new IllegalStateException();
+        curr = skipAnyWhitespace();
+        return token;
     }
 
     private Token parseBoolean() {
-        Token token;
-        if (c == 't') {
-            token = parseWord("true", Token.Type.BOOLEAN);
-        } else {
-            token = parseWord("false", Token.Type.BOOLEAN);
+        return curr == 't'
+                ? parseWord("true", Token.TRUE)
+                : parseWord("false", Token.FALSE);
+    }
+
+    private Token parseWord(String expected, Token token) {
+        for (char letter : expected.toCharArray()) {
+            assertChar(letter, curr);
+            curr = nextChar();
         }
         return token;
     }
 
     private Token parseString() {
         StringBuilder token = new StringBuilder();
-        if (c != '"') {
-            unexpectedChar(c);
-        }
-        token.append(c);
-        c = nextCharOrThrow();
-        while (c != '"') {
-            token.append(c);
-            c = nextCharOrThrow();
-        }
-        token.append(c);
-        c = nextNonWhiteCharOrNull();
-        return new Token(token.toString(), Token.Type.STRING);
+        assertChar('"', curr);
+        do {
+            token.append(curr);
+            curr = nextChar();
+        } while (curr != null && curr != '"');
+        assertChar('"', curr);
+        token.append(curr);
+        curr = nextChar();
+        return new Token(token.toString(), STRING);
     }
 
     private Token parseNumber() {
-        StringBuilder token = new StringBuilder();
-        token.append(parseInteger());
-        if (c != null && c == '.') {
-            token.append(c);
-            c = nextCharOrThrow();
-            if (!isIn("0123456789")) {
-                unexpectedChar(c);
-            }
-            token.append(parseDigits());
+        StringBuilder sb = new StringBuilder();
+        while (isAnyChar("0123456789-+.eE", curr)) {
+            sb.append(curr);
+            curr = nextChar();
         }
-        return new Token(token.toString(), Token.Type.NUMBER);
+        String token = sb.toString();
+        if (!isValidNumber(token)) {
+            curr = null;
+            throw new UnexpectedCharacterException("Invalid number '" + token + "'");
+        }
+        return new Token(token, NUMBER);
     }
 
-    private String parseInteger() {
-        StringBuilder token = new StringBuilder();
-        if (!isIn("123456789")) {
-            unexpectedChar(c);
-        }
-        token.append(c);
-        c = nextCharOrNull();
-        token.append(parseDigits());
-        return token.toString();
-    }
-
-    private String parseDigits() {
-        StringBuilder tokens = new StringBuilder();
-        while (c != null && isIn("0123456789")) {
-            tokens.append(c);
-            c = nextCharOrNull();
-        }
-        skipWhitespaceIfPresent();
-        return tokens.toString();
-    }
-
-    private void skipWhitespaceIfPresent() {
-        if (c != null && isWhitespace(c)) {
-            c = nextNonWhiteCharOrNull();
-        }
-    }
-
-    private Token parseChar(Token constant) {
-        c = nextNonWhiteCharOrNull();
-        if (c == null)
-            consumed = true;
+    private Token parse(Token constant) {
+        curr = nextChar();
         return constant;
     }
 
-    private Token parseWord(String expected, Token.Type type) {
-        char[] word = expected.toCharArray();
-        int i;
-        for (i = 0; i < word.length - 1; i++) {
-            if (c != word[i]) unexpectedChar(c);
-            c = nextCharOrThrow();
-        }
-        if (c != word[i]) unexpectedChar(c);
-        c = nextNonWhiteCharOrNull();
-        return new Token(expected, type);
+    private void assertChar(Character expected, Character actual) {
+        if (actual == null)
+            throw new EndOfSourceException(
+                    format("Expected '%c' but reached the end", expected));
+        if (actual != expected)
+            throw new UnexpectedCharacterException(
+                    format("Expected '%c' but got '%c'", expected, actual));
     }
 
-    private char nextCharOrThrow() {
-        if (!iterator.hasNext()) {
-            consumed = true;
-            endOfSource();
+    private Character skipAnyWhitespace() {
+        if (curr == null || isNonWhite(curr))
+            return curr;
+        while (iterator.hasNext()) {
+            char ch = iterator.next();
+            if (isNonWhite(ch))
+                return ch;
         }
-        return iterator.next();
+        return null;
     }
 
-    private Character nextCharOrNull() {
+    private Character nextChar() {
         if (!iterator.hasNext()) {
-            consumed = true;
             return null;
         }
         return iterator.next();
     }
 
-    private Character nextNonWhiteCharOrNull() {
-        char c;
-        do {
-            if (!iterator.hasNext()) {
-                consumed = true;
-                return null;
-            }
-            c = iterator.next();
-        } while (isWhitespace(c));
-        return c;
+    private boolean isNonWhite(char ch) {
+        return ch != 0x0020 && ch != 0x000A && ch != 0x000D && ch != 0x0009;
     }
 
-    private boolean isWhitespace(char ch) {
-        return ch == 0x0020 || ch == 0x000A || ch == 0x000D || ch == 0x0009;
+    private boolean isAnyChar(String s, Character actual) {
+        return actual != null && s.indexOf(actual) != -1;
     }
 
-    private boolean isIn(String s) {
-        return s.indexOf(c) != -1;
-    }
-
-    public boolean isConsumed() {
-        return consumed;
-    }
-
-    public boolean hasNext() {
-        return !consumed;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public String[] consumeStrings() {
-        List<String> list = new ArrayList<>();
-        while (!consumed) {
-            list.add(nextString());
-        }
-        return list.toArray(new String[0]);
-    }
-
-    public Token[] consumeTokens() {
-        List<Token> list = new ArrayList<>();
-        while (!consumed) {
-            list.add(nextToken());
-        }
-        return list.toArray(new Token[0]);
-    }
-
-    private void unexpectedChar(char c) {
-        consumed = true;
-        throw new UnexpectedCharacterException(c, iterator.getLine(), iterator.getColumn());
-    }
-
-    private void endOfSource() {
-        consumed = true;
-        throw new EndOfSourceException();
+    private boolean isValidNumber(String token) {
+        return NUMBER_PATTERN.matcher(token).matches();
     }
 
     static class EndOfSourceException extends RuntimeException {
-        private EndOfSourceException() {
-            super("Source ended prematurely");
+        private EndOfSourceException(String message) {
+            super(message);
         }
     }
 
-    static class UnexpectedCharacterException extends RuntimeException {
-        private UnexpectedCharacterException(char c) {
-            super(format("Encountered unexpected character '%s'", c));
-        }
-
-        private UnexpectedCharacterException(char c, int line, int column) {
-            super(format("Encountered unexpected character '%s' (%d:%d)", c, line, column));
+    class UnexpectedCharacterException extends RuntimeException {
+        private UnexpectedCharacterException(String message) {
+            super(format("(%d:%d) %s", iterator.getLine(), iterator.getColumn(), message));
         }
     }
 }

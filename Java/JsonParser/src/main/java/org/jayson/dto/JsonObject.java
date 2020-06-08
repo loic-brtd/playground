@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 public class JsonObject implements JsonElement {
 
-    private Map<String, JsonElement> values;
+    private Map<String, JsonElement> map;
 
     public JsonObject() {
-        values = new HashMap<>();
+        map = new HashMap<>();
     }
 
     @Override
@@ -20,25 +20,25 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonElement get(String key) {
-        return values.get(key);
+        return map.get(key);
     }
 
     public Set<String> keys() {
-        return values.keySet();
+        return map.keySet();
     }
 
     public JsonObject put(String key, JsonElement value) {
-        values.put(key, value);
+        map.put(key, value);
         return this;
     }
 
     public JsonObject put(String key, String value) {
-        values.put(key, new JsonString(value));
+        map.put(key, new JsonString(value));
         return this;
     }
 
     public String getString(String key) {
-        JsonElement element = values.get(key);
+        JsonElement element = map.get(key);
         if (element instanceof JsonString) {
             return ((JsonString) element).getValue();
         }
@@ -46,12 +46,12 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, double value) {
-        values.put(key, new JsonNumber(value));
+        map.put(key, new JsonNumber(value));
         return this;
     }
 
     public Double getDouble(String key) {
-        JsonElement element = values.get(key);
+        JsonElement element = map.get(key);
         if (element instanceof JsonNumber) {
             return ((JsonNumber) element).getDouble();
         }
@@ -59,12 +59,12 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, long value) {
-        values.put(key, new JsonNumber(value));
+        map.put(key, new JsonNumber(value));
         return this;
     }
 
     public Long getLong(String key) {
-        JsonElement element = values.get(key);
+        JsonElement element = map.get(key);
         if (element instanceof JsonNumber) {
             return ((JsonNumber) element).getLong();
         }
@@ -72,12 +72,12 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, boolean value) {
-        values.put(key, new JsonBoolean(value));
+        map.put(key, new JsonBoolean(value));
         return this;
     }
 
     public Boolean getBoolean(String key) {
-        JsonElement element = values.get(key);
+        JsonElement element = map.get(key);
         if (element instanceof JsonBoolean) {
             return ((JsonBoolean) element).getValue();
         }
@@ -86,7 +86,7 @@ public class JsonObject implements JsonElement {
 
     @Override
     public String toString() {
-        return values.entrySet().stream()
+        return map.entrySet().stream()
                 .map(e -> '"' + e.getKey() + '"' + ':' + e.getValue())
                 .collect(Collectors.joining(",", "{", "}"));
     }
@@ -96,11 +96,11 @@ public class JsonObject implements JsonElement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JsonObject object = (JsonObject) o;
-        return Objects.equals(values, object.values);
+        return Objects.equals(map, object.map);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(values);
+        return Objects.hash(map);
     }
 }
