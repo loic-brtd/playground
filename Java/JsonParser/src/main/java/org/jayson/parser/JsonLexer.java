@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static java.lang.String.*;
 import static org.jayson.parser.Token.Type.*;
 
 public class JsonLexer {
@@ -18,65 +17,35 @@ public class JsonLexer {
     public JsonLexer(String source) {
         iterator = new CharIterator(source);
         curr = nextChar();
-        curr = skipAnyWhitespace();
     }
 
     public boolean hasNext() {
+        curr = skipAnyWhitespace();
         return curr != null;
     }
 
-    public String[] consumeStrings() {
-        List<String> list = new ArrayList<>();
-        while (hasNext()) {
-            list.add(nextString());
-        }
-        return list.toArray(new String[0]);
-    }
-
-    public Token[] consumeTokens() {
-        List<Token> list = new ArrayList<>();
-        while (hasNext()) {
-            list.add(nextToken());
-        }
-        return list.toArray(new Token[0]);
-    }
-
-    public String nextString() {
-        Token token = nextToken();
-        return token == null ? null : token.value;
-    }
-
     public Token nextToken() {
-        if (curr == null)
+        if (!hasNext())
             return null;
 
-        Token token;
         switch (curr) {
             case '{':
-                token = parse(Token.OPENING_CURLY);
-                break;
+                return parse(Token.OPENING_CURLY);
             case '}':
-                token = parse(Token.CLOSING_CURLY);
-                break;
+                return parse(Token.CLOSING_CURLY);
             case '[':
-                token = parse(Token.OPENING_BRACKET);
-                break;
+                return parse(Token.OPENING_BRACKET);
             case ']':
-                token = parse(Token.CLOSING_BRACKET);
-                break;
+                return parse(Token.CLOSING_BRACKET);
             case ':':
-                token = parse(Token.COLON);
-                break;
+                return parse(Token.COLON);
             case ',':
-                token = parse(Token.COMMA);
-                break;
+                return parse(Token.COMMA);
             case '"':
-                token = parseString();
-                break;
+                return parseString();
             case 't':
             case 'f':
-                token = parseBoolean();
-                break;
+                return parseBoolean();
             case '-':
             case '0':
             case '1':
@@ -88,15 +57,13 @@ public class JsonLexer {
             case '7':
             case '8':
             case '9':
-                token = parseNumber();
-                break;
+                return parseNumber();
             default:
                 char temp = curr;
                 curr = null;
-                throw new UnexpectedCharacterException("Unexpected character '" + temp + "'");
+                throwUnexpectedChar("Unexpected character '%s'", temp);
+                return null;
         }
-        curr = skipAnyWhitespace();
-        return token;
     }
 
     private Token parseBoolean() {
@@ -135,7 +102,7 @@ public class JsonLexer {
         String token = sb.toString();
         if (!isValidNumber(token)) {
             curr = null;
-            throw new UnexpectedCharacterException("Invalid number '" + token + "'");
+            throwUnexpectedChar("Invalid number '%s'", token);
         }
         return new Token(token, NUMBER);
     }
@@ -147,11 +114,9 @@ public class JsonLexer {
 
     private void assertChar(Character expected, Character actual) {
         if (actual == null)
-            throw new EndOfSourceException(
-                    format("Expected '%c' but reached the end", expected));
+            throwEndOfSource("Expected '%c' but reached the end");
         if (actual != expected)
-            throw new UnexpectedCharacterException(
-                    format("Expected '%c' but got '%c'", expected, actual));
+            throwUnexpectedChar("Expected '%c' but got '%c'", expected, actual);
     }
 
     private Character skipAnyWhitespace() {
@@ -184,15 +149,46 @@ public class JsonLexer {
         return NUMBER_PATTERN.matcher(token).matches();
     }
 
+    public String[] consumeStrings() {
+        List<String> list = new ArrayList<>();
+        while (hasNext()) {
+            list.add(nextString());
+        }
+        return list.toArray(new String[0]);
+    }
+
+    public Token[] consumeTokens() {
+        List<Token> list = new ArrayList<>();
+        while (hasNext()) {
+            list.add(nextToken());
+        }
+        return list.toArray(new Token[0]);
+    }
+
+    public String nextString() {
+        Token token = nextToken();
+        return token == null ? null : token.value;
+    }
+
+    private void throwUnexpectedChar(String message, Object... objects) {
+        message = String.format(message, objects);
+        message = String.format("(%d:%d) %s", iterator.getLine(), iterator.getColumn(), message);
+        throw new UnexpectedCharacterException(message);
+    }
+
+    private void throwEndOfSource(String message) {
+        throw new EndOfSourceException(message);
+    }
+
     static class EndOfSourceException extends RuntimeException {
         private EndOfSourceException(String message) {
             super(message);
         }
     }
 
-    class UnexpectedCharacterException extends RuntimeException {
+    static class UnexpectedCharacterException extends RuntimeException {
         private UnexpectedCharacterException(String message) {
-            super(format("(%d:%d) %s", iterator.getLine(), iterator.getColumn(), message));
+            super(message);
         }
     }
 }

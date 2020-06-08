@@ -1,5 +1,6 @@
 package org.jayson.parser;
 
+import org.jayson.dto.Json;
 import org.junit.jupiter.api.Test;
 
 import static org.jayson.parser.JsonLexer.*;
@@ -76,14 +77,14 @@ class JsonLexerTest {
     @Test
     public void testEmptyStringNotClosed() {
         JsonLexer lexer = new JsonLexer("  \"\" \" true ");
-        assertThrows(EndOfSourceException.class, lexer::consumeStrings);
+        assertThrows(JsonLexer.EndOfSourceException.class, lexer::consumeStrings);
         assertConsumed(lexer);
     }
 
     @Test
     public void testStringWithoutEndingQuote() {
         JsonLexer lexer = new JsonLexer("\"string");
-        assertThrows(EndOfSourceException.class, lexer::consumeStrings);
+        assertThrows(JsonLexer.EndOfSourceException.class, lexer::consumeStrings);
         assertConsumed(lexer);
     }
 
