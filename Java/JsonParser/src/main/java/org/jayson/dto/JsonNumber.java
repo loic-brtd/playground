@@ -40,9 +40,14 @@ public class JsonNumber implements JsonElement {
     }
 
     @Override
-    public String toString() {
+    public String toJson() {
         if (isDouble) return String.valueOf(doubleValue);
         return String.valueOf(longValue);
+    }
+
+    @Override
+    public String toString() {
+        return toJson();
     }
 
     @Override

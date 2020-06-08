@@ -58,10 +58,15 @@ public class JsonArray implements JsonElement {
     }
 
     @Override
-    public String toString() {
+    public String toJson() {
         return elements.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",", "[", "]"));
+    }
+
+    @Override
+    public String toString() {
+        return toJson();
     }
 
     @Override

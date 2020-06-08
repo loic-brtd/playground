@@ -20,8 +20,13 @@ public class JsonBoolean implements JsonElement {
     }
 
     @Override
-    public String toString() {
+    public String toJson() {
         return value ? "true" : "false";
+    }
+
+    @Override
+    public String toString() {
+        return toJson();
     }
 
     @Override

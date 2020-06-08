@@ -23,4 +23,14 @@ public interface JsonElement {
         return false;
     }
 
+    String toJson();
+
+    default String toJson(String indent, int level) {
+        return toJson();
+    }
+
+    default String toJson(String indent) {
+        return toJson(indent, 0);
+    }
+
 }

@@ -1,17 +1,15 @@
 package org.jayson.dto;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JsonObject implements JsonElement {
 
     private Map<String, JsonElement> map;
+    private int level;
 
     public JsonObject() {
-        map = new HashMap<>();
+        map = new LinkedHashMap<>();
     }
 
     @Override
@@ -28,6 +26,9 @@ public class JsonObject implements JsonElement {
     }
 
     public JsonObject put(String key, JsonElement value) {
+        // if (value instanceof JsonObject) {
+        //     ((JsonObject) value).level = level + 1;
+        // }
         map.put(key, value);
         return this;
     }
@@ -90,10 +91,28 @@ public class JsonObject implements JsonElement {
     }
 
     @Override
-    public String toString() {
+    public String toJson() {
         return map.entrySet().stream()
                 .map(e -> '"' + e.getKey() + '"' + ':' + e.getValue())
                 .collect(Collectors.joining(",", "{", "}"));
+    }
+
+    @Override
+    public String toJson(String indent, int level) {
+        String indent1 = repeat(level + 1, indent);
+        String indent2 = repeat(level, indent);
+        return map.entrySet().stream()
+                .map(e -> indent1 + '"' + e.getKey() + '"' + ": " + e.getValue().toJson(indent, level + 1))
+                .collect(Collectors.joining(",\n", "{\n", "\n" + indent2 + "}"));
+    }
+
+    private static String repeat(int n, String s) {
+        return new String(new char[n]).replace("\0", s);
+    }
+
+    @Override
+    public String toString() {
+        return toJson();
     }
 
     @Override

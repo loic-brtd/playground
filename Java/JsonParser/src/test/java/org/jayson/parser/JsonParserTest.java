@@ -3,6 +3,11 @@ package org.jayson.parser;
 import org.jayson.dto.*;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static java.util.stream.Collectors.*;
 import static org.jayson.parser.JsonParser.UnexpectedTokenException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,5 +75,30 @@ class JsonParserTest {
                 .put("not_here", 12);
         JsonObject actual = Json.parse("{\"here\":null,\"not_here\":12}");
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testValid1() {
+        String source = loadResource("valid1.json");
+        String parsed = Json.parse(source).toJson();
+        String parsedAgain = Json.parse(parsed).toJson();
+        assertEquals(parsed, parsedAgain);
+    }
+
+    @Test
+    public void testValid2() {
+        String source = loadResource("valid2.json");
+        String parsed = Json.parse(source).toJson();
+        String parsedAgain = Json.parse(parsed).toJson();
+        assertEquals(parsed, parsedAgain);
+    }
+
+    private static String loadResource(String fileName) {
+        try {
+            URI uri = ClassLoader.getSystemResource(fileName).toURI();
+            return Files.lines(Paths.get(uri)).collect(joining("\n"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
