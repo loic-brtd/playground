@@ -16,10 +16,20 @@ public class Token {
 
     public final String value;
     public final Type type;
+    public final int line, column;
 
     public Token(String value, Type type) {
         this.value = value;
         this.type = type;
+        this.line = 0;
+        this.column = 0;
+    }
+
+    public Token(String value, Type type, int line, int column) {
+        this.value = value;
+        this.type = type;
+        this.line = line;
+        this.column = column;
     }
 
     enum Type {

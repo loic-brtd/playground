@@ -25,7 +25,7 @@ public class JsonParser {
     }
 
     private JsonObject parseObject() {
-        JsonObject object = Json.object();
+        JsonObject object = new JsonObject();
         assertType(OPENING_CURLY, token);
         token = lexer.nextToken();
         while (token != null && token.type != CLOSING_CURLY) {
@@ -34,10 +34,14 @@ public class JsonParser {
             token = lexer.nextToken();
             JsonElement value = parseElement();
             object.put(key, value);
-            if (token != null && token.type == COMMA) {
+            if (token == null)
+                throw new UnexpectedTokenException(
+                        "Expected a comma or a closing curly bracket but reached the end");
+            if (token.type != COMMA && token.type != CLOSING_CURLY)
+                throw new UnexpectedTokenException(
+                        "Expected a comma or a closing curly bracket but got <" + token.value + ">");
+            if (token.type == COMMA)
                 token = lexer.nextToken();
-                assertType(STRING, token);
-            }
         }
         assertType(CLOSING_CURLY, token);
         token = lexer.nextToken();
@@ -79,13 +83,12 @@ public class JsonParser {
         while (token != null && token.type != CLOSING_BRACKET) {
             JsonElement element = parseElement();
             array.push(element);
-            if (token == null) {
+            if (token == null)
                 throw new UnexpectedTokenException(
                         "Expected a comma or a closing bracket but reached the end");
-            } else if (token.type != COMMA && token.type != CLOSING_BRACKET) {
+            if (token.type != COMMA && token.type != CLOSING_BRACKET)
                 throw new UnexpectedTokenException(
                         "Expected a comma or a closing bracket but got <" + token.value + ">");
-            }
             if (token.type == COMMA)
                 token = lexer.nextToken();
         }
@@ -133,6 +136,11 @@ public class JsonParser {
     private void assertNull(Token actual) {
         if (actual != null)
             throw new UnexpectedTokenException("Unexpected token <" + actual.value + '>');
+    }
+
+    private void throwUnexpectedToken(String message, Object... objects) {
+        message = String.format(message, objects);
+        message = String.format("(%d:%d) %s");
     }
 
     public static class UnexpectedTokenException extends RuntimeException {

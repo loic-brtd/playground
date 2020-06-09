@@ -15,7 +15,7 @@ public class JsonBoolean implements JsonElement {
         return true;
     }
 
-    public Boolean getValue() {
+    public boolean getValue() {
         return value;
     }
 

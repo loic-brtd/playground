@@ -1,6 +1,8 @@
 package org.jayson.dto;
 
 
+import org.jayson.format.JsonFormat;
+
 public interface JsonElement {
 
     default boolean isBoolean() {
@@ -25,12 +27,16 @@ public interface JsonElement {
 
     String toJson();
 
-    default String toJson(String indent, int level) {
-        return toJson();
-    }
+    // default String toJson(String indent, int level) {
+    //     return toJson();
+    // }
+    //
+    // default String toJson(String indent) {
+    //     return toJson(indent, 0);
+    // }
 
-    default String toJson(String indent) {
-        return toJson(indent, 0);
+    default String toJson(JsonFormat format) {
+        return format.format(this);
     }
 
 }

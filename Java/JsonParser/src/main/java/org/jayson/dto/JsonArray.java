@@ -15,6 +15,11 @@ public class JsonArray implements JsonElement {
         this.elements = new ArrayList<>();
     }
 
+    public JsonArray(JsonElement... elements) {
+        this.elements = new ArrayList<>();
+        Collections.addAll(this.elements, elements);
+    }
+
     public int size() {
         return elements.size();
     }
@@ -23,9 +28,8 @@ public class JsonArray implements JsonElement {
         return elements.get(index);
     }
 
-    public JsonArray(JsonElement... elements) {
-        this.elements = new ArrayList<>();
-        Collections.addAll(this.elements, elements);
+    public List<JsonElement> values() {
+        return Collections.unmodifiableList(elements);
     }
 
     @Override
@@ -34,6 +38,8 @@ public class JsonArray implements JsonElement {
     }
 
     public JsonArray push(String value) {
+        if (value == null)
+            elements.add(null);
         elements.add(new JsonString(value));
         return this;
     }
@@ -58,6 +64,11 @@ public class JsonArray implements JsonElement {
         return this;
     }
 
+    public JsonArray pushNull() {
+        elements.add(null);
+        return this;
+    }
+
     @Override
     public String toJson() {
         return elements.stream()
@@ -65,22 +76,22 @@ public class JsonArray implements JsonElement {
                 .collect(joining(",", "[", "]"));
     }
 
-    @Override
-    public String toJson(String indent, int level) {
-        String margin = repeat(level, indent);
-        return elements.stream()
-                .map(e -> formatElement(e, level, indent))
-                .collect(joining(",\n", "[\n", "\n" + margin + "]"));
-    }
-
-    private String formatElement(JsonElement element, int level, String indent) {
-        String margin = repeat(level + 1, indent);
-        return margin + (element == null ? "null" : element.toJson(indent, level + 1));
-    }
-
-    private static String repeat(int n, String s) {
-        return new String(new char[n]).replace("\0", s);
-    }
+    // @Override
+    // public String toJson(String indent, int level) {
+    //     String margin = repeat(level, indent);
+    //     return elements.stream()
+    //             .map(e -> formatElement(e, level, indent))
+    //             .collect(joining(",\n", "[\n", "\n" + margin + "]"));
+    // }
+    //
+    // private String formatElement(JsonElement element, int level, String indent) {
+    //     String margin = repeat(level + 1, indent);
+    //     return margin + (element == null ? "null" : element.toJson(indent, level + 1));
+    // }
+    //
+    // private static String repeat(int n, String s) {
+    //     return new String(new char[n]).replace("\0", s);
+    // }
 
     @Override
     public String toString() {

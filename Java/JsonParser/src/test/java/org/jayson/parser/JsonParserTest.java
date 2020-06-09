@@ -78,6 +78,12 @@ class JsonParserTest {
     }
 
     @Test
+    public void testMissingComma() {
+        String source = "{\"salut\":10\"hello\":10}";
+        assertThrows(UnexpectedTokenException.class, () -> Json.parse(source));
+    }
+
+    @Test
     public void testValid1() {
         String source = loadResource("valid1.json");
         String parsed = Json.parse(source).toJson();

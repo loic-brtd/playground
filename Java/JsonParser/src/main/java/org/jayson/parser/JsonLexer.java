@@ -74,6 +74,7 @@ public class JsonLexer {
     }
 
     private Token parseNumber() {
+        int line = iterator.getLine(), col = iterator.getColumn();
         StringBuilder sb = new StringBuilder();
         while (isAnyChar("0123456789-+.eE", curr)) {
             sb.append(curr);
@@ -84,7 +85,7 @@ public class JsonLexer {
             curr = null;
             throwUnexpectedChar("Invalid number '%s'", token);
         }
-        return new Token(token, NUMBER);
+        return new Token(token, NUMBER, line, col);
     }
 
     private Token parseWord(String expected, Token token) {

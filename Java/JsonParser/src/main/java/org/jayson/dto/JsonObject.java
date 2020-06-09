@@ -29,6 +29,10 @@ public class JsonObject implements JsonElement {
         return map.keySet();
     }
 
+    public Set<Entry<String, JsonElement>> entries() {
+        return map.entrySet();
+    }
+
     public JsonObject put(String key, JsonElement value) {
         Objects.requireNonNull(key);
         map.put(key, value);
@@ -104,23 +108,23 @@ public class JsonObject implements JsonElement {
                 .collect(joining(",", "{", "}"));
     }
 
-    @Override
-    public String toJson(String indent, int level) {
-        String margin = repeat(level, indent);
-        return map.entrySet().stream()
-                .map(e -> formatEntry(e, indent, level))
-                .collect(joining(",\n", "{\n", "\n" + margin + "}"));
-    }
-
-    private String formatEntry(Entry<String, JsonElement> entry, String indent, int level) {
-        String margin = repeat(level + 1, indent);
-        String value = entry.getValue() == null ? "null" : entry.getValue().toJson(indent, level + 1);
-        return String.format("%s\"%s\": %s", margin, entry.getKey(), value);
-    }
-
-    private static String repeat(int n, String s) {
-        return new String(new char[n]).replace("\0", s);
-    }
+    // @Override
+    // public String toJson(String indent, int level) {
+    //     String margin = repeat(level, indent);
+    //     return map.entrySet().stream()
+    //             .map(e -> formatEntry(e, indent, level))
+    //             .collect(joining(",\n", "{\n", '\n' + margin + '}'));
+    // }
+    //
+    // private String formatEntry(Entry<String, JsonElement> entry, String indent, int level) {
+    //     String margin = repeat(level + 1, indent);
+    //     String value = entry.getValue() == null ? "null" : entry.getValue().toJson(indent, level + 1);
+    //     return String.format("%s\"%s\": %s", margin, entry.getKey(), value);
+    // }
+    //
+    // private static String repeat(int n, String s) {
+    //     return new String(new char[n]).replace("\0", s);
+    // }
 
     @Override
     public String toString() {
