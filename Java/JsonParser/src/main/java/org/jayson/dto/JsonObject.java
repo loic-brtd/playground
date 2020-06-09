@@ -6,8 +6,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import static java.util.stream.Collectors.joining;
-
 public class JsonObject implements JsonElement {
 
     private Map<String, JsonElement> map;
@@ -102,33 +100,8 @@ public class JsonObject implements JsonElement {
     }
 
     @Override
-    public String toJson() {
-        return map.entrySet().stream()
-                .map(e -> '"' + e.getKey() + '"' + ':' + e.getValue())
-                .collect(joining(",", "{", "}"));
-    }
-
-    // @Override
-    // public String toJson(String indent, int level) {
-    //     String margin = repeat(level, indent);
-    //     return map.entrySet().stream()
-    //             .map(e -> formatEntry(e, indent, level))
-    //             .collect(joining(",\n", "{\n", '\n' + margin + '}'));
-    // }
-    //
-    // private String formatEntry(Entry<String, JsonElement> entry, String indent, int level) {
-    //     String margin = repeat(level + 1, indent);
-    //     String value = entry.getValue() == null ? "null" : entry.getValue().toJson(indent, level + 1);
-    //     return String.format("%s\"%s\": %s", margin, entry.getKey(), value);
-    // }
-    //
-    // private static String repeat(int n, String s) {
-    //     return new String(new char[n]).replace("\0", s);
-    // }
-
-    @Override
     public String toString() {
-        return toJson();
+        return format();
     }
 
     @Override

@@ -20,13 +20,8 @@ public class JsonString implements JsonElement {
     }
 
     @Override
-    public String toJson() {
-        return '"' + value + '"';
-    }
-
-    @Override
     public String toString() {
-        return toJson();
+        return format();
     }
 
     @Override

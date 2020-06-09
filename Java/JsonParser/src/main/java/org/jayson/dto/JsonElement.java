@@ -1,6 +1,7 @@
 package org.jayson.dto;
 
 
+import org.jayson.Json;
 import org.jayson.format.JsonFormat;
 
 public interface JsonElement {
@@ -25,17 +26,11 @@ public interface JsonElement {
         return false;
     }
 
-    String toJson();
+    default String format() {
+        return Json.INLINE.format(this);
+    }
 
-    // default String toJson(String indent, int level) {
-    //     return toJson();
-    // }
-    //
-    // default String toJson(String indent) {
-    //     return toJson(indent, 0);
-    // }
-
-    default String toJson(JsonFormat format) {
+    default String format(JsonFormat format) {
         return format.format(this);
     }
 

@@ -103,7 +103,7 @@ public class JsonLexer {
 
     private void assertChar(Character expected, Character actual) {
         if (actual == null)
-            throwEndOfSource("Expected '%c' but reached the end");
+            throwEndOfSource("Expected '%c' but reached the end", expected);
         if (actual != expected)
             throwUnexpectedChar("Expected '%c' but got '%c'", expected, actual);
     }
@@ -152,15 +152,16 @@ public class JsonLexer {
         return token == null ? null : token.value;
     }
 
-    private void throwUnexpectedChar(String message, Object... objects) {
+    private void throwUnexpectedChar(String message, Object... args) {
         curr = null;
-        message = String.format(message, objects);
+        message = String.format(message, args);
         message = String.format("(%d:%d) %s", iterator.getLine(), iterator.getColumn(), message);
         throw new UnexpectedCharacterException(message);
     }
 
-    private void throwEndOfSource(String message) {
+    private void throwEndOfSource(String message, Object... args) {
         curr = null;
+        message = String.format(message, args);
         throw new EndOfSourceException(message);
     }
 

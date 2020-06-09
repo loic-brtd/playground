@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.stream.Collectors.joining;
-
 public class JsonArray implements JsonElement {
 
     private List<JsonElement> elements;
@@ -29,7 +27,7 @@ public class JsonArray implements JsonElement {
     }
 
     public List<JsonElement> values() {
-        return Collections.unmodifiableList(elements);
+        return elements;
     }
 
     @Override
@@ -70,32 +68,8 @@ public class JsonArray implements JsonElement {
     }
 
     @Override
-    public String toJson() {
-        return elements.stream()
-                .map(String::valueOf)
-                .collect(joining(",", "[", "]"));
-    }
-
-    // @Override
-    // public String toJson(String indent, int level) {
-    //     String margin = repeat(level, indent);
-    //     return elements.stream()
-    //             .map(e -> formatElement(e, level, indent))
-    //             .collect(joining(",\n", "[\n", "\n" + margin + "]"));
-    // }
-    //
-    // private String formatElement(JsonElement element, int level, String indent) {
-    //     String margin = repeat(level + 1, indent);
-    //     return margin + (element == null ? "null" : element.toJson(indent, level + 1));
-    // }
-    //
-    // private static String repeat(int n, String s) {
-    //     return new String(new char[n]).replace("\0", s);
-    // }
-
-    @Override
     public String toString() {
-        return toJson();
+        return format();
     }
 
     @Override

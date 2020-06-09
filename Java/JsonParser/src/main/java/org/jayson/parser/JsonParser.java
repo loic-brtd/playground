@@ -138,9 +138,9 @@ public class JsonParser {
             throw new UnexpectedTokenException("Unexpected token <" + actual.value + '>');
     }
 
-    private void throwUnexpectedToken(String message, Object... objects) {
-        message = String.format(message, objects);
-        message = String.format("(%d:%d) %s");
+    private void throwUnexpectedToken(String message, Object... args) {
+        message = String.format(message, args);
+        throw new UnexpectedTokenException(message);
     }
 
     public static class UnexpectedTokenException extends RuntimeException {

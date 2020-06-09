@@ -1,5 +1,6 @@
 package org.jayson.parser;
 
+import org.jayson.Json;
 import org.jayson.dto.*;
 import org.junit.jupiter.api.Test;
 
@@ -86,17 +87,16 @@ class JsonParserTest {
     @Test
     public void testValid1() {
         String source = loadResource("valid1.json");
-        String parsed = Json.parse(source).toJson();
-        String parsedAgain = Json.parse(parsed).toJson();
+        String parsed = Json.format(source, Json.MINIMIZED);
+        String parsedAgain = Json.format(source, Json.MINIMIZED);
         assertEquals(parsed, parsedAgain);
     }
 
     @Test
     public void testValid2() {
         String source = loadResource("valid2.json");
-        String parsed = Json.parse(source).toJson();
-        String parsedAgain = Json.parse(parsed).toJson();
-        System.out.println(Json.parse(source).toJson("    "));
+        String parsed = Json.format(source, Json.MINIMIZED);
+        String parsedAgain = Json.format(source, Json.MINIMIZED);
         assertEquals(parsed, parsedAgain);
     }
 
