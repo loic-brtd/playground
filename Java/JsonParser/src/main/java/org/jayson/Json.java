@@ -7,9 +7,7 @@ import org.jayson.format.JsonFormatter;
 import org.jayson.parser.JsonLexer;
 import org.jayson.parser.JsonParser;
 
-import java.io.IOException;
-
-import static org.jayson.format.JsonFormatter.*;
+import java.io.File;
 
 public final class Json {
 
@@ -17,6 +15,12 @@ public final class Json {
     }
 
     public static JsonElement parse(String source) {
+        JsonLexer lexer = new JsonLexer(source);
+        JsonParser parser = new JsonParser(lexer);
+        return parser.parse();
+    }
+
+    public static JsonElement parse(File source) {
         JsonLexer lexer = new JsonLexer(source);
         JsonParser parser = new JsonParser(lexer);
         return parser.parse();
@@ -67,26 +71,30 @@ public final class Json {
         return jsonArray;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
+        // JsonLexer lexer = new JsonLexer(new File("src/test/resources/valid1.json"));
+        // JsonLexer lexer = new JsonLexer(("/valid1.json"));
+        // JsonParser parser = new JsonParser(lexer);
+        // JsonElement element = parser.parse();
+        // System.out.println(element);
 
-        String source = "{\"coucou\":{\"salut\":10,\"hello\":[12, 23, true, null]}, " +
-                "\"hey\": {\"salut\":10,\"hello\":[12, 23, true, null]}}";
-
-        JsonObject object = Json.parse(source).asObject();
-        System.out.println(object.format(INLINE));
-        System.out.println(object
-                .getObject("coucou")
-                .getArray("hello")
-                .get(2)
-        );
-
-
-        // if (args.length != 1) {
-        //     throw new IllegalArgumentException();
-        // }
+        // String source = "{\"coucou\":{\"salut\":10,\"hello\":[12, 23, true, null]}, " +
+        //         "\"hey\": {\"salut\":10,\"hello\":[12, 23, true, null]}}";
         //
-        // String source = Files.lines(Paths.get(args[0])).collect(joining());
-        // System.out.println(Json.parse(source).format(MINIMIZED));
+        // JsonObject object = Json.parse(source).asObject();
+        // System.out.println(object.format(INLINE));
+        // System.out.println(object
+        //         .getObject("coucou")
+        //         .getArray("hello")
+        //         .get(2)
+        // );
+
+
+        if (args.length != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        System.out.println(Json.parse(new File(args[0])).format(JsonFormatter.TWO_SPACES));
 
         // JsonObject o = object()
         //         .put("hello", array("world", "!"))
@@ -106,23 +114,26 @@ public final class Json {
         //     object.format(FOUR_SPACES);
         // }
         // long stopTime = System.nanoTime();
-        // System.out.println(stopTime - startTime + "ns");
+        //
+        // long nano = stopTime - startTime;
+        // System.out.println(nano / 1e9 + "s");
 
         // 1_000_000 times :
 
         // non optimized :
-        // 8670455601ns
-        // 8765304066ns
+        // 8.670455601s
+        // 8.765304066s
 
         // optimized with string cache :
-        // 3927716681ns
-        // 3778578130ns
+        // 3.927716681s
+        // 3.778578130s
 
         // with parameterized fields :
-        // 4059617605ns
-        // 4216941714ns
+        // 4.059617605s
+        // 4.216941714s
 
-        // Java : fields in middle of file, close to place where used ?
-        // Java : Arrays.copyOf vs System.arrayCopy
+        // with pre-concatenations :
+        // 2.789962798s
+        // 2.811802606s
     }
 }

@@ -7,20 +7,21 @@ public interface JsonFormatter {
     JsonFormatter INLINE = new CustomFormatter();
     JsonFormatter MINIMIZED = new CustomFormatter().separator(",").colon(":");
     JsonFormatter FOUR_SPACES = new CustomFormatter().indent("    ").newline("\n");
+    JsonFormatter TWO_SPACES = new CustomFormatter().indent("  ").newline("\n");
 
     default String format(JsonElement element) {
         if (element == null) return formatNull();
-        if (element instanceof JsonObject) return format((JsonObject) element);
-        if (element instanceof JsonArray) return format((JsonArray) element);
-        if (element instanceof JsonString) return format((JsonString) element);
-        if (element instanceof JsonNumber) return format((JsonNumber) element);
-        if (element instanceof JsonBoolean) return format((JsonBoolean) element);
+        if (element.isObject()) return format((JsonObject) element);
+        if (element.isArray()) return format((JsonArray) element);
+        if (element.isString()) return format((JsonString) element);
+        if (element.isNumber()) return format((JsonNumber) element);
+        if (element.isBoolean()) return format((JsonBoolean) element);
         throw new IllegalStateException();
     }
 
     default String formatNull() {
         return "null";
-    };
+    }
 
     String format(JsonObject object);
 

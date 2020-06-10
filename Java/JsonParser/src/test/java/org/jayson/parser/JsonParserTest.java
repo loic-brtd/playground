@@ -3,13 +3,14 @@ package org.jayson.parser;
 import org.jayson.Json;
 import org.jayson.dto.*;
 import org.jayson.format.JsonFormatter;
+import org.jayson.util.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.joining;
 import static org.jayson.parser.JsonParser.UnexpectedTokenException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

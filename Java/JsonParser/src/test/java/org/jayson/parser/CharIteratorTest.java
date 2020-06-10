@@ -1,34 +1,70 @@
 package org.jayson.parser;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.NoSuchElementException;
+import java.io.File;
+import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CharIteratorTest {
 
-    @Test
-    public void testNext() {
-        CharIterator iterator = new CharIterator("abc");
-        assertTrue(iterator.hasNext());
-        assertEquals('a', iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals('b', iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals('c', iterator.next());
-        assertFalse(iterator.hasNext());
-        assertNull(iterator.next());
+    @Nested
+    class StringCharIteratorTest {
+
+        @Test
+        public void testNext() {
+            CharIterator iterator = new StringCharIterator("abc");
+            assertTrue(iterator.hasNext());
+            assertEquals('a', iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals('b', iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals('c', iterator.next());
+            assertFalse(iterator.hasNext());
+            assertNull(iterator.next());
+        }
+
+        @Test
+        public void testEmptySource() {
+            CharIterator iterator = new StringCharIterator("");
+            assertFalse(iterator.hasNext());
+        }
+
+        @Test
+        public void testNullSource() {
+            assertThrows(NullPointerException.class, () -> new StringCharIterator(null));
+        }
     }
 
-    @Test
-    public void testEmptySource() {
-        CharIterator iterator = new CharIterator("");
-        assertFalse(iterator.hasNext());
-    }
+    @Nested
+    class FileCharIteratorTest {
 
-    @Test
-    public void testNullSource() {
-        assertThrows(NullPointerException.class, () -> new CharIterator(null));
+        @Test
+        public void testNext() throws URISyntaxException {
+            File file = new File(getClass().getResource("/testNext.txt").toURI());
+            CharIterator iterator = new FileCharIterator(file);
+            assertTrue(iterator.hasNext());
+            assertEquals('a', iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals('b', iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals('c', iterator.next());
+            assertFalse(iterator.hasNext());
+            assertNull(iterator.next());
+        }
+
+        @Test
+        public void testEmptySource() throws URISyntaxException {
+            File file = new File(getClass().getResource("/testEmptySource.txt").toURI());
+            CharIterator iterator = new FileCharIterator(file);
+            assertFalse(iterator.hasNext());
+        }
+
+        @Test
+        public void testNullSource() {
+            assertThrows(NullPointerException.class, () -> new FileCharIterator(null));
+        }
     }
 }

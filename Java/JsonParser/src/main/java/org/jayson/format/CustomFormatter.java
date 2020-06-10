@@ -16,8 +16,8 @@ public class CustomFormatter implements JsonFormatter {
 
     // Cached concatenations
     private String sepLf = sep + lf;
-    private String openObj = "{" + lf;
-    private String openArr = "[" + lf;
+    private String openObj = '{' + lf;
+    private String openArr = '[' + lf;
     private String quoteColon = '"' + colon;
 
     public CustomFormatter indent(String indent) {
@@ -30,8 +30,8 @@ public class CustomFormatter implements JsonFormatter {
     public CustomFormatter newline(String newline) {
         this.lf = newline;
         sepLf = sep + lf;
-        openObj = "{" + lf;
-        openArr = "[" + lf;
+        openObj = '{' + lf;
+        openArr = '[' + lf;
         return this;
     }
 
@@ -53,7 +53,7 @@ public class CustomFormatter implements JsonFormatter {
         level++;
         String formatted = object.entries().stream()
                 .map(e -> margin(level) + '"' + e.getKey() + quoteColon + format(e.getValue()))
-                .collect(joining(sepLf, openObj, lf + margin(level - 1) + "}"));
+                .collect(joining(sepLf, openObj, lf + margin(level - 1) + '}'));
         level--;
         return formatted;
     }
@@ -62,7 +62,7 @@ public class CustomFormatter implements JsonFormatter {
         level++;
         String formatted = array.values().stream()
                 .map(element -> margin(level) + format(element))
-                .collect(joining(sepLf, openArr, lf + margin(level - 1) + "]"));
+                .collect(joining(sepLf, openArr, lf + margin(level - 1) + ']'));
         level--;
         return formatted;
     }
