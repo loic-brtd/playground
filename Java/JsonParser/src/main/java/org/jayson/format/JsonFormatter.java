@@ -2,7 +2,11 @@ package org.jayson.format;
 
 import org.jayson.dto.*;
 
-public interface JsonFormat {
+public interface JsonFormatter {
+
+    JsonFormatter INLINE = new CustomFormatter();
+    JsonFormatter MINIMIZED = new CustomFormatter().separator(",").colon(":");
+    JsonFormatter FOUR_SPACES = new CustomFormatter().indent("    ").newline("\n");
 
     default String format(JsonElement element) {
         if (element == null) return formatNull();

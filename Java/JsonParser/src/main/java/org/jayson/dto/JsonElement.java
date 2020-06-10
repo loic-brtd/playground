@@ -1,8 +1,7 @@
 package org.jayson.dto;
 
 
-import org.jayson.Json;
-import org.jayson.format.JsonFormat;
+import org.jayson.format.JsonFormatter;
 
 public interface JsonElement {
 
@@ -26,11 +25,19 @@ public interface JsonElement {
         return false;
     }
 
-    default String format() {
-        return Json.INLINE.format(this);
+    default JsonArray asArray() {
+        return (JsonArray) this;
     }
 
-    default String format(JsonFormat format) {
+    default JsonObject asObject() {
+        return (JsonObject) this;
+    }
+
+    default String format() {
+        return JsonFormatter.INLINE.format(this);
+    }
+
+    default String format(JsonFormatter format) {
         return format.format(this);
     }
 

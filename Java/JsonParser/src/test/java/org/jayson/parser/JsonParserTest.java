@@ -2,6 +2,7 @@ package org.jayson.parser;
 
 import org.jayson.Json;
 import org.jayson.dto.*;
+import org.jayson.format.JsonFormatter;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -17,20 +18,20 @@ class JsonParserTest {
 
     @Test
     public void testEmptyObject() {
-        JsonObject object = Json.parse("{}");
+        JsonObject object = Json.parseObject("{}");
         assertEquals(0, object.keys().size());
     }
 
     @Test
     public void testStringValue() {
-        JsonObject object = Json.parse(" {  \"hello\"  :  \"world\"  } ");
+        JsonObject object = Json.parseObject(" {  \"hello\"  :  \"world\"  } ");
         assertEquals(1, object.keys().size());
         assertEquals(new JsonString("world"), object.get("hello"));
     }
 
     @Test
     public void testStringAndBooleanValues() {
-        JsonObject object = Json.parse("{\"first\":\"hello\",\"boolean\":true}");
+        JsonObject object = Json.parseObject("{\"first\":\"hello\",\"boolean\":true}");
         assertEquals(2, object.keys().size());
         assertEquals(new JsonString("hello"), object.get("first"));
         assertEquals(new JsonBoolean(true), object.get("boolean"));
@@ -38,7 +39,7 @@ class JsonParserTest {
 
     @Test
     public void testObjectValues() {
-        JsonObject actual = Json.parse("{'first':'string','second':{'third':'another','bool':false}}"
+        JsonObject actual = Json.parseObject("{'first':'string','second':{'third':'another','bool':false}}"
                 .replaceAll("'", "\""));
         JsonObject expected = Json.object()
                 .put("first", "string")
@@ -50,12 +51,12 @@ class JsonParserTest {
 
     @Test
     public void testObjectNoClosed() {
-        assertThrows(UnexpectedTokenException.class, () -> Json.parse("{\"key\":\"value\""));
+        assertThrows(UnexpectedTokenException.class, () -> Json.parseObject("{\"key\":\"value\""));
     }
 
     @Test
     public void testEmptyArray() {
-        JsonObject actual = Json.parse("{\"array\":[]}");
+        JsonObject actual = Json.parseObject("{\"array\":[]}");
         JsonObject expected = Json.object()
                 .put("array", Json.array());
         assertEquals(expected, actual);
@@ -63,7 +64,7 @@ class JsonParserTest {
 
     @Test
     public void testArrayWithValues() {
-        JsonObject actual = Json.parse("{\"array\":[\"str\", 12, 5.3, true]}");
+        JsonObject actual = Json.parseObject("{\"array\":[\"str\", 12, 5.3, true]}");
         JsonObject expected = Json.object()
                 .put("array", Json.array("str", 12, 5.3, true));
         assertEquals(expected, actual);
@@ -74,29 +75,29 @@ class JsonParserTest {
         JsonObject expected = Json.object()
                 .put("here", (String) null)
                 .put("not_here", 12);
-        JsonObject actual = Json.parse("{\"here\":null,\"not_here\":12}");
+        JsonObject actual = Json.parseObject("{\"here\":null,\"not_here\":12}");
         assertEquals(expected, actual);
     }
 
     @Test
     public void testMissingComma() {
         String source = "{\"salut\":10\"hello\":10}";
-        assertThrows(UnexpectedTokenException.class, () -> Json.parse(source));
+        assertThrows(UnexpectedTokenException.class, () -> Json.parseObject(source));
     }
 
     @Test
     public void testValid1() {
         String source = loadResource("valid1.json");
-        String parsed = Json.format(source, Json.MINIMIZED);
-        String parsedAgain = Json.format(source, Json.MINIMIZED);
+        String parsed = Json.format(source, JsonFormatter.MINIMIZED);
+        String parsedAgain = Json.format(source, JsonFormatter.MINIMIZED);
         assertEquals(parsed, parsedAgain);
     }
 
     @Test
     public void testValid2() {
         String source = loadResource("valid2.json");
-        String parsed = Json.format(source, Json.MINIMIZED);
-        String parsedAgain = Json.format(source, Json.MINIMIZED);
+        String parsed = Json.format(source, JsonFormatter.MINIMIZED);
+        String parsedAgain = Json.format(source, JsonFormatter.MINIMIZED);
         assertEquals(parsed, parsedAgain);
     }
 

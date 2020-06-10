@@ -2,13 +2,15 @@ package org.jayson.format;
 
 import org.jayson.dto.*;
 
+import java.util.Arrays;
+
 import static java.util.stream.Collectors.joining;
 
-public class CustomFormat implements JsonFormat {
+public class CustomFormatter implements JsonFormatter {
 
     // Parameters
-    private String indent = "    ";
-    private String lf = "\n";
+    private String indent = "";
+    private String lf = "";
     private String sep = ", ";
     private String colon = ": ";
 
@@ -18,12 +20,14 @@ public class CustomFormat implements JsonFormat {
     private String openArr = "[" + lf;
     private String quoteColon = '"' + colon;
 
-    public CustomFormat indent(String indent) {
+    public CustomFormatter indent(String indent) {
+        if (!this.indent.equals(indent))
+            Arrays.fill(marginCache, null);
         this.indent = indent;
         return this;
     }
 
-    public CustomFormat newline(String newline) {
+    public CustomFormatter newline(String newline) {
         this.lf = newline;
         sepLf = sep + lf;
         openObj = "{" + lf;
@@ -31,13 +35,13 @@ public class CustomFormat implements JsonFormat {
         return this;
     }
 
-    public CustomFormat separator(String separator) {
+    public CustomFormatter separator(String separator) {
         this.sep = separator;
         sepLf = sep + lf;
         return this;
     }
 
-    public CustomFormat colon(String colon) {
+    public CustomFormatter colon(String colon) {
         this.colon = colon;
         quoteColon = '"' + colon;
         return this;
@@ -58,7 +62,7 @@ public class CustomFormat implements JsonFormat {
         level++;
         String formatted = array.values().stream()
                 .map(element -> margin(level) + format(element))
-                .collect(joining(sepLf, openArr, lf + margin(level-1) + "]"));
+                .collect(joining(sepLf, openArr, lf + margin(level - 1) + "]"));
         level--;
         return formatted;
     }
@@ -80,6 +84,8 @@ public class CustomFormat implements JsonFormat {
     private String[] marginCache = new String[8];
 
     private String margin(int n) {
+        if (n == 0) return "";
+        if (n == 1) return indent;
         if (n >= marginCache.length) {
             String[] copy = new String[marginCache.length * 2];
             System.arraycopy(marginCache, 0, copy, 0, marginCache.length);

@@ -22,10 +22,6 @@ public class JsonArray implements JsonElement {
         return elements.size();
     }
 
-    public JsonElement get(int index) {
-        return elements.get(index);
-    }
-
     public List<JsonElement> values() {
         return elements;
     }
@@ -35,10 +31,12 @@ public class JsonArray implements JsonElement {
         return true;
     }
 
+    public JsonElement get(int index) {
+        return elements.get(index);
+    }
+
     public JsonArray push(String value) {
-        if (value == null)
-            elements.add(null);
-        elements.add(new JsonString(value));
+        elements.add(value == null ? null : new JsonString(value));
         return this;
     }
 

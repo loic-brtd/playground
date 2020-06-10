@@ -1,10 +1,7 @@
 package org.jayson.dto;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
 
 public class JsonObject implements JsonElement {
 
@@ -19,16 +16,59 @@ public class JsonObject implements JsonElement {
         return true;
     }
 
-    public JsonElement get(String key) {
-        return map.get(key);
-    }
-
     public Set<String> keys() {
         return map.keySet();
     }
 
+    public Collection<JsonElement> values() {
+        return map.values();
+    };
+
     public Set<Entry<String, JsonElement>> entries() {
         return map.entrySet();
+    }
+
+    public JsonElement get(String key) {
+        return map.get(key);
+    }
+
+    public <T extends JsonElement> T get(String key, Class<T> type) {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(type);
+        JsonElement element = map.get(key);
+        return type.isInstance(element) ? type.cast(element) : null;
+    }
+
+    public JsonArray getArray(String key) {
+        return get(key, JsonArray.class);
+    }
+
+    public JsonObject getObject(String key) {
+        return get(key, JsonObject.class);
+    }
+
+    public JsonNumber getNumber(String key) {
+        return get(key, JsonNumber.class);
+    }
+
+    public String getString(String key) {
+        JsonString string = get(key, JsonString.class);
+        return string == null ? null : string.getValue();
+    }
+
+    public Double getDouble(String key) {
+        JsonNumber number = get(key, JsonNumber.class);
+        return number == null ? null : number.getDouble();
+    }
+
+    public Long getLong(String key) {
+        JsonNumber number = get(key, JsonNumber.class);
+        return number == null ? null : number.getLong();
+    }
+
+    public Boolean getBoolean(String key) {
+        JsonBoolean bool = get(key, JsonBoolean.class);
+        return bool == null ? null : bool.getValue();
     }
 
     public JsonObject put(String key, JsonElement value) {
@@ -43,26 +83,10 @@ public class JsonObject implements JsonElement {
         return this;
     }
 
-    public String getString(String key) {
-        JsonElement element = map.get(key);
-        if (element instanceof JsonString) {
-            return ((JsonString) element).getValue();
-        }
-        return null;
-    }
-
     public JsonObject put(String key, double value) {
         Objects.requireNonNull(key);
         map.put(key, new JsonNumber(value));
         return this;
-    }
-
-    public Double getDouble(String key) {
-        JsonElement element = map.get(key);
-        if (element instanceof JsonNumber) {
-            return ((JsonNumber) element).getDouble();
-        }
-        return null;
     }
 
     public JsonObject put(String key, long value) {
@@ -71,26 +95,10 @@ public class JsonObject implements JsonElement {
         return this;
     }
 
-    public Long getLong(String key) {
-        JsonElement element = map.get(key);
-        if (element instanceof JsonNumber) {
-            return ((JsonNumber) element).getLong();
-        }
-        return null;
-    }
-
     public JsonObject put(String key, boolean value) {
         Objects.requireNonNull(key);
         map.put(key, new JsonBoolean(value));
         return this;
-    }
-
-    public Boolean getBoolean(String key) {
-        JsonElement element = map.get(key);
-        if (element instanceof JsonBoolean) {
-            return ((JsonBoolean) element).getValue();
-        }
-        return null;
     }
 
     public JsonObject putNull(String key) {

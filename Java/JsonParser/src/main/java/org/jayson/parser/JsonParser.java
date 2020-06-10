@@ -17,9 +17,9 @@ public class JsonParser {
         this.lexer = lexer;
     }
 
-    public JsonObject parse() {
+    public JsonElement parse() {
         token = lexer.nextToken();
-        JsonObject object = parseObject();
+        JsonElement object = parseElement();
         assertNull(token);
         return object;
     }
