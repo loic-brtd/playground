@@ -89,16 +89,16 @@ class JsonParserTest {
     @Test
     public void testValid1() {
         String source = loadResource("valid1.json");
-        String parsed = Json.format(source, JsonFormatter.MINIMIZED);
-        String parsedAgain = Json.format(source, JsonFormatter.MINIMIZED);
+        String parsed = Json.parse(source).format(JsonFormatter.MINIMIZED);
+        String parsedAgain = Json.parse(parsed).format(JsonFormatter.MINIMIZED);
         assertEquals(parsed, parsedAgain);
     }
 
     @Test
     public void testValid2() {
         String source = loadResource("valid2.json");
-        String parsed = Json.format(source, JsonFormatter.MINIMIZED);
-        String parsedAgain = Json.format(source, JsonFormatter.MINIMIZED);
+        String parsed = Json.parse(source).format(JsonFormatter.MINIMIZED);
+        String parsedAgain = Json.parse(parsed).format(JsonFormatter.MINIMIZED);
         assertEquals(parsed, parsedAgain);
     }
 

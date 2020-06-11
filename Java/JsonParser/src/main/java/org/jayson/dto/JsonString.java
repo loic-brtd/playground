@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class JsonString implements JsonElement {
 
-    private String value;
+    private final String value;
 
     public JsonString(String value) {
         this.value = value;

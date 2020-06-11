@@ -109,11 +109,11 @@ public class JsonParser {
         if (token.value.contains(".")) {
             double value = Double.parseDouble(token.value);
             token = lexer.nextToken();
-            return new JsonNumber(value);
+            return new JsonDouble(value);
         } else {
             long value = Long.parseLong(token.value);
             token = lexer.nextToken();
-            return new JsonNumber(value);
+            return new JsonLong(value);
         }
     }
 

@@ -7,14 +7,12 @@ import java.util.Objects;
 
 public class JsonArray implements JsonElement {
 
-    private List<JsonElement> elements;
+    private final List<JsonElement> elements = new ArrayList<>();
 
     public JsonArray() {
-        this.elements = new ArrayList<>();
     }
 
     public JsonArray(JsonElement... elements) {
-        this.elements = new ArrayList<>();
         Collections.addAll(this.elements, elements);
     }
 
@@ -46,12 +44,12 @@ public class JsonArray implements JsonElement {
     }
 
     public JsonArray push(double value) {
-        elements.add(new JsonNumber(value));
+        elements.add(new JsonDouble(value));
         return this;
     }
 
     public JsonArray push(long value) {
-        elements.add(new JsonNumber(value));
+        elements.add(new JsonLong(value));
         return this;
     }
 

@@ -14,8 +14,6 @@ public class StringCharIterator implements CharIterator {
         this.source = source;
     }
 
-    // Java : initialize fields or in constructors ?
-
     @Override
     public boolean hasNext() {
         return index + 1 < source.length();

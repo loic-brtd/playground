@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class JsonBoolean implements JsonElement {
 
-    private boolean value;
+    private final boolean value;
 
     public JsonBoolean(boolean value) {
         this.value = value;

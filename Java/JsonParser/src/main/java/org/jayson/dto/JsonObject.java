@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 
 public class JsonObject implements JsonElement {
 
-    private Map<String, JsonElement> map;
+    private final Map<String, JsonElement> map;
 
     public JsonObject() {
         map = new LinkedHashMap<>();
@@ -85,13 +85,13 @@ public class JsonObject implements JsonElement {
 
     public JsonObject put(String key, double value) {
         Objects.requireNonNull(key);
-        map.put(key, new JsonNumber(value));
+        map.put(key, new JsonDouble(value));
         return this;
     }
 
     public JsonObject put(String key, long value) {
         Objects.requireNonNull(key);
-        map.put(key, new JsonNumber(value));
+        map.put(key, new JsonLong(value));
         return this;
     }
 
