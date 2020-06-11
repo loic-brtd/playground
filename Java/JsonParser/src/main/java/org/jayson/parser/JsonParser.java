@@ -119,7 +119,7 @@ public class JsonParser {
 
     private JsonString parseString() {
         assertType(STRING, token);
-        String value = token.value.substring(1, token.value.length() - 1);
+        String value = StringEscape.unescape(token.value);
         token = lexer.nextToken();
         return new JsonString(value);
     }

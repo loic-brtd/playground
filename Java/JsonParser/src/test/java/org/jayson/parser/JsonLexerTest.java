@@ -1,5 +1,6 @@
 package org.jayson.parser;
 
+import org.jayson.dto.JsonLong;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -204,6 +205,19 @@ class JsonLexerTest {
         assertEquals("false", lexer.nextString());
         assertEquals("true", lexer.nextString());
         assertConsumed(lexer);
+    }
+
+    @Test
+    public void testNewlineEscape() {
+        JsonLexer lexer = new JsonLexer("  \"new\\nline\"");
+        assertEquals("\"new\\nline\"", lexer.nextString());
+        assertConsumed(lexer);
+    }
+
+    @Test
+    public void testWrongEscapeSequence() {
+        JsonLexer lexer = new JsonLexer("  \"new\\oline\"");
+        assertThrows(JsonLexer.UnexpectedCharacterException.class, lexer::nextToken);
     }
 
     @Test

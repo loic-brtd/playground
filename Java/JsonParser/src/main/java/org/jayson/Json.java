@@ -40,10 +40,6 @@ public final class Json {
         return (JsonObject) element;
     }
 
-    // public static String format(String source, JsonFormatter format) {
-    //     return parse(source).format(format);
-    // }
-
     public static JsonObject object() {
         return new JsonObject();
     }
@@ -61,6 +57,8 @@ public final class Json {
                 jsonArray.push((String) element);
             } else if (element instanceof Double) {
                 jsonArray.push((Double) element);
+            } else if (element instanceof Float) {
+                jsonArray.push((Float) element);
             } else if (element instanceof Long) {
                 jsonArray.push((Long) element);
             } else if (element instanceof Integer) {
@@ -77,23 +75,11 @@ public final class Json {
     }
 
     public static void main(String[] args) throws Exception {
-
         if (args.length != 1) {
             throw new IllegalArgumentException();
         }
-
         File fileSource = new File(args[0]);
         String strSource = Files.lines(Paths.get(args[0])).collect(joining());
         System.out.println(Json.parse(strSource).format(JsonFormatter.MINIMIZED));
-
-        // JsonObject o = object()
-        //         .put("hello", array("world", "!"))
-        //         .put("age", 12)
-        //         .put("isNew", false);
-        //
-        // String formatted = o.format(FOUR_SPACES);
-        // JsonObject other = Json.parseObject(formatted);
-        //
-        // System.out.println("o.equals(other) = " + o.equals(other));
     }
 }

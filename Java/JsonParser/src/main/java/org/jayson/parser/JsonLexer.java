@@ -69,14 +69,32 @@ public class JsonLexer {
     private Token parseString() {
         StringBuilder token = new StringBuilder();
         assertChar('"', current);
-        do {
-            token.append(current);
-            current = iterator.next();
-        } while (current != null && current != '"');
+        token.append(current);
+        current = iterator.next();
+        while (current != null && current != '"') {
+            if (current == '\\') {
+                parseEscapeSequence(token);
+            } else {
+                token.append(current);
+                current = iterator.next();
+            }
+        }
         assertChar('"', current);
         token.append(current);
         current = iterator.next();
         return new Token(token.toString(), STRING);
+    }
+
+    private void parseEscapeSequence(StringBuilder token) {
+        assertChar('\\', current);
+        token.append(current);
+        current = iterator.next();
+        if (isAnyChar("\"\\/bfnrt", current)) {
+            token.append(current);
+            current = iterator.next();
+        } else {
+            throwUnexpectedChar("Wrong character '%c' in escape sequence", current);
+        }
     }
 
     private Token parseNumber() {

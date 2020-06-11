@@ -87,6 +87,28 @@ class JsonParserTest {
     }
 
     @Test
+    public void testNewlineEscape() {
+        JsonElement actual = Json.parse("\"new\\nline\"");
+        JsonElement expected = new JsonString("new\nline");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testEscapeSequences() {
+        JsonElement actual = Json.parse(loadResource("escapeSeq.json"));
+        JsonElement expected = Json.object()
+                .put("dq", "double\"quote")
+                .put("bs", "back\\slash")
+                .put("fs", "forward/slash")
+                .put("b", "back\nspace")
+                .put("f", "form\ffeed")
+                .put("n", "new\nline")
+                .put("r", "carriage\rreturn")
+                .put("t", "tab\tulation");
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void testValid1() {
         String source = loadResource("valid1.json");
         String parsed = Json.parse(source).format(JsonFormatter.MINIMIZED);

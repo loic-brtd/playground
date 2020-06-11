@@ -1,6 +1,7 @@
 package org.jayson.format;
 
 import org.jayson.dto.*;
+import org.jayson.parser.StringEscape;
 
 import java.util.Arrays;
 
@@ -78,7 +79,7 @@ public class CustomFormatter implements JsonFormatter {
     }
 
     public String format(JsonString string) {
-        return '"' + string.getValue() + '"';
+        return StringEscape.escape(string.getValue());
     }
 
     private String[] marginCache = new String[8];
