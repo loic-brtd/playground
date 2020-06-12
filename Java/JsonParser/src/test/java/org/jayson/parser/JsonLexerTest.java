@@ -221,6 +221,25 @@ class JsonLexerTest {
     }
 
     @Test
+    public void testWrongHexadecimalSequence() {
+        JsonLexer lexer = new JsonLexer("  \"hello\\u75w0world\" ");
+        assertThrows(JsonLexer.UnexpectedCharacterException.class, lexer::nextToken);
+    }
+
+    @Test
+    public void testTooShortHexadecimalSequence() {
+        JsonLexer lexer = new JsonLexer("  \"hello\\u75a \" ");
+        assertThrows(JsonLexer.UnexpectedCharacterException.class, lexer::nextToken);
+    }
+
+    @Test
+    public void testValidHexadecimalSequence() {
+        JsonLexer lexer = new JsonLexer("  \"hello\\u75fAworld\" ");
+        assertEquals("\"hello\\u75fAworld\"", lexer.nextString());
+        assertConsumed(lexer);
+    }
+
+    @Test
     public void testBigExample() {
         JsonLexer lexer = new JsonLexer(" {\n" +
                 "  \"integer\": 123,\n" +

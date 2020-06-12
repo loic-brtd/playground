@@ -5,6 +5,7 @@ plugins {
 
 group 'org.jayson'
 version '1.0-SNAPSHOT'
+mainClassName = 'org.jayson.Json'
 
 repositories {
     mavenCentral()

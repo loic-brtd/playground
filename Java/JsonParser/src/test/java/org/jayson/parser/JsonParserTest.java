@@ -3,7 +3,6 @@ package org.jayson.parser;
 import org.jayson.Json;
 import org.jayson.dto.*;
 import org.jayson.format.JsonFormatter;
-import org.jayson.util.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -95,7 +94,7 @@ class JsonParserTest {
 
     @Test
     public void testEscapeSequences() {
-        JsonElement actual = Json.parse(loadResource("escapeSeq.json"));
+        JsonElement actual = Json.parse(loadResource("escape_sequence.json"));
         JsonElement expected = Json.object()
                 .put("dq", "double\"quote")
                 .put("bs", "back\\slash")
@@ -109,16 +108,30 @@ class JsonParserTest {
     }
 
     @Test
-    public void testValid1() {
-        String source = loadResource("valid1.json");
+    public void testHexadecimalSequence() {
+        JsonElement actual = Json.parse("\"\\u0068\\u0065\\u006C\\u006C\\u006f world\" ");
+        JsonElement expected = new JsonString("hello world");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testHexadecimalSequence2() {
+        JsonElement actual = Json.parse("\"\\u4567\\u1234\\uFFFF\" ");
+        JsonElement expected = new JsonString("\u4567\u1234\uFFFF");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testMenu() {
+        String source = loadResource("menu.json");
         String parsed = Json.parse(source).format(JsonFormatter.MINIMIZED);
         String parsedAgain = Json.parse(parsed).format(JsonFormatter.MINIMIZED);
         assertEquals(parsed, parsedAgain);
     }
 
     @Test
-    public void testValid2() {
-        String source = loadResource("valid2.json");
+    public void testWidget() {
+        String source = loadResource("widget.json");
         String parsed = Json.parse(source).format(JsonFormatter.MINIMIZED);
         String parsedAgain = Json.parse(parsed).format(JsonFormatter.MINIMIZED);
         assertEquals(parsed, parsedAgain);

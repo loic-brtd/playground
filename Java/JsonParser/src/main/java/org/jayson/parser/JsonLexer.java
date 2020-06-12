@@ -92,6 +92,15 @@ public class JsonLexer {
         if (isAnyChar("\"\\/bfnrt", current)) {
             token.append(current);
             current = iterator.next();
+        } else if (current == 'u') {
+            token.append(current);
+            current = iterator.next();
+            for (int i = 0; i < 4; i++) {
+                if (!isHexDigit(current))
+                    throwUnexpectedChar("Character '%c' is not a valid hexadecimal digit", current);
+                token.append(current);
+                current = iterator.next();
+            }
         } else {
             throwUnexpectedChar("Wrong character '%c' in escape sequence", current);
         }
@@ -144,7 +153,14 @@ public class JsonLexer {
     }
 
     private boolean isNonWhite(char ch) {
-        return ch != 0x0020 && ch != 0x000A && ch != 0x000D && ch != 0x0009;
+        return ch != ' ' && ch != '\n' && ch != '\r' && ch != '\t';
+    }
+
+    private boolean isHexDigit(Character ch) {
+        return ch != null &&
+                (ch >= '0' && ch <= '9'
+                        || ch >= 'A' && ch <= 'F'
+                        || ch >= 'a' && ch <= 'f');
     }
 
     private boolean isAnyChar(String s, Character actual) {

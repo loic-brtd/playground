@@ -13,7 +13,7 @@ class FileCharIteratorTest {
 
     @Test
     public void testNext() throws URISyntaxException {
-        File file = new File(getClass().getResource("/testNext.txt").toURI());
+        File file = new File(getClass().getResource("/abc.txt").toURI());
         CharIterator iterator = new FileCharIterator(file);
         assertTrue(iterator.hasNext());
         assertEquals('a', iterator.next());
@@ -27,7 +27,7 @@ class FileCharIteratorTest {
 
     @Test
     public void testEmptySource() throws URISyntaxException {
-        File file = new File(getClass().getResource("/testEmptySource.txt").toURI());
+        File file = new File(getClass().getResource("/empty.txt").toURI());
         CharIterator iterator = new FileCharIterator(file);
         assertFalse(iterator.hasNext());
     }
