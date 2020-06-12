@@ -2,36 +2,30 @@ package org.jayson.parser;
 
 public class StringEscape {
 
-    public static String unescape(String escaped) {
+    public static String unescape(String str) {
         StringBuilder result = new StringBuilder();
-        for (int i = 1; i < escaped.length() - 1; i++) {
-            if (escaped.charAt(i) == '\\') {
+        for (int i = 1; i < str.length() - 1; i++) {
+            if (str.charAt(i) == '\\') {
                 i++;
-                if (escaped.charAt(i) == 'u') {
-                    char[] hex = new char[4];
-                    for (int j = 0; j < 4; j++) {
-                        hex[j] = escaped.charAt(++i);
-                    }
+                if (str.charAt(i) == 'u') {
+                    String hex = str.substring(i + 1, i + 5);
                     result.append(hexToAscii(hex));
+                    i += 4;
                 } else {
-                    result.append(charToSpecial(escaped.charAt(i)));
+                    result.append(charToSpecial(str.charAt(i)));
                 }
             } else {
-                result.append(escaped.charAt(i));
+                result.append(str.charAt(i));
             }
         }
         return result.toString();
     }
 
-    private static char hexToAscii(char[] hex) {
-        return (char) Integer.parseInt(new String(hex), 16);
-    }
-
-    public static String escape(String unescaped) {
+    public static String escape(String str) {
         StringBuilder result = new StringBuilder();
         result.append('"');
-        for (int i = 0; i < unescaped.length(); i++) {
-            char ch = unescaped.charAt(i);
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
             if (isSpecial(ch)) {
                 result.append('\\').append(specialToChar(ch));
             } else {
@@ -39,6 +33,10 @@ public class StringEscape {
             }
         }
         return result.append('"').toString();
+    }
+
+    private static char hexToAscii(String hex) {
+        return (char) Integer.parseInt(hex, 16);
     }
 
     private static boolean isSpecial(char c) {
@@ -65,7 +63,6 @@ public class StringEscape {
                 throw new IllegalArgumentException(String.valueOf(c));
         }
     }
-
 
     private static char specialToChar(char c) {
         switch (c) {
