@@ -1,7 +1,7 @@
 package org.jayson.format;
 
 import org.jayson.dto.*;
-import org.jayson.parser.StringEscape;
+import org.jayson.util.StringEscape;
 
 import java.util.Arrays;
 
@@ -69,17 +69,17 @@ public class CustomFormatter implements JsonFormatter {
     }
 
     public String format(JsonBoolean bool) {
-        return bool.getValue() ? "true" : "false";
+        return bool.value() ? "true" : "false";
     }
 
     public String format(JsonNumber number) {
         return number.isDouble()
-                ? String.valueOf(number.getDouble())
-                : String.valueOf(number.getLong());
+                ? String.valueOf(number.doubleValue())
+                : String.valueOf(number.longValue());
     }
 
     public String format(JsonString string) {
-        return StringEscape.escape(string.getValue());
+        return StringEscape.escape(string.value());
     }
 
     private String[] marginCache = new String[8];

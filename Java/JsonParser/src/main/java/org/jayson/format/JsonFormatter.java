@@ -6,11 +6,12 @@ public interface JsonFormatter {
 
     JsonFormatter INLINE = new CustomFormatter();
     JsonFormatter MINIMIZED = new CustomFormatter().separator(",").colon(":");
-    JsonFormatter FOUR_SPACES = new CustomFormatter().indent("    ").newline("\n");
-    JsonFormatter TWO_SPACES = new CustomFormatter().indent("  ").newline("\n");
+    JsonFormatter FOUR_SPACES = new CustomFormatter().indent("    ").separator(",").newline("\n");
+    JsonFormatter TWO_SPACES = new CustomFormatter().indent("  ").separator(",").newline("\n");
+    JsonFormatter DEFAULT = INLINE;
 
     default String format(JsonElement element) {
-        if (element == null) return formatNull();
+        if (element == null || element.isNull()) return formatNull();
         if (element.isObject()) return format((JsonObject) element);
         if (element.isArray()) return format((JsonArray) element);
         if (element.isString()) return format((JsonString) element);

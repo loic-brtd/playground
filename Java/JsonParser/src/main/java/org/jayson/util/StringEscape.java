@@ -1,8 +1,11 @@
-package org.jayson.parser;
+package org.jayson.util;
 
 public class StringEscape {
 
     public static String unescape(String str) {
+        if (str.charAt(0) != '"' || str.charAt(str.length()-1) != '"')
+            throw new IllegalArgumentException("String to unescape must be in quotes");
+
         StringBuilder result = new StringBuilder();
         for (int i = 1; i < str.length() - 1; i++) {
             if (str.charAt(i) == '\\') {

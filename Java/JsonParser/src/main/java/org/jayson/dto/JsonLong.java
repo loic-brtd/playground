@@ -1,13 +1,15 @@
 package org.jayson.dto;
 
+import org.jayson.format.JsonFormatter;
+
 import java.util.Objects;
 
 public class JsonLong implements JsonNumber {
 
-    private final long longValue;
+    private final long value;
 
     public JsonLong(long value) {
-        this.longValue = value;
+        this.value = value;
     }
 
     @Override
@@ -16,18 +18,23 @@ public class JsonLong implements JsonNumber {
     }
 
     @Override
-    public double getDouble() {
-        return longValue;
+    public double doubleValue() {
+        return value;
     }
 
     @Override
-    public long getLong() {
-        return longValue;
+    public long longValue() {
+        return value;
+    }
+
+    @Override
+    public int intValue() {
+        return (int) value;
     }
 
     @Override
     public String toString() {
-        return format();
+        return JsonFormatter.DEFAULT.format(this);
     }
 
     @Override
@@ -35,11 +42,11 @@ public class JsonLong implements JsonNumber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JsonLong jsonLong = (JsonLong) o;
-        return longValue == jsonLong.longValue;
+        return value == jsonLong.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(longValue);
+        return Objects.hash(value);
     }
 }

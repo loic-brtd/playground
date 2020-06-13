@@ -1,5 +1,7 @@
 package org.jayson.dto;
 
+import org.jayson.format.JsonFormatter;
+
 import java.util.Objects;
 
 public class JsonString implements JsonElement {
@@ -15,13 +17,13 @@ public class JsonString implements JsonElement {
         return true;
     }
 
-    public String getValue() {
+    public String value() {
         return value;
     }
 
     @Override
     public String toString() {
-        return format();
+        return JsonFormatter.DEFAULT.format(this);
     }
 
     @Override

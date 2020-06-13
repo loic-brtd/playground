@@ -2,6 +2,7 @@ package org.jayson.parser;
 
 import org.jayson.dto.*;
 import org.jayson.parser.Token.Type;
+import org.jayson.util.StringEscape;
 
 import java.util.Objects;
 
@@ -29,7 +30,7 @@ public class JsonParser {
         assertType(OPENING_CURLY, token);
         token = lexer.nextToken();
         while (token != null && token.type != CLOSING_CURLY) {
-            String key = parseString().getValue();
+            String key = parseString().value();
             assertType(COLON, token);
             token = lexer.nextToken();
             JsonElement value = parseElement();
@@ -73,7 +74,7 @@ public class JsonParser {
     private JsonElement parseNull() {
         assertType(NULL, token);
         token = lexer.nextToken();
-        return null;
+        return JsonNull.INSTANCE;
     }
 
     private JsonArray parseArray() {

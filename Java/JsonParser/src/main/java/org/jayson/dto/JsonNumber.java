@@ -15,7 +15,9 @@ public interface JsonNumber extends JsonElement {
         return false;
     }
 
-    double getDouble();
+    double doubleValue();
 
-    long getLong();
+    long longValue();
+
+    int intValue();
 }

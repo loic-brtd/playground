@@ -1,5 +1,7 @@
 package org.jayson.dto;
 
+import org.jayson.format.JsonFormatter;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -32,54 +34,15 @@ public class JsonObject implements JsonElement {
         return map.get(key);
     }
 
-    public <T extends JsonElement> T get(String key, Class<T> type) {
-        Objects.requireNonNull(key);
-        Objects.requireNonNull(type);
-        JsonElement element = map.get(key);
-        return type.isInstance(element) ? type.cast(element) : null;
-    }
-
-    public JsonArray getArray(String key) {
-        return get(key, JsonArray.class);
-    }
-
-    public JsonObject getObject(String key) {
-        return get(key, JsonObject.class);
-    }
-
-    public JsonNumber getNumber(String key) {
-        return get(key, JsonNumber.class);
-    }
-
-    public String getString(String key) {
-        JsonString string = get(key, JsonString.class);
-        return string == null ? null : string.getValue();
-    }
-
-    public Double getDouble(String key) {
-        JsonNumber number = get(key, JsonNumber.class);
-        return number == null ? null : number.getDouble();
-    }
-
-    public Long getLong(String key) {
-        JsonNumber number = get(key, JsonNumber.class);
-        return number == null ? null : number.getLong();
-    }
-
-    public Boolean getBoolean(String key) {
-        JsonBoolean bool = get(key, JsonBoolean.class);
-        return bool == null ? null : bool.getValue();
-    }
-
     public JsonObject put(String key, JsonElement value) {
         Objects.requireNonNull(key);
-        map.put(key, value);
+        map.put(key, (value == null) ? JsonNull.INSTANCE : value);
         return this;
     }
 
     public JsonObject put(String key, String value) {
         Objects.requireNonNull(key);
-        map.put(key, (value == null) ? null : new JsonString(value));
+        map.put(key, (value == null) ? JsonNull.INSTANCE : new JsonString(value));
         return this;
     }
 
@@ -103,13 +66,13 @@ public class JsonObject implements JsonElement {
 
     public JsonObject putNull(String key) {
         Objects.requireNonNull(key);
-        map.put(key, null);
+        map.put(key, JsonNull.INSTANCE);
         return this;
     }
 
     @Override
     public String toString() {
-        return format();
+        return JsonFormatter.DEFAULT.format(this);
     }
 
     @Override

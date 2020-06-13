@@ -10,7 +10,6 @@ import org.jayson.parser.JsonParser;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -29,15 +28,6 @@ public final class Json {
         JsonLexer lexer = new JsonLexer(source);
         JsonParser parser = new JsonParser(lexer);
         return parser.parse();
-    }
-
-    public static JsonObject parseObject(String source) {
-        JsonElement element = parse(source);
-        if (!element.isObject()) {
-            throw new RuntimeException("Tried to parse a JsonObject but got a "
-                    + element.getClass().getSimpleName());
-        }
-        return (JsonObject) element;
     }
 
     public static JsonObject object() {

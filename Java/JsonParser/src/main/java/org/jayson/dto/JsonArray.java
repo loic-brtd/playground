@@ -1,5 +1,7 @@
 package org.jayson.dto;
 
+import org.jayson.format.JsonFormatter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +67,7 @@ public class JsonArray implements JsonElement {
 
     @Override
     public String toString() {
-        return format();
+        return JsonFormatter.DEFAULT.format(this);
     }
 
     @Override

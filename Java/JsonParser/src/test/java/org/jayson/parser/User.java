@@ -2,9 +2,10 @@ package org.jayson.parser;
 
 import org.jayson.Json;
 import org.jayson.dto.JsonObject;
-import org.jayson.format.JsonFormatter;
 
 import java.time.LocalDate;
+
+import static org.jayson.format.JsonFormatter.MINIMIZED;
 
 public class User {
 
@@ -21,11 +22,11 @@ public class User {
     }
 
     private static User fromJson(String json) {
-        JsonObject user = Json.parseObject(json);
-        return new User(user.getString("username"),
-                user.getString("passwordHash"),
-                dateFromJson(user.getObject("dateOfBirth")),
-                user.getBoolean("isPremium"));
+        JsonObject user = Json.parse(json).asObject();
+        return new User(user.get("username").asString(),
+                user.get("passwordHash").asString(),
+                dateFromJson(user.get("dateOfBirth").asObject()),
+                user.get("isPremium").asBoolean());
     }
 
     public String toJson() {
@@ -34,7 +35,7 @@ public class User {
                 .put("passwordHash", passwordHash)
                 .put("dateOfBirth", dateToJson(dateOfBirth))
                 .put("isPremium", isPremium)
-                .format(JsonFormatter.MINIMIZED);
+                .format(MINIMIZED);
     }
 
     private JsonObject dateToJson(LocalDate d) {
@@ -45,9 +46,9 @@ public class User {
     }
 
     private static LocalDate dateFromJson(JsonObject obj) {
-        return LocalDate.of(obj.getLong("year").intValue(),
-                obj.getLong("month").intValue(),
-                obj.getLong("day").intValue());
+        return LocalDate.of(obj.get("year").asInt(),
+                obj.get("month").asInt(),
+                obj.get("day").asInt());
     }
 
     public static void main(String[] args) {
@@ -56,5 +57,13 @@ public class User {
         System.out.println(json);
         User loaded = User.fromJson(json);
         System.out.println(loaded.toJson());
+
+        System.out.println(
+                Json.parse("[{}, null, {}]").asArray()
+                        .get(1).asObject()
+        );
+
+        JsonObject object = Json.parse("null").asObject();
+        System.out.println(object);
     }
 }
