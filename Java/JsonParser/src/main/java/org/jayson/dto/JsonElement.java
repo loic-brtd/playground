@@ -3,6 +3,8 @@ package org.jayson.dto;
 
 import org.jayson.format.JsonFormatter;
 
+import java.util.function.Function;
+
 public interface JsonElement {
 
     default boolean isBoolean() {
@@ -72,6 +74,10 @@ public interface JsonElement {
         if (isNumber())
             return ((JsonNumber) this).doubleValue();
         throw new IllegalStateException(getClass().getSimpleName() + " cannot be converted to double: " + this);
+    }
+
+    default <T> T as(Function<? super JsonElement, T> mapper) {
+        return mapper.apply(this);
     }
 
     default String format(JsonFormatter format) {

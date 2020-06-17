@@ -2,12 +2,10 @@ package org.jayson.dto;
 
 import org.jayson.format.JsonFormatter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Consumer;
 
-public class JsonArray implements JsonElement {
+public class JsonArray implements JsonElement, Iterable<JsonElement> {
 
     private final List<JsonElement> elements = new ArrayList<>();
 
@@ -36,7 +34,7 @@ public class JsonArray implements JsonElement {
     }
 
     public JsonArray push(String value) {
-        elements.add(value == null ? null : new JsonString(value));
+        elements.add(value == null ? JsonNull.INSTANCE : new JsonString(value));
         return this;
     }
 
@@ -56,12 +54,12 @@ public class JsonArray implements JsonElement {
     }
 
     public JsonArray push(JsonElement element) {
-        elements.add(element);
+        elements.add(element == null ? JsonNull.INSTANCE : element);
         return this;
     }
 
     public JsonArray pushNull() {
-        elements.add(null);
+        elements.add(JsonNull.INSTANCE);
         return this;
     }
 
@@ -81,5 +79,20 @@ public class JsonArray implements JsonElement {
     @Override
     public int hashCode() {
         return Objects.hash(elements);
+    }
+
+    @Override
+    public Iterator<JsonElement> iterator() {
+        return elements.iterator();
+    }
+
+    @Override
+    public Spliterator<JsonElement> spliterator() {
+        return elements.spliterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super JsonElement> action) {
+        elements.forEach(action);
     }
 }

@@ -122,6 +122,22 @@ class JsonParserTest {
     }
 
     @Test
+    public void testTrailingCommaInObject() {
+        JsonElement actual = Json.parse("{\"key\": \"value\", \"hello\": \"world\",}");
+        JsonElement expected = Json.object()
+                .put("key", "value")
+                .put("hello", "world");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testTrailingCommaInArray() {
+        JsonElement actual = Json.parse("[1, 2, 3,]");
+        JsonElement expected = Json.array(1, 2, 3);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void testMenu() {
         String source = loadResource("menu.json");
         String parsed = Json.parse(source).format(JsonFormatter.MINIMIZED);
