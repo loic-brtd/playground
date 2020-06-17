@@ -14,17 +14,10 @@ user.json :
 
 ```java
 File file = new File("user.json");
-
-JsonObject obj = Json.parse(file).asObject();
+JsonElement obj = Json.parse(file);
 
 String value = obj.get("string").asString();
-
-int two = obj.get("array").asArray()
-             .get(1).asInt();
-
-int twelve = obj.get("object").asObject()
-                .get("number").asInt();
-
-boolean yes = obj.get("object").asObject()
-                 .get("boolean").asBoolean();
+int two      = obj.get("array").get(1).asInt();
+int twelve   = obj.get("object").get("number").asInt();
+boolean yes  = obj.get("object").get("boolean").asBoolean();
 ```

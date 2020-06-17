@@ -4,6 +4,7 @@ import org.jayson.format.JsonFormatter;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class JsonArray implements JsonElement, Iterable<JsonElement> {
 
@@ -20,8 +21,8 @@ public class JsonArray implements JsonElement, Iterable<JsonElement> {
         return elements.size();
     }
 
-    public List<JsonElement> values() {
-        return elements;
+    public Stream<JsonElement> stream() {
+        return elements.stream();
     }
 
     @Override

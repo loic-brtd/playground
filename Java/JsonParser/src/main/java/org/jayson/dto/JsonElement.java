@@ -31,6 +31,14 @@ public interface JsonElement {
         return false;
     }
 
+    default JsonElement get(String key) {
+        return asObject().get(key);
+    }
+
+    default JsonElement get(int index) {
+        return asArray().get(index);
+    }
+
     default JsonArray asArray() {
         if (isNull()) return null;
         if (isArray())

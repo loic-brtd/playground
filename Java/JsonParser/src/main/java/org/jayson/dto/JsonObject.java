@@ -4,7 +4,6 @@ import org.jayson.format.JsonFormatter;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 public class JsonObject implements JsonElement {
 

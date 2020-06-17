@@ -1,15 +1,17 @@
 package org.jayson.parser;
 
 import org.jayson.Json;
-import org.jayson.dto.JsonArray;
 import org.jayson.dto.JsonElement;
 import org.jayson.dto.JsonObject;
-import org.jayson.format.JsonFormatter;
 
-import java.io.File;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.jayson.format.JsonFormatter.MINIMIZED;
+import static org.jayson.format.JsonFormatter.TWO_SPACES;
 
 public class User {
 
@@ -26,7 +28,7 @@ public class User {
     }
 
     private static User fromJson(String json) {
-        JsonObject user = Json.parse(json).asObject();
+        JsonElement user = Json.parse(json);
         return new User(
                 user.get("username").asString(),
                 user.get("passwordHash").asString(),
@@ -50,12 +52,11 @@ public class User {
                 .put("day", d.getDayOfMonth());
     }
 
-    private static LocalDate jsonToDate(JsonElement e) {
-        JsonObject obj = e.asObject();
+    private static LocalDate jsonToDate(JsonElement elt) {
         return LocalDate.of(
-                obj.get("year").asInt(),
-                obj.get("month").asInt(),
-                obj.get("day").asInt());
+                elt.get("year").asInt(),
+                elt.get("month").asInt(),
+                elt.get("day").asInt());
     }
 
     public static void main(String[] args) {
@@ -73,6 +74,23 @@ public class User {
         // JsonObject object = Json.parse("null").asObject();
         // System.out.println(object);
 
+        // String json = "{\n" +
+        //         "    \"string\": \"value\",\n" +
+        //         "    \"array\": [1, 2, 3],\n" +
+        //         "    \"object\": {\n" +
+        //         "        \"number\": 12,\n" +
+        //         "        \"boolean\": true\n" +
+        //         "    }\n" +
+        //         "}";
+        // JsonObject obj = Json.parse(json).asObject();
+        // String value = obj.get("string").asString();
+        // int two = obj.get("array").asArray()
+        //              .get(1).asInt();
+        // int twelve = obj.get("object").asObject()
+        //                 .get("number").asInt();
+        // boolean yes = obj.get("object").asObject()
+        //                  .get("boolean").asBoolean();
+
         String json = "{\n" +
                 "    \"string\": \"value\",\n" +
                 "    \"array\": [1, 2, 3],\n" +
@@ -81,13 +99,20 @@ public class User {
                 "        \"boolean\": true\n" +
                 "    }\n" +
                 "}";
-        JsonObject obj = Json.parse(json).asObject();
+
+        JsonElement obj = Json.parse(json);
+
         String value = obj.get("string").asString();
-        int two = obj.get("array").asArray()
-                     .get(1).asInt();
-        int twelve = obj.get("object").asObject()
-                        .get("number").asInt();
-        boolean yes = obj.get("object").asObject()
-                         .get("boolean").asBoolean();
+        int two = obj.get("array").get(1).asInt();
+        int twelve = obj.get("object").get("number").asInt();
+        boolean yes = obj.get("object").get("boolean").asBoolean();
+
+        Stream.of(value, two, twelve, yes).forEach(System.out::println);
+
+        List<String> collect = Json.parse("[1, 2, 3]").asArray()
+                .stream()
+                .map(TWO_SPACES::format)
+                .collect(Collectors.toList());
+        System.out.println(collect);
     }
 }

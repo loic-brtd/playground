@@ -1,7 +1,10 @@
 package org.jayson.parser;
 
 import org.jayson.Json;
-import org.jayson.dto.*;
+import org.jayson.dto.JsonBoolean;
+import org.jayson.dto.JsonElement;
+import org.jayson.dto.JsonObject;
+import org.jayson.dto.JsonString;
 import org.jayson.format.JsonFormatter;
 import org.junit.jupiter.api.Test;
 

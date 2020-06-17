@@ -61,7 +61,7 @@ public class CustomFormatter implements JsonFormatter {
 
     public String format(JsonArray array) {
         level++;
-        String formatted = array.values().stream()
+        String formatted = array.stream()
                 .map(element -> margin(level) + format(element))
                 .collect(joining(sepLf, openArr, lf + margin(level - 1) + ']'));
         level--;
