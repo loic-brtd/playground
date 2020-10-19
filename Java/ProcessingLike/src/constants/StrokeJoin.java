@@ -1,6 +1,6 @@
 package constants;
 
-import java.awt.BasicStroke;
+import java.awt.*;
 
 public enum StrokeJoin {
 
@@ -10,7 +10,7 @@ public enum StrokeJoin {
 
     private int value;
 
-    private StrokeJoin(int value) {
+    StrokeJoin(int value) {
         this.value = value;
     }
 

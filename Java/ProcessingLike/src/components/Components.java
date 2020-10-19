@@ -1,11 +1,9 @@
 package components;
 
-import java.awt.Color;
-import java.awt.Font;
-
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public interface Components {
 

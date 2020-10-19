@@ -1,13 +1,10 @@
 package components;
 
-import java.awt.Dimension;
-
-import javax.swing.JComponent;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeListener;
-
 import core.PCanvas;
+
+import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 public class Slider {
 

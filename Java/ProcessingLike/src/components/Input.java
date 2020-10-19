@@ -1,13 +1,11 @@
 package components;
 
-import java.awt.Dimension;
+import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.border.CompoundBorder;
 
 public class Input {
 

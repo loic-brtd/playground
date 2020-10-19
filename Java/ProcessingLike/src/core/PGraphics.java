@@ -1,20 +1,8 @@
 package core;
 
-import java.awt.BasicStroke;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import constants.*;
 
-import constants.Alignment;
-import constants.AngleMode;
-import constants.ArcMode;
-import constants.ColorMode;
-import constants.RendererType;
-import constants.ShapeEndMode;
-import constants.ShapeMode;
-import constants.StrokeCap;
-import constants.StrokeJoin;
-import constants.TextAlign;
+import java.awt.*;
 
 public class PGraphics {
 
@@ -115,23 +103,23 @@ public class PGraphics {
     }
 
     public void stroke(float grey) {
-        stroke(renderer.color(grey));
+        renderer.getStyle().setStrokeColor(renderer.color(grey));
     }
 
     public void stroke(float grey, float alpha) {
-        stroke(renderer.color(grey, alpha));
+        renderer.getStyle().setStrokeColor(renderer.color(grey, alpha));
     }
 
     public void stroke(int a, float alpha) {
-        stroke(renderer.color(a, alpha));
+        renderer.getStyle().setStrokeColor(renderer.color(a, alpha));
     }
 
     public void stroke(float a, float b, float c) {
-        stroke(renderer.color(a, b, c));
+        renderer.getStyle().setStrokeColor(renderer.color(a, b, c));
     }
 
     public void stroke(float a, float b, float c, float alpha) {
-        stroke(renderer.color(a, b, c, alpha));
+        renderer.getStyle().setStrokeColor(renderer.color(a, b, c, alpha));
     }
 
     // Fill
@@ -145,23 +133,23 @@ public class PGraphics {
     }
 
     public void fill(float grey) {
-        fill(renderer.color(grey));
+        renderer.getStyle().setFillColor(renderer.color(grey));
     }
 
     public void fill(int a, float alpha) {
-        fill(renderer.color(a, alpha));
+        renderer.getStyle().setFillColor(renderer.color(a, alpha));
     }
 
     public void fill(float grey, float alpha) {
-        fill(renderer.color(grey, alpha));
+        renderer.getStyle().setFillColor(renderer.color(grey, alpha));
     }
 
     public void fill(float a, float b, float c, float alpha) {
-        fill(renderer.color(a, b, c, alpha));
+        renderer.getStyle().setFillColor(renderer.color(a, b, c, alpha));
     }
 
     public void fill(float a, float b, float c) {
-        fill(renderer.color(a, b, c));
+        renderer.getStyle().setFillColor(renderer.color(a, b, c));
     }
 
     // Color

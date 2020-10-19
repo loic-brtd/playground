@@ -1,12 +1,12 @@
 package core;
 
-import java.awt.Color;
+import matrix_math.Matrix;
+import matrix_math.Vector;
+
+import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Stack;
-
-import matrix_math.Matrix;
-import matrix_math.Vector;
 
 public class P3DRenderer extends P2DRendered {
 

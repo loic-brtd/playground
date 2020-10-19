@@ -1,7 +1,6 @@
 package constants;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 
 public class TextAlign {
 
@@ -24,15 +23,15 @@ public class TextAlign {
     }
 
     public void adaptOrigin(Point.Float point, float x, float y, String text, Graphics2D g2) {
-        final int textAscent = g2.getFontMetrics().getAscent();
-        final int textDescent = g2.getFontMetrics().getDescent();
-        final int textWidth = g2.getFontMetrics().stringWidth(text);
+        int textAscent = g2.getFontMetrics().getAscent();
+        int textDescent = g2.getFontMetrics().getDescent();
+        int textWidth = g2.getFontMetrics().stringWidth(text);
 
         // Horizontal alignment
         if (horizAlign == Alignment.RIGHT) {
             x = x - textWidth;
         } else if (horizAlign == Alignment.CENTER) {
-            x = x - textWidth / 2;
+            x = x - textWidth / 2f;
         }
 
         // Vertical alignment
@@ -41,7 +40,7 @@ public class TextAlign {
         } else if (vertAlign == Alignment.BOTTOM) {
             y = y - textDescent;
         } else if (vertAlign == Alignment.CENTER) {
-            y = y - textDescent + (textAscent + textDescent) / 2;
+            y = y - textDescent + (textAscent + textDescent) / 2f;
         }
 
         point.setLocation(x, y);

@@ -1,15 +1,10 @@
 package core;
 
-import java.awt.BasicStroke;
-import java.awt.Font;
+import constants.*;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.StringJoiner;
-
-import constants.AngleMode;
-import constants.ColorMaxes;
-import constants.ColorMode;
-import constants.ShapeMode;
-import constants.TextAlign;
 
 public class StyleSettings {
 

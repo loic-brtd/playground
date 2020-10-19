@@ -1,9 +1,7 @@
 package components;
 
-import java.awt.Dimension;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class LineBreak {
 

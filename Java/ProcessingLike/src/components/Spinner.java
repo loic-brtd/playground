@@ -1,15 +1,9 @@
 package components;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 public class Spinner {
 

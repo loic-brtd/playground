@@ -1,36 +1,18 @@
 package core;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.Rectangle;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import components.Button;
+import components.*;
+import constants.PConstants;
+import constants.RendererType;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-
-import components.Button;
-import components.Html;
-import components.Input;
-import components.LineBreak;
-import components.Paragraph;
-import components.Radio;
-import components.Slider;
-import components.Spinner;
-import constants.PConstants;
-import constants.RendererType;
 
 public class PApplet extends PCanvas implements PConstants {
 

@@ -1,6 +1,6 @@
 package constants;
 
-import java.awt.BasicStroke;
+import java.awt.*;
 
 public enum StrokeCap {
 
@@ -10,7 +10,7 @@ public enum StrokeCap {
 
     private int value;
 
-    private StrokeCap(int value) {
+    StrokeCap(int value) {
         this.value = value;
     }
 

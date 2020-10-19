@@ -1,9 +1,9 @@
 package constants;
 
+import java.util.HashMap;
+
 import static constants.ColorMode.HSB;
 import static constants.ColorMode.RGB;
-
-import java.util.HashMap;
 
 public class ColorMaxes {
 

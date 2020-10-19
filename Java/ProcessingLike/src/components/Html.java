@@ -1,11 +1,9 @@
 package components;
 
-import java.awt.Color;
-
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-
 import core.ColorManagement;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Html {
 

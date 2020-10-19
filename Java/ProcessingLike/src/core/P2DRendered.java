@@ -1,29 +1,14 @@
 package core;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
+import constants.ArcMode;
+import constants.ShapeEndMode;
+
+import java.awt.*;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
-import constants.ArcMode;
-import constants.ShapeEndMode;
 
 public class P2DRendered implements PRenderer {
 
@@ -35,7 +20,7 @@ public class P2DRendered implements PRenderer {
     protected StyleSettings style;
     protected final Stack<StyleSettings> styleStack;
 
-    // Shapes (to avoid creating new shapes each frame)
+    // Cached shapes (to avoid creating new shapes at each frame)
     private final Arc2D.Float arc = new Arc2D.Float();
     private final Ellipse2D.Float ellipse = new Ellipse2D.Float();
     private final RoundRectangle2D.Float roundRect = new RoundRectangle2D.Float();
@@ -76,15 +61,6 @@ public class P2DRendered implements PRenderer {
     }
 
     // Drawing
-
-    // @Override
-    // public void background(float color) {
-    // final AffineTransform oldTransform = g2.getTransform();
-    // g2.setTransform(IDENTITY);
-    // g2.setColor(new Color(color(color), true));
-    // g2.fillRect(0, 0, size.width, size.height);
-    // g2.setTransform(oldTransform);
-    // }
 
     @Override
     public void background(int color) {

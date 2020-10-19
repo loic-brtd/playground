@@ -1,11 +1,11 @@
 package core;
 
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Toolkit;
+import constants.MouseButton;
+import constants.RendererType;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -13,25 +13,13 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.imageio.ImageIO;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
-import constants.MouseButton;
-import constants.RendererType;
-
-import static core.PTimer.*;
+import static core.PTimer.Policy;
+import static core.PTimer.create;
 
 public class PCanvas extends PGraphics {
 

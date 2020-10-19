@@ -1,10 +1,10 @@
 package core;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import constants.ArcMode;
 import constants.ShapeEndMode;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public interface PRenderer {
 

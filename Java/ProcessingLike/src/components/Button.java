@@ -1,10 +1,8 @@
 package components;
 
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.JButton;
-import javax.swing.JComponent;
 
 public class Button {
 
