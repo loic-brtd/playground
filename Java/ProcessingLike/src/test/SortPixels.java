@@ -5,18 +5,16 @@ import core.PImage;
 
 import java.util.Arrays;
 
-public class Test extends PApplet {
+public class SortPixels extends PApplet {
 
-    PImage img;
+    PImage img = loadImage("/home/loic/Images/wallpapers/vaporwave.jpg");
 
     @Override
     protected void setup() {
-        // img = loadImage("/home/loic/Images/wallpapers/building.jpg");
-        img = loadImage("/home/loic/Images/wallpapers/vaporwave.jpg");
         img.resize(600, 0);
         size(img.width, img.height);
-
         image(img, 0, 0);
+        noLoop();
     }
 
     @Override

@@ -17,7 +17,9 @@ public class Simplest {
         var integers = List.of(1, 2, 3);
         var strings = List.of("one", "two", "three");
 
-        zip(integers, strings, (l, r) -> System.out.format("(%s, %s)\n", l, r));
+        zip(integers, strings, (l, r) -> {
+            System.out.format("(%s, %s)\n", l, r);
+        });
     }
 
 }

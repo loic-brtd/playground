@@ -24,6 +24,9 @@ public class PImage {
             img = ImageIO.read(new File(filePath));
             width = img.getWidth();
             height = img.getHeight();
+            if (!img.getColorModel().hasAlpha()) {
+                img = this.copy().img;
+            }
         } catch (IOException e) {
             PCanvas.error(e.getMessage());
         }
@@ -42,10 +45,11 @@ public class PImage {
             height = (int) (this.height * width / (float) this.width);
         }
 
-        BufferedImage resized = new BufferedImage(width, height, img.getType());
+        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resized.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(img, 0, 0, width, height, 0, 0, img.getWidth(), img.getHeight(), null);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
+        g.drawImage(img, 0, 0, width, height, null);
         g.dispose();
         this.img = resized;
         this.width = img.getWidth();
@@ -55,6 +59,10 @@ public class PImage {
 
     public int get(int x, int y) {
         return img.getRGB(x, y);
+    }
+
+    public int[] getRGBA(int x, int y) {
+        return img.getRaster().getPixel(x, y, new int[4]);
     }
 
     public void loadPixels() {
@@ -80,27 +88,21 @@ public class PImage {
         return new PImage(img.getSubimage(x, y, width, height));
     }
 
-    public void grayScale() {
-        final WritableRaster raster = img.getRaster();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int[] rgba = raster.getPixel(x, y, new int[4]);
-                int average = (rgba[0] + rgba[2] + rgba[3]) / 3;
-                rgba[0] = average;
-                rgba[1] = average;
-                rgba[2] = average;
-                raster.setPixel(x, y, rgba);
-            }
-        }
-        img.setData(raster);
-    }
-
     public PImage copy() {
         BufferedImage copyImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = copyImg.createGraphics();
         g.drawImage(img, 0, 0, null);
         g.dispose();
         return new PImage(copyImg);
+    }
+
+
+    public WritableRaster getWritableRaster() {
+        return img.getRaster();
+    }
+
+    public BufferedImage getBufferedImage() {
+        return img;
     }
 
     @Override
