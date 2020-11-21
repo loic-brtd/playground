@@ -14,46 +14,44 @@ public class Convolution implements ImageFilter {
         if (matrix.length % 2 == 0) {
             throw new IllegalArgumentException("Matrix must have odd dimensions");
         }
+        if (matrix.length != matrix[0].length) {
+            throw new IllegalArgumentException("Matrix must be a square");
+        }
         radius = matrix.length / 2;
     }
 
     @Override
     public Image applyTo(Image image) {
-        int[] localPixel = new int[4];
-        Image resultImage = image.copy();
-        for (int x = 0; x < image.width(); x++) {
-            for (int y = 0; y < image.height(); y++) {
-                int[] averagePixel = new int[]{0, 0, 0, 255};
-                int n = 0;
+        int[] averagePixel = new int[]{0, 0, 0, 0};
+        return image.map((pixel, y, x) -> {
+            int n = 0;
+            for (int yOffset = -radius; yOffset <= radius; yOffset++) {
                 for (int xOffset = -radius; xOffset <= radius; xOffset++) {
-                    for (int yOffset = -radius; yOffset <= radius; yOffset++) {
-                        int xLookup = x + xOffset;
-                        int yLookup = y + yOffset;
-                        if (isInBounds(image, xLookup, yLookup)) {
-                            int coefficient = this.matrix[yOffset + radius][xOffset + radius];
-                            localPixel = image.getPixel(xLookup, yLookup, localPixel);
-                            weightedSumInPlace(averagePixel, localPixel, coefficient);
-                            n += coefficient;
-                        }
+                    int xLookup = x + xOffset;
+                    int yLookup = y + yOffset;
+                    if (isInBounds(image, xLookup, yLookup)) {
+                        int coefficient = this.matrix[yOffset + radius][xOffset + radius];
+                        pixel = image.getPixel(xLookup, yLookup, pixel);
+                        weightedSumInPlace(averagePixel, pixel, coefficient);
+                        n += coefficient;
                     }
                 }
-                if (n != 0) {
-                    divideInPlace(averagePixel, n);
-                }
-                resultImage.setPixel(x, y, averagePixel);
             }
-        }
-        return resultImage;
+            if (n != 0) {
+                divideInPlace(averagePixel, n);
+            }
+            return averagePixel;
+        });
     }
 
     private void weightedSumInPlace(int[] averagePixel, int[] localPixel, int coefficient) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             averagePixel[i] += localPixel[i] * coefficient;
         }
     }
 
     private static void divideInPlace(int[] averagePixels, int n) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             averagePixels[i] /= n;
         }
     }
@@ -89,14 +87,14 @@ public class Convolution implements ImageFilter {
     }
 
     public static Convolution donut(int innerRadius, int outerRadius) {
-        int inRadSq = outerRadius * outerRadius;
-        int outRadSq = innerRadius * innerRadius;
+        int outRadSq = outerRadius * outerRadius;
+        int inRadSq = innerRadius * innerRadius;
         int size = outerRadius * 2 + 1;
         int[][] matrix = new int[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 int distSq = (x - outerRadius) * (x - outerRadius) + (y - outerRadius) * (y - outerRadius);
-                matrix[y][x] = between(distSq, outRadSq, inRadSq) ? 1 : 0;
+                matrix[y][x] = between(distSq, inRadSq, outRadSq) ? 1 : 0;
             }
         }
         return new Convolution(matrix);

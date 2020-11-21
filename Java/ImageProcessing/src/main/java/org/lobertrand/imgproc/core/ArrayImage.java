@@ -19,18 +19,18 @@ public class ArrayImage implements Image {
 
         array = new int[img.getHeight()][img.getWidth()][4];
         var raster = img.getRaster();
-        for (int i = 0; i < img.getHeight(); i++) {
-            for (int j = 0; j < img.getWidth(); j++) {
-                array[i][j] = raster.getPixel(j, i, new int[4]);
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                array[y][x] = raster.getPixel(x, y, new int[4]);
             }
         }
     }
 
     private ArrayImage(int[][][] array) {
         this.array = new int[array.length][array[0].length][4];
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                System.arraycopy(array[i][j], 0, this.array[i][j], 0, 4);
+        for (int y = 0; y < array.length; y++) {
+            for (int x = 0; x < array[y].length; x++) {
+                System.arraycopy(array[y][x], 0, this.array[y][x], 0, 4);
             }
         }
     }
@@ -69,10 +69,10 @@ public class ArrayImage implements Image {
     public BufferedImage toBufferedImage() {
         var buffImg = new BufferedImage(width(), height(), BufferedImage.TYPE_INT_ARGB);
         var raster = buffImg.getRaster();
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                var pixel = array[i][j];
-                raster.setPixel(j, i, pixel);
+        for (int y = 0; y < array.length; y++) {
+            for (int x = 0; x < array[y].length; x++) {
+                var pixel = array[y][x];
+                raster.setPixel(x, y, pixel);
             }
         }
         return buffImg;

@@ -15,7 +15,7 @@ public class PerformanceTest {
                 .resize(700, -1);
 
         long sum = 0;
-        long n = 20;
+        long n = 1;
         for (int i = 0; i < n; i++) {
             long timeBefore = System.currentTimeMillis();
             image = image.filter(Convolution.circle(20));

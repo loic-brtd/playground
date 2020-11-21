@@ -27,30 +27,6 @@ public class Superpose implements ImageFilter {
         g2.drawImage(other.toBufferedImage(), 0, 0, null);
         g2.setComposite(old);
         return resultImage;
-
-        // int[] pixel = new int[4];
-        // int[] otherPixel = new int[4];
-        // WritableRaster originalRaster = image.getWritableRaster();
-        // PImage resultImage = image.copy();
-        // WritableRaster resultRaster = resultImage.getWritableRaster();
-        // WritableRaster otherRaster = other.getWritableRaster();
-        // int w = Math.min(image.width, other.width);
-        // int h = Math.min(image.height, other.height);
-        // for (int x = 0; x < w; x++) {
-        //     for (int y = 0; y < h; y++) {
-        //         pixel = originalRaster.getPixel(x, y, pixel);
-        //         otherPixel = otherRaster.getPixel(x, y, otherPixel);
-        //         superposeInPlace(pixel, otherPixel, amount);
-        //         resultRaster.setPixel(x, y, pixel);
-        //     }
-        // }
-        // return resultImage;
-    }
-
-    private void superposeInPlace(int[] originalPixel, int[] otherPixel, float amount) {
-        for (int i = 0; i < 4; i++) {
-            originalPixel[i] = Math.round(originalPixel[i] * (1 - amount) + otherPixel[i] * amount);
-        }
     }
 
     public static Superpose image(Image other, float amount) {

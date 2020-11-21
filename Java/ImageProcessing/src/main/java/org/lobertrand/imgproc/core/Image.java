@@ -3,7 +3,6 @@ package org.lobertrand.imgproc.core;
 import org.lobertrand.imgproc.filter.ImageFilter;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public interface Image {
 
@@ -17,24 +16,43 @@ public interface Image {
 
     BufferedImage toBufferedImage();
 
-    default int[][][] to3DArray() {
-        int[][][] array = new int[height()][width()][4];
-        for (int i = 0; i < height(); i++) {
-            for (int j = 0; j < width(); j++) {
-                var pixel = getPixel(j, i, new int[4]);
-                System.arraycopy(pixel, 0, array[i][j], 0, 4);
+    default Image map(PixelMapper pixelMapper) {
+        Image result = copy();
+        var rgba = new int[4];
+        for (int y = 0; y < height(); y++) {
+            for (int x = 0; x < width(); x++) {
+                var originalPixel = getPixel(x, y, rgba);
+                var mappedPixel = pixelMapper.map(originalPixel, y, x);
+                result.setPixel(x, y, mappedPixel);
             }
         }
-        return array;
+        return result;
+    }
+
+    @FunctionalInterface
+    interface PixelMapper {
+        int[] map(int[] pixel, int y, int x);
+    }
+
+    default int[][][] to3DArray() {
+        int[] pixel = new int[4];
+        int[][][] result = new int[height()][width()][4];
+        for (int i = 0; i < height(); i++) {
+            for (int j = 0; j < width(); j++) {
+                pixel = getPixel(j, i, pixel);
+                System.arraycopy(getPixel(j, i, pixel), 0, result[i][j], 0, 4);
+            }
+        }
+        return result;
     }
 
     default int[][] toMonochrome2DArray() {
+        int[] pixel = new int[4];
         int[][] array = new int[height()][width()];
         for (int i = 0; i < height(); i++) {
             for (int j = 0; j < width(); j++) {
-                var pixel = getPixel(j, i, new int[4]);
-                var average = (pixel[0] + pixel[1] + pixel[2]) / 3;
-                array[i][j] = average;
+                pixel = getPixel(j, i, pixel);
+                array[i][j] = (pixel[0] + pixel[1] + pixel[2]) / 3;
             }
         }
         return array;
