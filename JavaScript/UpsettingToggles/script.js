@@ -53,7 +53,7 @@ function onChange(current, allInputs) {
 function main() {
     const container = document.querySelector("#container");
     const allInputs = [];
-    const N = 48;
+    const N = 36;
 
     for (let i = 0; i < N; i++) {
         const { wrapper, input } = createCheckbox("checkbox" + i);
