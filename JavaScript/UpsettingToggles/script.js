@@ -62,8 +62,7 @@ function main() {
         input.onchange = () => onChange(input, allInputs);
     }
 
-    const n = randomInt(0, N);
-    allInputs[n].checked = true;
+    randomElt(allInputs).checked = true;
 }
 
 main();
