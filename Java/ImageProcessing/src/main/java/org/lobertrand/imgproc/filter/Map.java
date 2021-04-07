@@ -2,30 +2,34 @@ package org.lobertrand.imgproc.filter;
 
 import org.lobertrand.imgproc.core.Image;
 
-import java.util.function.IntUnaryOperator;
+import java.util.function.DoubleUnaryOperator;
 
 public class Map implements ImageFilter {
 
-    private final IntUnaryOperator unaryOperator;
+    private final DoubleUnaryOperator unaryOperator;
+    private final int iterationLength;
 
-    private Map(IntUnaryOperator horizontal) {
-        this.unaryOperator = horizontal;
+    public Map(DoubleUnaryOperator unaryOperator, boolean mapOnAlpha) {
+        this.unaryOperator = unaryOperator;
+        this.iterationLength = mapOnAlpha ? 4 : 3;
     }
+
 
     @Override
     public Image applyTo(Image image) {
-        return image.map((pixel, y, x) -> applyOnRGB(pixel));
+        return image.map((pixel, x, y) -> {
+            for (int i = 0; i < iterationLength; i++) {
+                pixel[i] = (int) unaryOperator.applyAsDouble(pixel[i]);
+            }
+            return pixel;
+        });
     }
 
-    private int[] applyOnRGB(int[] pixel) {
-        for (int i = 0; i < 3; i++) {
-            pixel[i] = unaryOperator.applyAsInt(pixel[i]);
-        }
-        return pixel;
+    public static Map onRGB(DoubleUnaryOperator function) {
+        return new Map(function, false);
     }
 
-    public static Map unaryOperator(IntUnaryOperator function) {
-        return new Map(function);
+    public static Map onRGBA(DoubleUnaryOperator function) {
+        return new Map(function, true);
     }
-
 }

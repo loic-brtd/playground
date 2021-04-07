@@ -11,8 +11,8 @@ public class Dynamic implements ImageFilter {
     public Image applyTo(Image image) {
         var bounds = computeMinMax(image);
         float span = bounds.max - bounds.min;
-        return image.map((pixel, y, x) -> {
-            for (int i = 0; i < 3; i++) {
+        return image.map((pixel, x, y) -> {
+            for (int i = 0; i < 4; i++) {
                 pixel[i] = Math.round(255 * (pixel[i] - bounds.min) / span);
             }
             return pixel;
@@ -25,7 +25,7 @@ public class Dynamic implements ImageFilter {
         for (int y = 0; y < image.height(); y++) {
             for (int x = 0; x < image.width(); x++) {
                 pixel = image.getPixel(x, y, pixel);
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 4; i++) {
                     min = Math.min(min, pixel[i]);
                     max = Math.max(max, pixel[i]);
                 }

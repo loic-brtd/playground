@@ -1,6 +1,7 @@
 package com.picasso.gui;
 
-import com.picasso.gui.theme.Theme;
+import com.picasso.gui.theme.BaseTheme;
+import com.picasso.gui.theme.ThemeManager;
 import org.jdesktop.swingx.JXPanel;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class PIcon extends JXPanel {
+
+    private static final ThemeManager themes = ThemeManager.getInstance();
 
     private BufferedImage img;
     private final int padding = 4;
@@ -53,10 +56,10 @@ public class PIcon extends JXPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Dimension d = getPreferredSize();
         if (hovered) {
-            g2.setColor(Theme.getCurrent().getFocusedMenu());
+            g2.setColor(themes.current().focusedMenu());
             g2.fillOval(0, 0, d.width, d.height);
         } else {
-            g2.setColor(Theme.getCurrent().getMenuBorder());
+            g2.setColor(themes.current().menuBorder());
             g2.drawOval(0, 0, d.width - 1, d.height - 1);
         }
         g2.drawImage(img, padding, padding, null);

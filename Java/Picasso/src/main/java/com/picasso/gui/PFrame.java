@@ -1,17 +1,19 @@
 package com.picasso.gui;
 
 import com.picasso.controls.MainKeyListener;
-import com.picasso.gui.theme.Theme;
+import com.picasso.gui.theme.BaseTheme;
+import com.picasso.gui.theme.ThemeManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PFrame extends JFrame {
 
+    private static final ThemeManager themes = ThemeManager.getInstance();
     private static PFrame mainFrame;
 
     private PFrame() {
-        setBackground(Theme.getCurrent().getBackground());
+        setBackground(themes.current().background());
         setJMenuBar(PMenuBar.createMain());
         setContentPane(PRootPanel.create());
         setPreferredSize(new Dimension(700, 500));

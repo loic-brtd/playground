@@ -1,132 +1,45 @@
 package com.picasso.gui.theme;
 
-import com.picasso.util.Fonts;
-
-import javax.swing.*;
 import java.awt.*;
 
-import static java.awt.Color.*;
+public interface Theme {
+    Font mainFont();
 
-public class Theme {
+    void mainFont(Font mainFont);
 
-    private static Theme current = new Theme();
+    Color background();
 
-    private Font mainFont;
-    private Color background;
-    private Color onBackground;
-    private Color menu;
-    private Color onMenu;
-    private Color focusedMenu;
-    private Color onFocusedMenu;
-    private Color menuBorder;
-    private Color thumb;
-    private Color focusedThumb;
+    void background(Color background);
 
-    private Theme() {
-        // Default theme parameters
-        setMainFont(Fonts.loadFont("/font/noto_sans/NotoSans-Regular.ttf")
-                .map(f -> f.deriveFont(13f))
-                .orElseGet(() -> new Font("Arial", Font.PLAIN, 12)));
-        setBackground(decode("#222222"));
-        setOnBackground(decode("#bbbbbb"));
-        setMenu(decode("#333333"));
-        setOnMenu(onBackground);
-        setFocusedMenu(decode("#0055cc"));
-        setOnFocusedMenu(decode("#ffffff"));
-        setMenuBorder(decode("#444444"));
-        setThumb(decode("#555555"));
-        setFocusedThumb(decode("#666666"));
-    }
+    Color onBackground();
 
-    public static Theme getCurrent() {
-        return current;
-    }
+    void onBackground(Color onBackground);
 
-    public static void setCurrent(Theme current) {
-        Theme.current = current;
-    }
+    Color menu();
 
-    public Font getMainFont() {
-        return mainFont;
-    }
+    void menu(Color menu);
 
-    public void setMainFont(Font mainFont) {
-        this.mainFont = mainFont;
-    }
+    Color onMenu();
 
-    public Color getBackground() {
-        return background;
-    }
+    void onMenu(Color onMenu);
 
-    public void setBackground(Color background) {
-        this.background = background;
-    }
+    Color focusedMenu();
 
-    public Color getOnBackground() {
-        return onBackground;
-    }
+    void focusedMenu(Color focusedMenu);
 
-    public void setOnBackground(Color onBackground) {
-        this.onBackground = onBackground;
-    }
+    Color onFocusedMenu();
 
-    public Color getMenu() {
-        return menu;
-    }
+    void onFocusedMenu(Color onFocusedMenu);
 
-    public void setMenu(Color menu) {
-        this.menu = menu;
-    }
+    Color menuBorder();
 
-    public Color getOnMenu() {
-        return onMenu;
-    }
+    void onMenuBorder(Color menuBorder);
 
-    public void setOnMenu(Color onMenu) {
-        this.onMenu = onMenu;
-    }
+    Color thumb();
 
-    public Color getFocusedMenu() {
-        return focusedMenu;
-    }
+    void thumb(Color thumb);
 
-    public void setFocusedMenu(Color focusedMenu) {
-        this.focusedMenu = focusedMenu;
-        UIManager.put("Menu.selectionBackground", this.focusedMenu);
-        UIManager.put("MenuItem.selectionBackground", this.focusedMenu);
-    }
+    Color focusedThumb();
 
-    public Color getOnFocusedMenu() {
-        return onFocusedMenu;
-    }
-
-    public void setOnFocusedMenu(Color onFocusedMenu) {
-        this.onFocusedMenu = onFocusedMenu;
-        UIManager.put("Menu.selectionForeground", this.onFocusedMenu);
-        UIManager.put("MenuItem.selectionForeground", this.onFocusedMenu);
-    }
-
-    public Color getMenuBorder() {
-        return menuBorder;
-    }
-
-    public void setMenuBorder(Color menuBorder) {
-        this.menuBorder = menuBorder;
-    }
-
-    public Color getThumb() {
-        return thumb;
-    }
-
-    public void setThumb(Color thumb) {
-        this.thumb = thumb;
-    }
-
-    public Color getFocusedThumb() {
-        return focusedThumb;
-    }
-
-    public void setFocusedThumb(Color focusedThumb) {
-        this.focusedThumb = focusedThumb;
-    }
+    void focusedThumb(Color focusedThumb);
 }

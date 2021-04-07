@@ -14,14 +14,15 @@ public class ArrayImage implements Image {
     private final int[][][] array;
 
     private ArrayImage(BufferedImage bufferedImage) {
-        var img = bufferedImage.getColorModel().hasAlpha()
-                ? bufferedImage : Convert.bufferedImageToARGB(bufferedImage);
-
-        array = new int[img.getHeight()][img.getWidth()][4];
-        var raster = img.getRaster();
-        for (int y = 0; y < img.getHeight(); y++) {
-            for (int x = 0; x < img.getWidth(); x++) {
+        boolean hasNoAlpha = !bufferedImage.getColorModel().hasAlpha();
+        array = new int[bufferedImage.getHeight()][bufferedImage.getWidth()][4];
+        var raster = bufferedImage.getRaster();
+        for (int y = 0; y < bufferedImage.getHeight(); y++) {
+            for (int x = 0; x < bufferedImage.getWidth(); x++) {
                 array[y][x] = raster.getPixel(x, y, new int[4]);
+                if (hasNoAlpha) {
+                    array[y][x][3] = 255;
+                }
             }
         }
     }
@@ -69,10 +70,9 @@ public class ArrayImage implements Image {
     public BufferedImage toBufferedImage() {
         var buffImg = new BufferedImage(width(), height(), BufferedImage.TYPE_INT_ARGB);
         var raster = buffImg.getRaster();
-        for (int y = 0; y < array.length; y++) {
-            for (int x = 0; x < array[y].length; x++) {
-                var pixel = array[y][x];
-                raster.setPixel(x, y, pixel);
+        for (int y = 0; y < height(); y++) {
+            for (int x = 0; x < width(); x++) {
+                raster.setPixel(x, y, array[y][x]);
             }
         }
         return buffImg;

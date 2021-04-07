@@ -12,7 +12,7 @@ public class Flip implements ImageFilter {
 
     @Override
     public Image applyTo(Image image) {
-        return image.map((pixel, y, x) -> {
+        return image.map((pixel, x, y) -> {
             int flippedX = horizontal ? image.width() - 1 - x : x;
             int flippedY = horizontal ? y : image.height() - 1 - y;
             return image.getPixel(flippedX, flippedY, pixel);

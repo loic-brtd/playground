@@ -1,12 +1,15 @@
 package com.picasso.gui;
 
-import com.picasso.gui.theme.Theme;
+import com.picasso.gui.theme.BaseTheme;
+import com.picasso.gui.theme.ThemeManager;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 
 public class CustomScrollBarUI extends BasicScrollBarUI {
+
+    private static final ThemeManager themes = ThemeManager.getInstance();
 
     @Override
     protected JButton createDecreaseButton(int orientation) {
@@ -30,7 +33,7 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
 
     @Override
     protected void paintTrack(Graphics g, JComponent c, Rectangle r) {
-        g.setColor(Theme.getCurrent().getBackground());
+        g.setColor(themes.current().background());
         g.fillRect(0, 0, c.getWidth(), c.getHeight());
     }
 
@@ -47,8 +50,8 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
     protected void paintThumb(Graphics g, JComponent c, Rectangle r) {
         if (!c.isEnabled() || checkSizes(c, r)) return;
         g.setColor(isThumbRollover()
-                ? Theme.getCurrent().getFocusedThumb()
-                : Theme.getCurrent().getThumb());
+                ? themes.current().focusedThumb()
+                : themes.current().thumb());
         g.fillRect(r.x, r.y, r.width, r.height);
         g.dispose();
     }

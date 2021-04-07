@@ -1,7 +1,8 @@
 package com.picasso.gui;
 
 import com.picasso.app.ImageEditor;
-import com.picasso.gui.theme.Theme;
+import com.picasso.gui.theme.BaseTheme;
+import com.picasso.gui.theme.ThemeManager;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.border.DropShadowBorder;
 
@@ -19,6 +20,8 @@ import static java.awt.GridBagConstraints.*;
 
 public class PImageEditorPanel extends JXPanel {
 
+    private static final ThemeManager themes = ThemeManager.getInstance();
+
     private JComponent titleBar;
     private PCanvas canvas;
 
@@ -32,11 +35,11 @@ public class PImageEditorPanel extends JXPanel {
 
         // Title bar
         titleBar = new JPanel(new GridBagLayout());
-        titleBar.setBackground(Theme.getCurrent().getMenu());
+        titleBar.setBackground(themes.current().menu());
         JLabel titleLabel = new JLabel(imageEditor.getName());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setForeground(Theme.getCurrent().getOnMenu());
-        titleLabel.setFont(Theme.getCurrent().getMainFont());
+        titleLabel.setForeground(themes.current().onMenu());
+        titleLabel.setFont(themes.current().mainFont());
         titleBar.add(titleLabel, gridBag(0, 0, 1, 1, CENTER, 1, HORIZONTAL));
         PIcon cross = new PIcon("/image/cross.png");
         cross.addMouseListener(new MouseAdapter() {
@@ -57,7 +60,7 @@ public class PImageEditorPanel extends JXPanel {
 
     private JScrollPane createScrollPane(PCanvas canvas) {
         JScrollPane scrollPane = new JScrollPane(canvas);
-        scrollPane.setBackground(Theme.getCurrent().getMenu());
+        scrollPane.setBackground(themes.current().menu());
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
         JScrollBar vsb = scrollPane.getVerticalScrollBar();
         JScrollBar hsb = scrollPane.getHorizontalScrollBar();
@@ -84,7 +87,7 @@ public class PImageEditorPanel extends JXPanel {
     }
 
     private Border createBorder() {
-        Border lineBorder = new LineBorder(Theme.getCurrent().getMenuBorder());
+        Border lineBorder = new LineBorder(themes.current().menuBorder());
         DropShadowBorder shadow = new DropShadowBorder();
         shadow.setShadowColor(Color.BLACK);
         shadow.setShowLeftShadow(true);

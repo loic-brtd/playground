@@ -1,6 +1,6 @@
 package com.picasso.util;
 
-import com.picasso.gui.theme.Theme;
+import com.picasso.gui.theme.BaseTheme;
 
 import java.awt.*;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.Optional;
 public class Fonts {
     public static Optional<Font> loadFont(String name) {
         try {
-            InputStream inputStream = Theme.class.getResourceAsStream(name);
+            InputStream inputStream = BaseTheme.class.getResourceAsStream(name);
             Objects.requireNonNull(inputStream);
             Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
             return Optional.of(font);

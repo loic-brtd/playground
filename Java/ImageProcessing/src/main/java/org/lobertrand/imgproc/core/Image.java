@@ -22,7 +22,7 @@ public interface Image {
         for (int y = 0; y < height(); y++) {
             for (int x = 0; x < width(); x++) {
                 var originalPixel = getPixel(x, y, rgba);
-                var mappedPixel = pixelMapper.map(originalPixel, y, x);
+                var mappedPixel = pixelMapper.map(originalPixel, x, y);
                 result.setPixel(x, y, mappedPixel);
             }
         }
@@ -31,7 +31,7 @@ public interface Image {
 
     @FunctionalInterface
     interface PixelMapper {
-        int[] map(int[] pixel, int y, int x);
+        int[] map(int[] pixel, int x, int y);
     }
 
     default int[][][] to3DArray() {
