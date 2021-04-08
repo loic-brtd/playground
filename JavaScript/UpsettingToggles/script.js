@@ -1,68 +1,41 @@
+const handleChange = (current, allToggles) => {
+  const onCount = allToggles.filter(t => t.checked).length;
+  const offCount = allToggles.length - onCount;
 
-function createCheckbox(id) {
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("checkbox");
+  if (onCount < 2) {
 
-    const input = document.createElement("input");
-    input.type = "checkbox"
-    input.id = id;
+    const otherOffToggles = allToggles.filter(t => t !== current && !t.checked);
+    shuffle(otherOffToggles);
 
-    const label = document.createElement("label");
-    label.htmlFor = id;
+    const n = randomElement([1, 1, 1, 1, 1, 1, 2, 2, 3]);
+    otherOffToggles.slice(0, n).forEach(t => {
+      t.checked = true;
+    });
 
-    wrapper.appendChild(input);
-    wrapper.appendChild(label);
+  } else if (offCount < 2) {
 
-    return { wrapper, input, label };
+    const otherOnToggles = allToggles.filter(t => t !== current && t.checked);
+    shuffle(otherOnToggles);
+
+    const n = randomElement([1, 1, 1, 1, 1, 1, 2, 2, 3]);
+    otherOnToggles.slice(0, n).forEach(t => {
+      t.checked = false;
+    });
+
+  }
 }
 
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+(() => {
+  const container = document.querySelector("#container");
+  const allToggles = [];
+  const N = 9;
 
-function randomElt(array) {
-    const index = Math.floor(Math.random() * array.length);
-    return array[index];
-}
+  for (let i = 0; i < N; i++) {
+    const toggle = new Toggle("toggle" + i);
+    toggle.parent(container);
+    allToggles.push(toggle);
+    toggle.onChange(() => handleChange(toggle, allToggles));
+  }
 
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-function onChange(current, allInputs) {
-    if (current.checked) {
-        return;
-    }
-    const otherOffInputs = allInputs.filter(input => input !== current && !input.checked);
-    shuffle(otherOffInputs);
-
-    const onInputsCount = allInputs.filter(input => input.checked).length;
-
-    if (onInputsCount < 2) {
-        const n = randomElt([1, 1, 1, 1, 1, 1, 2, 2, 3]);
-        otherOffInputs.slice(0, n).forEach(input => {
-            input.checked = true;
-        });
-    }
-}
-
-function main() {
-    const container = document.querySelector("#container");
-    const allInputs = [];
-    const N = 36;
-
-    for (let i = 0; i < N; i++) {
-        const { wrapper, input } = createCheckbox("checkbox" + i);
-        container.appendChild(wrapper);
-        allInputs.push(input);
-        input.onchange = () => onChange(input, allInputs);
-    }
-
-    randomElt(allInputs).checked = true;
-}
-
-main();
+  randomElement(allToggles).toggle();
+})()
