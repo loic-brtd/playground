@@ -1,1 +1,1 @@
-Demo: https://cdn.rawgit.com/lobertrand/personal-coding/708e74c/Clock_of_clocks_p5js/index.html
+Demo: https://lobertrand.github.io/playground/JavaScript/Clock_of_clocks_p5js/
