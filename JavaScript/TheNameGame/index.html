@@ -7,20 +7,18 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <h1>The Name game</h1>
+    <main class="container">
+      <h1>The Name Game</h1>
 
-    <form id="nameForm">
-      <div class="field">
-        <label for="nameInput" style="display: none">Name</label>
-        <input
-          type="text"
-          id="nameInput"
-          placeholder="Enter a name..."
-        />
-      </div>
-      <button type="submit" id="submitButton">Generate</button>
-    </form>
-    <p id="result"></p>
+      <form id="nameForm">
+        <div class="field">
+          <label for="nameInput" style="display: none">Name</label>
+          <input type="text" id="nameInput" placeholder="Enter a name..." autocomplete="off"/>
+        </div>
+        <button type="submit" id="submitButton">Generate</button>
+      </form>
+      <p id="result"></p>
+    </main>
 
     <script src="script.js"></script>
   </body>
