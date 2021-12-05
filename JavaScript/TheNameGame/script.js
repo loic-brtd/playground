@@ -56,21 +56,29 @@ function main() {
   const nameInput = document.querySelector("#nameInput");
   const result = document.querySelector("#result");
 
-  function generate() {
-    let name = nameInput.value;
-    if (!name) {
-      name = "Lana";
-      nameInput.value = name;
-    }
+  function generate(name) {
+    // Generate lyrics for name
     const lyrics = makeLyricsForName(name);
     result.innerText = lyrics;
+    nameInput.value = name;
+
+    // Update URL without page reload
+    const baseUrl = location.protocol + '//' + location.host + location.pathname;
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.append("name", name);
+    const newUrl = baseUrl + "?" + urlSearchParams.toString();
+    window.history.pushState(null, null, newUrl);
   }
 
-  generate();
+  // On page load
+  const urlSearchParams = new URLSearchParams(location.search);
+  const queryParamName = urlSearchParams.get('name');
+  generate(queryParamName || "Lana");
 
+  // On submit
   nameForm.onsubmit = (event) => {
     event.preventDefault();
-    generate();
+    generate(nameInput.value || "Lana");
   };
 }
 
