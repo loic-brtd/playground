@@ -67,7 +67,7 @@ function main() {
     const urlSearchParams = new URLSearchParams();
     urlSearchParams.append("name", name);
     const newUrl = baseUrl + "?" + urlSearchParams.toString();
-    window.history.pushState(null, null, newUrl);
+    window.history.replaceState(null, null, newUrl);
   }
 
   // On page load
