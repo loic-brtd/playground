@@ -46,10 +46,9 @@ function makeLyricsForName(name) {
   const mName = first == "M" ? suffix : "M" + suffix;
 
   return dedent`${name}!
-                ${name}, ${name} bo ${bName}
-                Bo bana fanna fo ${fName}
-                Fee fi mo ${mName}
-                ${name}!`;
+                ${name}, ${name}, bo ${bName}
+                Banana fanna fo ${fName}
+                Fee fy mo ${mName}, ${name}!`;
 }
 
 function main() {
