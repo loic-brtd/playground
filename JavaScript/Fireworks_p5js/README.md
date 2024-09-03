@@ -1,1 +1,1 @@
-Demo: https://lobertrand.github.io/playground/JavaScript/Fireworks_p5js/
+Demo: https://loic-brtd.github.io/playground/JavaScript/Fireworks_p5js/
