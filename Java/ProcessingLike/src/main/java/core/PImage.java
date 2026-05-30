@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class PImage {
 
@@ -21,7 +22,10 @@ public class PImage {
 
     public PImage(String filePath) {
         try {
-            img = ImageIO.read(new File(filePath));
+            InputStream resource = PImage.class.getClassLoader().getResourceAsStream(filePath);
+            img = resource != null
+                    ? ImageIO.read(resource)
+                    : ImageIO.read(new File(filePath));
             width = img.getWidth();
             height = img.getHeight();
             if (!img.getColorModel().hasAlpha()) {
@@ -96,6 +100,13 @@ public class PImage {
         return new PImage(copyImg);
     }
 
+    public void grayScale() {
+        this.loadPixels();
+        for (int i = 0; i < this.pixels.length; i++) {
+            this.pixels[i] = ColorManagement.greyScale(this.pixels[i]);
+        }
+        this.updatePixels();
+    }
 
     public WritableRaster getWritableRaster() {
         return img.getRaster();
@@ -109,5 +120,4 @@ public class PImage {
     public String toString() {
         return "PImage [width=" + width + ", height=" + height + "]";
     }
-
 }

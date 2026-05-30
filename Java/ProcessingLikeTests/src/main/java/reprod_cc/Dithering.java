@@ -12,7 +12,7 @@ public class Dithering extends PApplet {
         kitten = loadImage("res/kitten.jpg")
                 .get(200, 0, 640, 640);
         kitten.resize(600, 600);
-//        kitten.grayScale(); // TODO:
+        kitten.grayScale();
         image(kitten, 0, 0);
         noLoop();
     }

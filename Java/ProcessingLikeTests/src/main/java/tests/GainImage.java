@@ -7,10 +7,9 @@ public class GainImage extends PApplet {
 
   @Override
   protected void setup() {
-    // PImage img = loadImage("res/kitten.jpg");
     PImage img = loadImage("res/kitten.jpg");
     img.resize(500, 0);
-//    img.grayScale(); // TODO:
+    img.grayScale();
 
     size(img.width * 2, img.height);
     image(img, 0, 0);

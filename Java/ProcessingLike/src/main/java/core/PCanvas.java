@@ -616,19 +616,19 @@ public class PCanvas extends PGraphics {
     // Color functions
 
     public static int alpha(int color) {
-        return (color >> 24) & 0xFF;
+        return ColorManagement.alpha(color);
     }
 
     public static int red(int color) {
-        return (color >> 16) & 0xFF;
+        return ColorManagement.red(color);
     }
 
     public static int green(int color) {
-        return (color >> 8) & 0xFF;
+        return ColorManagement.green(color);
     }
 
     public static int blue(int color) {
-        return (color) & 0x000000FF;
+        return ColorManagement.blue(color);
     }
 
     // System

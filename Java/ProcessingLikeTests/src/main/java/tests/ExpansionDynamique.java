@@ -13,7 +13,7 @@ public class ExpansionDynamique extends PApplet {
         // PImage img = loadImage("res/kitten.jpg");
         PImage img = loadImage("res/cellules.jpg");
         img.resize(500, 0);
-//        img.grayScale(); TODO: Retrouver implémentation de cette méthode
+        img.grayScale();
         PImage h1 = histogramme(img);
         PImage img2 = expansionDynamique(img);
         PImage h2 = histogramme(img2);
