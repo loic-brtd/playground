@@ -1,1 +1,1 @@
-Demo : https://lobertrand.github.io/playground/JavaScript/UpsettingToggles/
+Demo : https://loic-brtd.github.io/playground/JavaScript/UpsettingToggles/
